@@ -51,9 +51,9 @@
 }
 
 .description {
-  margin: 4rem 0;
   line-height: 1.5;
   font-size: 1.5rem;
+  margin: 1rem 0 4rem;
 }
 
 .code {
@@ -113,4 +113,16 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+.description-emphasis {
+  font-weight: bold;
+}
+
+.line{
+  background-color: black;
+  height: 2px;
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 2rem;
 }
