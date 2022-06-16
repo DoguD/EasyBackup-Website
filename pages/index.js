@@ -29,6 +29,17 @@ export default function Home() {
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
+    // Toasts
+    const {toasts} = useToasterStore();
+    const TOAST_LIMIT = 1;
+    /*
+    useEffect(() => {
+        toasts
+            .filter((t) => t.visible) // Only consider visible toasts
+            .filter((_, i) => i >= TOAST_LIMIT) // Is toast index over limit?
+            .forEach((t) => toast.remove(t.id)); // Dismiss – Use toast.remove(t.id) for no exit animation
+    }, [toasts]);
+     */
 
     // Web3
     useEffect(() => {
@@ -46,10 +57,13 @@ export default function Home() {
             nftContract.on("Transfer", async (from, to, tokenId, event) => {
                 console.log("Inside event.");
                 console.log(event);
-                /*
                 if (event.event === "Transfer" && to === await signer.getAddress()) {
                     console.log("Transfer occured.")
-                }*/
+
+                    await getUserNFTData(await signer.getAddress());
+                    toast.success("Successfully minted The Easy Club NFTs!");
+                    setIsMinting(false);
+                }
             })
         } else {
             console.log("Metamask not installed.");
@@ -111,14 +125,14 @@ export default function Home() {
 
     // Contract Methods
     async function mintNFT(count) {
+        setIsMinting(true);
         try {
             console.log('Hey');
             setIsMinting(true);
             const options = {value: ethers.utils.parseEther((100 * count).toString())}
             await nftContractWithSigner.mintForSelfFtm(count, options);
-
         } catch (e) {
-            console.log('Nah');
+            setIsMinting(false);
             console.log(e);
             toast.error("You don't have enough FTM in your wallet.", {duration: 5000,});
             setIsMinting(false);
@@ -206,7 +220,8 @@ export default function Home() {
                     Mint Now
                 </h2>
                 <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
-                         mintNFT={(count) => mintNFT(count)} minted={minted}/>
+                         mintNFT={(count) => mintNFT(count)} minted={minted}
+                         isMinting={isMinting}/>
 
                 {walletAddress !== "" ? <>
                     <h2 className={styles.subTitle}>

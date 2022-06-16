@@ -2,6 +2,7 @@ import styles from "../styles/Home.module.css";
 import ProgressBar from "@ramonak/react-progress-bar";
 import {AiOutlineMinusCircle, AiOutlinePlusCircle} from "react-icons/ai";
 import {useState} from "react";
+import {CircleLoader} from "react-spinners";
 
 export default function MintBox(props) {
     const [toMint, setToMint] = useState(1);
@@ -37,7 +38,10 @@ export default function MintBox(props) {
                     </div>
                     <p className={styles.mintCostText}>Cost: {100 * toMint} <b>$FTM</b></p>
                     <div className={styles.mintButton} onClick={async () => props.mintNFT(toMint)}>
-                        <p className={styles.mintText}>Mint</p>
+                        {props.isMinting ?
+                            <CircleLoader color={"#3a70ed"} size={25}/>
+                            :
+                            <p className={styles.mintText}>Mint</p>}
                     </div>
                 </>}
         </>
