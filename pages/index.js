@@ -17,6 +17,7 @@ import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 import {useEffect, useState} from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import UtilityBox from "../components/UtilityBox";
+import MintBox from "../components/MintBox";
 
 // Web3 Global Vars
 let provider;
@@ -27,7 +28,6 @@ let signer;
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(550);
-    const [toMint, setToMint] = useState(1);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
 
@@ -170,37 +170,8 @@ export default function Home() {
                 <h2 className={styles.subTitle}>
                     Mint Now
                 </h2>
-                <p className={styles.generationText} style={{textDecoration: "line-through"}}>
-                    <b>Generation 0:</b> Sold-out
-                </p>
-                <p className={styles.generationText}>
-                    <b>Generation {Math.floor(minted / 1000) + 1} left to mint:</b> {1000 - minted % 1000} / 1000
-                </p>
-                <div style={{height: 16}}/>
-                <ProgressBar bgColor={"#3a70ed"}
-                             completed={(minted % 1000) * 100 / 1000}
-                             width={300}/>
-                {walletAddress === "" ?
-                    <div className={styles.mintButton} onClick={() => connectWalletHandler()}>
-                        <p className={styles.mintText}>Connect</p>
-                    </div> :
-                    <>
-                        <div className={styles.mintCountController}>
-                            <p className={styles.mintCountTitle}><b>Mint Count: </b></p>
-                            <AiOutlineMinusCircle size={32} className={styles.mintCountButton} onClick={() => {
-                                if (toMint > 1) setToMint(toMint - 1)
-                            }}/>
-                            <p className={styles.mintCount}>{toMint}</p>
-                            <AiOutlinePlusCircle size={32} className={styles.mintCountButton}
-                                                 onClick={() => {
-                                                     if (toMint < 20) setToMint(toMint + 1)
-                                                 }}/>
-                        </div>
-                        <p className={styles.mintCostText}>Cost: {100 * toMint} <b>$FTM</b></p>
-                        <div className={styles.mintButton} onClick={async () => mintNFT(toMint)}>
-                            <p className={styles.mintText}>Mint</p>
-                        </div>
-                    </>}
+                <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
+                         mintNFT={(count) => mintNFT(count)} minted={minted}/>
 
                 <h2 className={styles.subTitle}>
                     Utility and Benefits
