@@ -12,7 +12,7 @@ export default function MintBox(props) {
                 <b>Generation 0:</b> Sold-out
             </p>
             <p className={styles.generationText}>
-                <b>Generation {Math.floor(props.minted / 1000) + 1} left to mint:</b> {1000 - props.minted % 1000} /
+                <b>Generation {Math.floor(props.minted / 1000) + 1} left:</b> {1000 - props.minted % 1000} /
                 1000
             </p>
             <div style={{height: 16}}/>

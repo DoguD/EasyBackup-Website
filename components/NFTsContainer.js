@@ -26,12 +26,6 @@ export default function NFTsContainer(props) {
                 <div className={styles.nftGrid}>
                     {parsedNFTs.map((item) =>
                         <a className={styles.nftBox}
-                           style={{
-                               width: window.innerWidth < 960 ? 140 : 160,
-                               height: window.innerWidth < 960 ? 180 : 200,
-                               margin: window.innerWidth < 960 ? 4 : 16,
-                               marginBottom: 16,
-                           }}
                            href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item.name.slice(15)}
                            target={"_blank"}>
                             <img src={`data:image/svg+xml;base64,${item.image.slice(26)}`}

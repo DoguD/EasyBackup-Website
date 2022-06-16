@@ -172,6 +172,12 @@
     right: 0;
 }
 
+@media (max-width: 600px) {
+    .iconContainer {
+        visibility: hidden;
+    }
+}
+
 .navbarIcon {
     margin-right: 8px;
     margin-left: 8px;
@@ -265,6 +271,15 @@
     border-radius: 8px;
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.6) 0px 3px 8px;
+    width: 160px;
+    height: 200px;
+}
+
+@media (max-width: 600px) {
+    .nftBox {
+        margin: 4px 4px 16px;
+        width: 140px;
+    }
 }
 
 /*Main color: #3a70ed*/
