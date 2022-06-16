@@ -13,6 +13,7 @@ import UtilityBox from "../components/UtilityBox";
 import MintBox from "../components/MintBox";
 import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
+import NFTsContainer from "../components/NFTsContainer";
 
 // Web3 Global Vars
 let provider;
@@ -23,6 +24,8 @@ let signer;
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
+    const [userNFTCount, setUserNFTCount] = useState(0);
+    const [userNFTs, setUserNFTs] = useState([]);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
@@ -96,7 +99,10 @@ export default function Home() {
                 signer = provider.getSigner();
                 console.log("Is signer null ?", signer == null)
                 nftContractWithSigner = nftContract.connect(signer);
-                setWalletAddress(await signer.getAddress());
+                let userAddress = await signer.getAddress();
+                console.log("User address", userAddress)
+                setWalletAddress(userAddress);
+                await getUserNFTData(userAddress);
             }
         } catch (e) {
             console.log(e);
@@ -137,6 +143,37 @@ export default function Home() {
         }
     }
 
+    async function getUserNFTData(walletAddress) {
+        try {
+            // Info about signer
+            signer = provider.getSigner();
+            let shouldProceed = false;
+            try {
+                await signer.getAddress();
+                shouldProceed = true;
+            } catch (e) {
+                console.log("User data error.")
+            }
+            if (signer != null && shouldProceed) {
+                console.log("WALLET ADDRESS,", walletAddress)
+                // NFT
+                let balance = parseInt(await nftContract.balanceOf(walletAddress), 10);
+                setUserNFTCount(balance);
+                let userNfts = [];
+                for (let i = 0; i < balance; i++) {
+                    userNfts.push(parseInt(await nftContract.tokenOfOwnerByIndex(walletAddress, i), 10));
+                }
+                console.log("User NFTs");
+                console.log(userNfts);
+                setUserNFTs(userNfts);
+            }
+        } catch (e) {
+            console.log("Get user data error: ");
+            console.log(e);
+            await getUserNFTData();
+        }
+    }
+
     return (
         <div className={styles.container}>
             <Toaster/>
@@ -169,6 +206,13 @@ export default function Home() {
                 </h2>
                 <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                          mintNFT={(count) => mintNFT(count)} minted={minted}/>
+
+                {walletAddress !== "" ? <>
+                    <h2 className={styles.subTitle}>
+                        Your NFTs
+                    </h2>
+                    <NFTsContainer userNFTs={userNFTs} userNFTCount={userNFTCount} nftContract={nftContract}/>
+                </> : null}
 
                 <h2 className={styles.subTitle}>
                     Utility and Benefits

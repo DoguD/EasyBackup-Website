@@ -97,7 +97,9 @@
     border-color: #3a70ed;
 }
 
-.learnMore {}
+.learnMore {
+}
+
 .learnMore:hover,
 .learnMore:focus,
 .learnMore:active {
@@ -243,6 +245,17 @@
     font-size: 16px;
     margin: 0;
     margin-top: 4px;
+}
+
+.nftBox {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin: 16px;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 3px 8px;
 }
 
 /*Main color: #3a70ed*/
