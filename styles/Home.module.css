@@ -153,8 +153,8 @@
 }
 
 .navbarIcon {
-    margin-right: 16px;
-    margin-left: 16px;
+    margin-right: 8px;
+    margin-left: 8px;
     cursor: pointer;
 }
 
@@ -166,3 +166,18 @@
 .subTitle {
     font-size: 3rem;
 }
+
+.navbarTitleContainer {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.paintSwapLogo {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+}
+
+/*Main color: #3a70ed*/
