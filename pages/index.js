@@ -22,36 +22,37 @@ let signer;
 
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
-    const [minted, setMinted] = useState(550);
+    const [minted, setMinted] = useState(0);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
+    const [metamaskInstalled, setMetamaskInstalled] = useState(false);
 
     // Web3
-    let metamaskInstalled = false;
     useEffect(() => {
         if (window.ethereum != null) {
-            metamaskInstalled = true;
+            setMetamaskInstalled(true);
             console.log("Metamask installed.");
             window.ethereum.enable();
             provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+
+            // CONTRACTS
+            nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider)
+            getNFTData();
+
+            // LISTENERS
+            nftContract.on("Transfer", async (from, to, tokenId, event) => {
+                console.log("Inside event.");
+                console.log(event);
+                /*
+                if (event.event === "Transfer" && to === await signer.getAddress()) {
+                    console.log("Transfer occured.")
+                }*/
+            })
         } else {
             console.log("Metamask not installed.");
             provider = new ethers.providers.getDefaultProvider("https://rpc.ftm.tools");
         }
-
-        // CONTRACTS
-        nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider)
-
-        // LISTENERS
-        nftContract.on("Transfer", async (from, to, tokenId, event) => {
-            console.log("Inside event.");
-            console.log(event);
-            /*
-            if (event.event === "Transfer" && to === await signer.getAddress()) {
-                console.log("Transfer occured.")
-            }*/
-        })
-    }, [])
+    }, [signer])
 
     // Network Change
     async function changeNetworkToFTM() {
@@ -115,6 +116,24 @@ export default function Home() {
             console.log(e);
             toast.error("You don't have enough FTM in your wallet.", {duration: 5000,});
             setIsMinting(false);
+        }
+    }
+
+    async function getNFTData() {
+        try {
+            setMinted(parseInt(await nftContract.numTokensMinted(), 10));
+        } catch (e) {
+            console.log("General methods error: ");
+            console.log(e);
+            let chainId = await provider.getNetwork();
+            chainId = chainId['chainId'];
+            if (chainId !== 250) {
+                if (window.confirm("Please switch to Fantom Network to use EasyBlock.")) {
+                    await changeNetworkToFTM();
+                }
+            } else {
+                await getNFTData()
+            }
         }
     }
 
