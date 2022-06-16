@@ -33,7 +33,7 @@ export default function UtilityBox(props) {
                 </div>
             </div>
             <a className={styles.learnMore} href={"https://medium.com/easyblock/easyblock-nfts-are-coming-bcae95ae34a0"}
-               target={"_blank"}>
+               >
                 <h3>Learn More &rarr;</h3>
             </a>
         </>
