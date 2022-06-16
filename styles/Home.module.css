@@ -53,7 +53,7 @@
 .description {
     line-height: 1.5;
     font-size: 1.5rem;
-    margin: 1rem 0 4rem;
+    margin: 1rem 0 2rem;
 }
 
 .description-emphasis {
@@ -165,6 +165,8 @@
 
 .subTitle {
     font-size: 3rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
 }
 
 .navbarTitleContainer {
@@ -178,6 +180,59 @@
     width: 32px;
     height: 32px;
     border-radius: 16px;
+}
+
+.generationText {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.mintButton {
+    margin-top: 1rem;
+    padding: 16px;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.mintText {
+    color: #3a70ed;
+    margin: 0;
+    font-size: 24px;
+}
+
+.mintCountController {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+
+    margin: 1rem 0 0;
+}
+
+.mintCountButton {
+    margin: 0 8px;
+    cursor: pointer;
+}
+
+.mintCount {
+    font-size: 24px;
+    margin: 0;
+}
+
+.mintCountTitle {
+    font-size: 24px;
+    margin: 0;
+}
+
+.mintCostText {
+    font-size: 16px;
+    margin: 0;
+    margin-top: 4px;
 }
 
 /*Main color: #3a70ed*/

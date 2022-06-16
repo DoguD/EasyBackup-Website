@@ -5,6 +5,9 @@ import styles from '../styles/Home.module.css'
 import {AiOutlineTwitter} from "react-icons/ai";
 import {FaDiscord} from "react-icons/fa";
 import {AiFillMediumSquare} from "react-icons/ai";
+
+import {AiOutlinePlusCircle} from "react-icons/ai";
+import {AiOutlineMinusCircle} from "react-icons/ai";
 // Web3
 import {NFT_ADDRESS, NFT_ABI} from "../contracts/EasyClub";
 import {ethers} from "ethers";
@@ -23,6 +26,7 @@ let signer;
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(550);
+    const [toMint, setToMint] = useState(1);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
 
@@ -165,21 +169,37 @@ export default function Home() {
                 <h2 className={styles.subTitle}>
                     Mint Now
                 </h2>
-                <p>
-                    Connected Wallet: {walletAddress}
+                <p className={styles.generationText} style={{textDecoration: "line-through"}}>
+                    <b>Generation 0:</b> Sold-out
                 </p>
-                <p>
-                    Generation {Math.floor(minted / 1000) + 1} left to mint: {1000 - minted % 1000} / 1000
+                <p className={styles.generationText}>
+                    <b>Generation {Math.floor(minted / 1000) + 1} left to mint:</b> {1000 - minted % 1000} / 1000
                 </p>
-                <ProgressBar completed={(minted % 1000) * 100 / 1000}
+                <div style={{height: 16}}/>
+                <ProgressBar bgColor={"#3a70ed"}
+                             completed={(minted % 1000) * 100 / 1000}
                              width={300}/>
                 {walletAddress === "" ?
-                    <div onClick={() => connectWalletHandler()}>
-                        <p>Connect</p>
+                    <div className={styles.mintButton} onClick={() => connectWalletHandler()}>
+                        <p className={styles.mintText}>Connect</p>
                     </div> :
-                    <div onClick={async () => mintNFT(10)}>
-                        <p>Mint</p>
-                    </div>}
+                    <>
+                        <div className={styles.mintCountController}>
+                            <p className={styles.mintCountTitle}><b>Mint Count: </b></p>
+                            <AiOutlineMinusCircle size={32} className={styles.mintCountButton} onClick={() => {
+                                if (toMint > 1) setToMint(toMint - 1)
+                            }}/>
+                            <p className={styles.mintCount}>{toMint}</p>
+                            <AiOutlinePlusCircle size={32} className={styles.mintCountButton}
+                                                 onClick={() => {
+                                                     if (toMint < 20) setToMint(toMint + 1)
+                                                 }}/>
+                        </div>
+                        <p className={styles.mintCostText}>Cost: {100 * toMint} <b>$FTM</b></p>
+                        <div className={styles.mintButton} onClick={async () => mintNFT(toMint)}>
+                            <p className={styles.mintText}>Mint</p>
+                        </div>
+                    </>}
 
                 <h2 className={styles.subTitle}>
                     Utility and Benefits
