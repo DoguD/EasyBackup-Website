@@ -27,9 +27,10 @@ export default function NFTsContainer(props) {
                 <CircleLoader color={"#3a70ed"} size={50}/> :
                 <>
                     <div className={styles.nftGrid}>
-                        {parsedNFTs.map((item, key) =>
+                        {parsedNFTs.map((item) =>
                             <a className={styles.nftBox}
-                               href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item.name.slice(15)}>
+                               href={'https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/' + item.name.slice(15)}
+                            key={item.name}>
                                 <img src={`data:image/svg+xml;base64,${item.image.slice(26)}`}
                                      style={{width: '100%'}}/>
                                 <p style={{
@@ -43,7 +44,7 @@ export default function NFTsContainer(props) {
                             </a>)}
                     </div>
                     <a className={styles.learnMore} href={"https://paintswap.finance/marketplace/user"}
-                    >
+                       >
                         <h3>Browse All on PaintSwap &rarr;</h3>
                     </a>
                 </> : <p>You don't own any Easy Club NFTs mint one now!</p>
