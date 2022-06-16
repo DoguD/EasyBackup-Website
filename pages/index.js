@@ -185,7 +185,8 @@ export default function Home() {
 
             <main className={styles.main}>
                 <NavBar/>
-                <img src="/bannerLong.png" alt="Samples Banner" width={'100%'}/>
+                <img className={styles.longBanner} src={"/bannerLong.png"} alt="Samples Banner"/>
+                <img className={styles.shortBanner} src={'/bannerShort.png'} alt="Samples Banner"/>
                 <div className={styles.line}/>
                 <h1 className={styles.title}>
                     The Easy Club
