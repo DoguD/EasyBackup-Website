@@ -1,13 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-// Icons
-import {AiOutlineTwitter} from "react-icons/ai";
-import {FaDiscord} from "react-icons/fa";
-import {AiFillMediumSquare} from "react-icons/ai";
-
-import {AiOutlinePlusCircle} from "react-icons/ai";
-import {AiOutlineMinusCircle} from "react-icons/ai";
 // Web3
 import {NFT_ADDRESS, NFT_ABI} from "../contracts/EasyClub";
 import {ethers} from "ethers";
@@ -18,6 +11,8 @@ import {useEffect, useState} from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import UtilityBox from "../components/UtilityBox";
 import MintBox from "../components/MintBox";
+import NavBar from "../components/NavBar";
+import IconContainer from "../components/subComponents/IconContainer";
 
 // Web3 Global Vars
 let provider;
@@ -133,24 +128,7 @@ export default function Home() {
             </Head>
 
             <main className={styles.main}>
-                <div className={styles.navbar}>
-                    <div className={styles.navbarTitleContainer}
-                         onClick={() => window.location = "https://easyblock.finance"}>
-                        <img src="/favicon.png" alt="Icon" width={40} height={40}/>
-                        <p className={styles.navbarTitle}>EasyBlock</p>
-                    </div>
-
-                    <div className={styles.iconContainer}>
-                        <img className={styles.paintSwapLogo + " " + styles.navbarIcon} src="/paintSwapLogo.png"
-                             onClick={() => window.location = "https://paintswap.finance/marketplace/collections/0x5d6f546f2357e84720371a0510f64dbc3fbace33"}/>
-                        <AiOutlineTwitter color={"#3f8bd2"} size={32} className={styles.navbarIcon}
-                                          onClick={() => window.location = "https://twitter.com/easyblock_fin"}/>
-                        <FaDiscord color={"#5568e3"} size={32} className={styles.navbarIcon}
-                                   onClick={() => window.location = "http://discord.gg/easyblock"}/>
-                        <AiFillMediumSquare size={32} className={styles.navbarIcon}
-                                            onClick={() => window.location = "https://medium.com/easyblock"}/>
-                    </div>
-                </div>
+                <NavBar/>
                 <img src="/bannerLong.png" alt="Samples Banner" width={'100%'}/>
                 <div className={styles.line}/>
                 <h1 className={styles.title}>
@@ -181,16 +159,7 @@ export default function Home() {
             </main>
 
             <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16}/>
-          </span>
-                </a>
+                <IconContainer/>
             </footer>
         </div>
     )
