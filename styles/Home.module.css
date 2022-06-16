@@ -77,6 +77,14 @@
     max-width: 800px;
 }
 
+.nftGrid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+}
+
 .card {
     margin: 1rem;
     padding: 1.5rem;
@@ -179,6 +187,7 @@
     font-size: 3rem;
     margin-bottom: 0.5rem;
     margin-top: 3rem;
+    text-align: center;
 }
 
 .navbarTitleContainer {
