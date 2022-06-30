@@ -252,7 +252,7 @@ export default function Home() {
                     All you need to do is to mint an NFT during the week. Each NFT minted is one entry for the
                     giveaway. <br/>
                     Results announced every <b>Sunday</b>.<br/>
-                    <span style={{fontWeight: 'bold'}}>As 5 weeks have passed since Easy Club launch for the first giveaway 10 people will be rewarded instead of 2.</span>
+                    <span style={{fontWeight: 'bold'}}>As 5 weeks have passed since Easy Club launch, for the first giveaway 10 people will be rewarded instead of 2.</span>
                 </p>
                 <p className={styles.entryText}><b>Your Minted:</b> {getUserGiveAwayEligibleNFTCount()}</p>
                 <p className={styles.entryText}><b>Minted Total:</b> {minted - giveAwayCutOffCount}</p>
