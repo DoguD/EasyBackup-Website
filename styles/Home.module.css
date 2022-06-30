@@ -313,4 +313,17 @@
     color: #3a70ed
 }
 
+.entryText {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+}
+
+.winningChanceText {
+    color: #3a70ed;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
 /*Main color: #3a70ed*/

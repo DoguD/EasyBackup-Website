@@ -15,6 +15,10 @@ import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
 import NFTsContainer from "../components/NFTsContainer";
 
+// Circular Progress Bar
+import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
 // Web3 Global Vars
 let provider;
 let nftContract;
@@ -173,6 +177,7 @@ export default function Home() {
                 // NFT
                 let balance = parseInt(await nftContract.balanceOf(walletAddress), 10);
                 setUserNFTCount(balance);
+                console.log(balance);
                 let userNfts = [];
                 for (let i = 0; i < balance; i++) {
                     userNfts.push(parseInt(await nftContract.tokenOfOwnerByIndex(walletAddress, i), 10));
@@ -186,6 +191,11 @@ export default function Home() {
             console.log(e);
             await getUserNFTData();
         }
+    }
+
+    function getWinningChance(userCount, allCount) {
+        console.log(100 - (((allCount - userCount) / allCount) ** 2) * 100);
+        return 100 - (((allCount - userCount) / allCount) ** 2) * 100;
     }
 
     return (
@@ -222,6 +232,28 @@ export default function Home() {
                 <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                          mintNFT={(count) => mintNFT(count)} minted={minted}
                          isMinting={isMinting}/>
+                <h2 className={styles.subTitle}>
+                    Weekly Giveaway
+                </h2>
+                <p className={styles.description} style={{marginBottom: 16}}>Every week <span
+                    style={{fontWeight: 'bold'}}>5 Easy Club NFTs each will be gifted to 2 people.</span><br/>
+                    All you need to do is to mint an NFT during the week. Each NFT minted is one entry for the
+                    giveaway. <br/>
+                    Results announced every <b>Sunday</b>.
+                </p>
+                <p className={styles.entryText}><b>Your Minted:</b> {userNFTCount}</p>
+                <p className={styles.entryText}><b>Minted Total:</b> {minted}</p>
+                <p className={styles.winningChanceText}>Winning Chance</p>
+                <div style={{width: 150, height: 150}}>
+                    <CircularProgressbar value={getWinningChance(userNFTCount, minted)}
+                                         text={`${getWinningChance(userNFTCount, minted).toFixed(4)}%`} styles={buildStyles({
+                        // Colors
+                        pathColor: `#3a70ed`,
+                        textColor: '#3a70ed',
+                        trailColor: '#d6d6d6',
+                        backgroundColor: '#3a70ed',
+                    })}/>;
+                </div>
 
                 {walletAddress !== "" ? <>
                     <h2 className={styles.subTitle}>
