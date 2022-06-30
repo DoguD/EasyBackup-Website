@@ -26,6 +26,8 @@ let nftContractWithSigner;
 let signer;
 
 export default function Home() {
+    const giveAwayCutOffCount = 0;
+    const giveAwayRewardCount = 10;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
     const [userNFTCount, setUserNFTCount] = useState(0);
@@ -193,9 +195,19 @@ export default function Home() {
         }
     }
 
+    function getUserGiveAwayEligibleNFTCount() {
+        let count = 0;
+        for (let i = 0; i < userNFTs.length; i++) {
+            if (userNFTs[i] > giveAwayCutOffCount) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
     function getWinningChance(userCount, allCount) {
-        console.log(100 - (((allCount - userCount) / allCount) ** 2) * 100);
-        return 100 - (((allCount - userCount) / allCount) ** 2) * 100;
+        allCount -= giveAwayCutOffCount;
+        return 100 - (((allCount - userCount) / allCount) ** giveAwayRewardCount) * 100;
     }
 
     return (
@@ -239,20 +251,22 @@ export default function Home() {
                     style={{fontWeight: 'bold'}}>5 Easy Club NFTs each will be gifted to 2 people.</span><br/>
                     All you need to do is to mint an NFT during the week. Each NFT minted is one entry for the
                     giveaway. <br/>
-                    Results announced every <b>Sunday</b>.
+                    Results announced every <b>Sunday</b>.<br/>
+                    <span style={{fontWeight: 'bold'}}>As 5 weeks have passed since Easy Club launch for the first giveaway 10 people will be rewarded instead of 2.</span>
                 </p>
-                <p className={styles.entryText}><b>Your Minted:</b> {userNFTCount}</p>
-                <p className={styles.entryText}><b>Minted Total:</b> {minted}</p>
+                <p className={styles.entryText}><b>Your Minted:</b> {getUserGiveAwayEligibleNFTCount()}</p>
+                <p className={styles.entryText}><b>Minted Total:</b> {minted - giveAwayCutOffCount}</p>
                 <p className={styles.winningChanceText}>Winning Chance</p>
                 <div style={{width: 150, height: 150}}>
-                    <CircularProgressbar value={getWinningChance(userNFTCount, minted)}
-                                         text={`${getWinningChance(userNFTCount, minted).toFixed(4)}%`} styles={buildStyles({
-                        // Colors
-                        pathColor: `#3a70ed`,
-                        textColor: '#3a70ed',
-                        trailColor: '#d6d6d6',
-                        backgroundColor: '#3a70ed',
-                    })}/>;
+                    <CircularProgressbar value={getWinningChance(getUserGiveAwayEligibleNFTCount(), minted)}
+                                         text={`${getWinningChance(getUserGiveAwayEligibleNFTCount(), minted).toFixed(3)}%`}
+                                         styles={buildStyles({
+                                             // Colors
+                                             pathColor: `#3a70ed`,
+                                             textColor: '#3a70ed',
+                                             trailColor: '#d6d6d6',
+                                             backgroundColor: '#3a70ed',
+                                         })}/>;
                 </div>
 
                 {walletAddress !== "" ? <>
