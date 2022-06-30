@@ -20,7 +20,7 @@ export default function UtilityBox(props) {
                     className={styles.card}
                 >
                     <h2>Fee Reductions</h2>
-                    <p>Pay less fees and earn money on our future projects.</p>
+                    <p>Pay less fees and earn more on our future projects.</p>
                 </div>
 
                 <div
