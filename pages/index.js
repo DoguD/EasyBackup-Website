@@ -26,7 +26,7 @@ let nftContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 642;
+    const giveAwayCutOffCount = 649;
     const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
