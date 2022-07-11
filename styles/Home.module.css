@@ -265,6 +265,7 @@
     font-size: 16px;
     margin: 0;
     margin-top: 4px;
+    text-align: center;
 }
 
 .nftBox {
@@ -324,6 +325,11 @@
     font-weight: bold;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+}
+
+.discountNotificationText {
+    color: #3a70ed;
+    font-weight: bold;
 }
 
 /*Main color: #3a70ed*/

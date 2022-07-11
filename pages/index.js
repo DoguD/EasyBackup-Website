@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 // Web3
-import {NFT_ADDRESS, NFT_ABI} from "../contracts/EasyClub";
+import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/EasyClub";
 import {ethers} from "ethers";
 // Toast
 import toast, {Toaster, useToasterStore} from 'react-hot-toast';
@@ -22,16 +22,19 @@ import 'react-circular-progressbar/dist/styles.css';
 // Web3 Global Vars
 let provider;
 let nftContract;
+let discountedContract;
 let nftContractWithSigner;
+let discountedContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 649;
+    const giveAwayCutOffCount = 648;
     const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
     const [userNFTCount, setUserNFTCount] = useState(0);
     const [userNFTs, setUserNFTs] = useState([]);
+    const [isDiscounted, setIsDiscounted] = useState(false);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
@@ -57,6 +60,7 @@ export default function Home() {
 
             // CONTRACTS
             nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider)
+            discountedContract = new ethers.Contract(DISCOUNTED_ADDRESS, DISCOUNTED_ABI, provider);
             getNFTData();
 
             // LISTENERS
@@ -119,10 +123,17 @@ export default function Home() {
                 signer = provider.getSigner();
                 console.log("Is signer null ?", signer == null)
                 nftContractWithSigner = nftContract.connect(signer);
+                discountedContractWithSigner = discountedContract.connect(signer);
                 let userAddress = await signer.getAddress();
                 console.log("User address", userAddress)
                 setWalletAddress(userAddress);
                 await getUserNFTData(userAddress);
+
+                // Discounted data
+                if(typeof userAddress != "undefined") {
+                    console.log("Hey, ", await discountedContract.isEligible(userAddress));
+                    setIsDiscounted(await discountedContract.isEligible(userAddress));
+                }
             }
         } catch (e) {
             console.log(e);
@@ -135,8 +146,13 @@ export default function Home() {
         try {
             console.log('Hey');
             setIsMinting(true);
-            const options = {value: ethers.utils.parseEther((100 * count).toString())}
-            await nftContractWithSigner.mintForSelfFtm(count, options);
+            if (!isDiscounted) {
+                const options = {value: ethers.utils.parseEther((100 * count).toString())}
+                await nftContractWithSigner.mintForSelfFtm(count, options);
+            } else {
+                const options = {value: ethers.utils.parseEther((20 * count).toString())}
+                await discountedContractWithSigner.mintForSelf(count, options);
+            }
         } catch (e) {
             setIsMinting(false);
             console.log(e);
@@ -191,7 +207,7 @@ export default function Home() {
         } catch (e) {
             console.log("Get user data error: ");
             console.log(e);
-            await getUserNFTData();
+            await getUserNFTData(walletAddress);
         }
     }
 
@@ -243,7 +259,7 @@ export default function Home() {
                 </h2>
                 <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                          mintNFT={(count) => mintNFT(count)} minted={minted}
-                         isMinting={isMinting}/>
+                         isMinting={isMinting} isDiscounted={isDiscounted}/>
                 <h2 className={styles.subTitle}>
                     Weekly Giveaway
                 </h2>

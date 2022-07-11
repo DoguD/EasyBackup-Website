@@ -36,7 +36,15 @@ export default function MintBox(props) {
                                                  if (toMint < 20) setToMint(toMint + 1)
                                              }}/>
                     </div>
-                    <p className={styles.mintCostText}>Cost: {100 * toMint} <b>$FTM</b></p>
+                    {props.isDiscounted ?
+                        <>
+                        <p className={styles.mintCostText}>Cost: <span
+                            style={{textDecoration: "line-through"}}>{100 * toMint} <b>$FTM</b></span><br/>
+                            {20 * toMint} <b>$FTM</b></p>
+                            <p className={styles.discountNotificationText}>You can mint with 80% discount because you are an EasyBlock shareholder.</p>
+                        </>:
+                        <p className={styles.mintCostText}>Cost: {100 * toMint} <b>$FTM</b></p>
+                    }
                     <div className={styles.mintButton} onClick={async () => props.mintNFT(toMint)}>
                         {props.isMinting ?
                             <CircleLoader color={"#3a70ed"} size={25}/>
