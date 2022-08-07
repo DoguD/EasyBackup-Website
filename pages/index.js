@@ -28,7 +28,7 @@ let discountedContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 792;
+    const giveAwayCutOffCount = 857;
     const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
