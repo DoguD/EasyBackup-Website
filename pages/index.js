@@ -28,7 +28,7 @@ let discountedContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 857;
+    const giveAwayCutOffCount = 867;
     const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
@@ -165,7 +165,7 @@ export default function Home() {
     async function getNFTData() {
         try {
             setMinted(parseInt(await nftContract.numTokensMinted(), 10));
-            setDiscountContractBalance(parseInt(await nftContract.balanceOf(0xF7d864F1B4c7d7A267EB176Ce0484Ba62410F777), 10));
+            setDiscountContractBalance(parseInt(await nftContract.balanceOf("0xF7d864F1B4c7d7A267EB176Ce0484Ba62410F777"), 10));
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -273,7 +273,7 @@ export default function Home() {
                     Results announced every <b>Sunday</b>.<br/>
                 </p>
                 <p className={styles.entryText}><b>Your Minted:</b> {getUserGiveAwayEligibleNFTCount()}</p>
-                <p className={styles.entryText}><b>Minted Total:</b> {minted - giveAwayCutOffCount}</p>
+                <p className={styles.entryText}><b>Minted Total:</b> {minted - giveAwayCutOffCount -discountContractBalance}</p>
                 <p className={styles.winningChanceText}>Winning Chance</p>
                 <div style={{width: 150, height: 150}}>
                     <CircularProgressbar value={getWinningChance(getUserGiveAwayEligibleNFTCount(), minted)}
