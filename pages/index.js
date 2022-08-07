@@ -35,6 +35,7 @@ export default function Home() {
     const [userNFTCount, setUserNFTCount] = useState(0);
     const [userNFTs, setUserNFTs] = useState([]);
     const [isDiscounted, setIsDiscounted] = useState(false);
+    const [discountContractBalance, setDiscountContractBalance] = useState(0);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
@@ -164,6 +165,7 @@ export default function Home() {
     async function getNFTData() {
         try {
             setMinted(parseInt(await nftContract.numTokensMinted(), 10));
+            setDiscountContractBalance(parseInt(await nftContract.balanceOf(0xF7d864F1B4c7d7A267EB176Ce0484Ba62410F777), 10));
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -223,6 +225,7 @@ export default function Home() {
 
     function getWinningChance(userCount, allCount) {
         allCount -= giveAwayCutOffCount;
+        allCount -= discountContractBalance;
         return 100 - (((allCount - userCount) / allCount) ** giveAwayRewardCount) * 100;
     }
 
