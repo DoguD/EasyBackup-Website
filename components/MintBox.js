@@ -14,7 +14,7 @@ export default function MintBox(props) {
             </p>
             <p className={styles.generationText}>
                 <b>Generation {Math.floor(props.minted / 1000) + 1} left:</b> {1000 - props.minted % 1000} /
-                1000
+                900
             </p>
             <div style={{height: 16}}/>
             <ProgressBar bgColor={"#3a70ed"}
