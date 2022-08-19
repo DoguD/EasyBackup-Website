@@ -131,7 +131,7 @@ export default function Home() {
                 await getUserNFTData(userAddress);
 
                 // Discounted data
-                if(typeof userAddress != "undefined") {
+                if (typeof userAddress != "undefined") {
                     console.log("Hey, ", await discountedContract.isEligible(userAddress));
                     setIsDiscounted(await discountedContract.isEligible(userAddress));
                 }
@@ -273,7 +273,8 @@ export default function Home() {
                     Results announced every <b>Sunday</b>.<br/>
                 </p>
                 <p className={styles.entryText}><b>Your Minted:</b> {getUserGiveAwayEligibleNFTCount()}</p>
-                <p className={styles.entryText}><b>Minted Total:</b> {minted - giveAwayCutOffCount -discountContractBalance}</p>
+                <p className={styles.entryText}><b>Minted
+                    Total:</b> {Math.max((minted - giveAwayCutOffCount - discountContractBalance), 0)}</p>
                 <p className={styles.winningChanceText}>Winning Chance</p>
                 <div style={{width: 150, height: 150}}>
                     <CircularProgressbar value={getWinningChance(getUserGiveAwayEligibleNFTCount(), minted)}
