@@ -5,6 +5,13 @@ export default function UtilityBox(props) {
         <>
             <div className={styles.grid}>
                 <div className={styles.card}>
+                    <h2>Passive Income</h2>
+                    <p>10% of our protocol fees from <a href={"https://horde.easyblock.finance"} target={"_blank"}
+                                                        style={{textDecoration: "underline"}}>EasyBlock Horde</a> is
+                        distributed to VIP holders monthly. You can
+                        start earning passive income by purchasing at least 5 NFTs.</p>
+                </div>
+                <div className={styles.card}>
                     <h2>Discord Benefits</h2>
                     <p>Get a special role in Discord and join an exclusive channel to be in close contact with the
                         EasyBlock
@@ -33,7 +40,7 @@ export default function UtilityBox(props) {
                 </div>
             </div>
             <a className={styles.learnMore} href={"https://medium.com/easyblock/easyblock-nfts-are-coming-bcae95ae34a0"}
-               >
+            >
                 <h3>Learn More &rarr;</h3>
             </a>
         </>

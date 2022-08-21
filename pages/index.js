@@ -292,6 +292,9 @@ export default function Home() {
                     <h2 className={styles.subTitle}>
                         Your NFTs
                     </h2>
+                    <h3>VIP Status: {
+                        userNFTCount >= 5 ? <span style={{color: "#4caf50"}}>You are a VIP holder!</span> : <span style={{color: "#b71c1c"}}>You need {5-userNFTCount} more NFTs to become VIP.</span>
+                    }</h3>
                     <NFTsContainer userNFTs={userNFTs} userNFTCount={userNFTCount} nftContract={nftContract}/>
                 </> : null}
 
