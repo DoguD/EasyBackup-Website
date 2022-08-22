@@ -6,7 +6,7 @@ export default function UtilityBox(props) {
             <div className={styles.grid}>
                 <div className={styles.card}>
                     <h2>Passive Income</h2>
-                    <p>10% of our protocol fees from <a href={"https://horde.easyblock.finance"} target={"_blank"}
+                    <p>10% of our protocol fees from <a href={"https://horde.easyblock.finance"} target={"_blank"} rel="noreferrer"
                                                         style={{textDecoration: "underline"}}>EasyBlock Horde</a> is
                         distributed to VIP holders monthly. You can
                         start earning passive income by purchasing at least 5 NFTs.</p>
