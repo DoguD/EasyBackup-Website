@@ -28,7 +28,7 @@ let discountedContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 985;
+    const giveAwayCutOffCount = 1086;
     const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
@@ -266,6 +266,7 @@ export default function Home() {
                 <h2 className={styles.subTitle}>
                     Weekly Giveaway
                 </h2>
+                <h3>Next Draw: <span style={{color: "#3a70ed"}}>September 11</span></h3>
                 <p className={styles.description} style={{marginBottom: 16}}>Every week <span
                     style={{fontWeight: 'bold'}}>5 Easy Club NFTs each will be gifted to 2 people.</span><br/>
                     All you need to do is to mint an NFT during the week. Each NFT minted is one entry for the
