@@ -65,6 +65,7 @@ export default function Home() {
             getNFTData();
 
             // LISTENERS
+            /* TODO: listener disabled
             nftContract.on("Transfer", async (from, to, tokenId, event) => {
                 console.log("Inside event.");
                 console.log(event);
@@ -76,6 +77,7 @@ export default function Home() {
                     setIsMinting(false);
                 }
             })
+             */
         } else {
             console.log("Metamask not installed.");
             provider = new ethers.providers.getDefaultProvider("https://rpc.ftm.tools");
@@ -165,7 +167,7 @@ export default function Home() {
     async function getNFTData() {
         try {
             setMinted(parseInt(await nftContract.numTokensMinted(), 10));
-            setDiscountContractBalance(parseInt(await nftContract.balanceOf("0xF7d864F1B4c7d7A267EB176Ce0484Ba62410F777"), 10));
+            setDiscountContractBalance(parseInt(await nftContract.balanceOf(DISCOUNTED_ADDRESS), 10));
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
