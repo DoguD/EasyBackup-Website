@@ -284,7 +284,9 @@ export default function Home() {
                 {walletAddress !== "" ?
                     <div className={styles.mintButton}
                          style={{width: "unset", flexDirection: "column", cursor: "unset"}}>
-                        <h2 style={{color: "#3a70ed"}}>Refer Your Friends and Get Rewarded</h2>
+                        <h1 style={{color: "#3a70ed", marginBottom: 0}}>Refer Your Friends and Get Rewarded</h1>
+                        <p style={{marginTop: 4}}>When your link is used, you <b>automatically earn 10% of
+                            minting costs</b>.</p>
                         <p style={{marginTop: 0}}><b>Your Referral
                             Link: </b>{userNFTCount > 0 ?
                             <span>https://club.easyblock.finance?r={walletAddress}</span>
