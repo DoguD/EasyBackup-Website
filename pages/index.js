@@ -28,7 +28,7 @@ let discountedContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 1250;
+    const giveAwayCutOffCount = 1583;
     const giveAwayRewardCount = 3;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
@@ -268,15 +268,7 @@ export default function Home() {
                 <h2 className={styles.subTitle}>
                     Weekly Giveaway
                 </h2>
-                <h3>Next Draw: <span style={{color: "#3a70ed"}}>September 18</span></h3>
-                <div className={styles.mintButton} style={{width: "unset", flexDirection: "column", marginTop: 0, cursor:"unset"}}>
-                    <h3>Surprise Giveaway Only For This Week 🎁</h3>
-                    <h2 style={{color: "#5abd4e", marginTop: 0}}>Extra $50 Worth of <a
-                        href={"https://horde.easyblock.finance"}
-                        target={"_blank"} rel="noreferrer"
-                        style={{textDecoration: "underline"}}>Easy Block
-                        Horde</a> Shares</h2>
-                </div>
+                <h3>Next Draw: <span style={{color: "#3a70ed"}}>September 25</span></h3>
                 <p className={styles.description} style={{marginBottom: 16}}>Every week <span
                     style={{fontWeight: 'bold'}}>5 Easy Club NFTs each will be gifted to 2 people.</span><br/>
                     All you need to do is to mint an NFT during the week. Each NFT minted is one entry for the
