@@ -42,6 +42,11 @@ export default function Home() {
     // Toasts
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
+    // Referral
+    const [referer, setReferer] = useState("0x0000000000000000000000000000000000000000");
+    const [totalRefRewards, setTotalRefRewards] = useState(0);
+    const [userRefRewards, setUserRefRewards] = useState(0);
+    const [userRefCount, setUserRefCount] = useState(0);
     /*
     useEffect(() => {
         toasts
@@ -50,6 +55,19 @@ export default function Home() {
             .forEach((t) => toast.remove(t.id)); // Dismiss – Use toast.remove(t.id) for no exit animation
     }, [toasts]);
      */
+
+    // Referrer
+    useEffect(() => {
+        let fullUrl = window.location.href;
+        let splitUrl = fullUrl.split('?');
+        if (splitUrl.length > 1) {
+            let params = splitUrl[1];
+            if (params.indexOf("r=") != -1) {
+                let referer = params.slice(2, 44);
+                setReferer(referer);
+            }
+        }
+    }, []);
 
     // Web3
     useEffect(() => {
@@ -128,15 +146,17 @@ export default function Home() {
                 nftContractWithSigner = nftContract.connect(signer);
                 discountedContractWithSigner = discountedContract.connect(signer);
                 let userAddress = await signer.getAddress();
-                console.log("User address", userAddress)
                 setWalletAddress(userAddress);
-                await getUserNFTData(userAddress);
-
                 // Discounted data
                 if (typeof userAddress != "undefined") {
                     console.log("Hey, ", await discountedContract.isEligible(userAddress));
                     setIsDiscounted(await discountedContract.isEligible(userAddress));
+                    setTotalRefRewards(parseInt(await discountedContract.referralRewardDistributedTotal(), 10) / 10 ** 18);
+                    setUserRefRewards(parseInt(await discountedContract.referralRewardDistributed(userAddress), 10) / 10 ** 18);
+                    setUserRefCount(parseInt(await discountedContract.referralSaleOccured(userAddress), 10));
                 }
+                // All NFT Data
+                await getUserNFTData(userAddress);
             }
         } catch (e) {
             console.log(e);
@@ -151,10 +171,10 @@ export default function Home() {
             setIsMinting(true);
             if (!isDiscounted) {
                 const options = {value: ethers.utils.parseEther((100 * count).toString())}
-                await nftContractWithSigner.mintForSelfFtm(count, options);
+                await discountedContractWithSigner.mintForSelf(count, referer, options);
             } else {
                 const options = {value: ethers.utils.parseEther((20 * count).toString())}
-                await discountedContractWithSigner.mintForSelf(count, options);
+                await discountedContractWithSigner.mintForSelf(count, referer, options);
             }
         } catch (e) {
             setIsMinting(false);
@@ -195,17 +215,13 @@ export default function Home() {
                 console.log("User data error.")
             }
             if (signer != null && shouldProceed) {
-                console.log("WALLET ADDRESS,", walletAddress)
                 // NFT
                 let balance = parseInt(await nftContract.balanceOf(walletAddress), 10);
                 setUserNFTCount(balance);
-                console.log(balance);
                 let userNfts = [];
                 for (let i = 0; i < balance; i++) {
                     userNfts.push(parseInt(await nftContract.tokenOfOwnerByIndex(walletAddress, i), 10));
                 }
-                console.log("User NFTs");
-                console.log(userNfts);
                 setUserNFTs(userNfts);
             }
         } catch (e) {
@@ -265,6 +281,25 @@ export default function Home() {
                 <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                          mintNFT={(count) => mintNFT(count)} minted={minted}
                          isMinting={isMinting} isDiscounted={isDiscounted}/>
+                {walletAddress !== "" ?
+                    <div className={styles.mintButton}
+                         style={{width: "unset", flexDirection: "column", cursor: "unset"}}>
+                        <h1 style={{color: "#3a70ed", marginBottom: 0}}>Refer Your Friends and Get Rewarded</h1>
+                        <p style={{marginTop: 4}}>When your link is used, you <b>automatically earn 10% of
+                            minting costs</b>.</p>
+                        <p style={{marginTop: 0}}><b>Your Referral
+                            Link: </b>{userNFTCount > 0 ?
+                            <span>https://club.easyblock.finance?r={walletAddress}</span>
+                            : <span>Mint 1 NFT to unlock your referral link</span>
+                        }
+                        </p>
+                        <p style={{margin: 2}}><b>Total Referral Rewards Distributed: </b><span
+                            style={{color: "#3a70ed"}}>{totalRefRewards} $FTM</span></p>
+                        <p style={{margin: 2}}><b>Your Referral Earnings: </b><span
+                            style={{color: "#3a70ed"}}>{userRefRewards} $FTM</span></p>
+                        <p style={{margin: 2}}><b>People Used your Referral Link: </b><span
+                            style={{color: "#3a70ed"}}>{userRefCount}</span></p>
+                    </div> : null}
                 <h2 className={styles.subTitle}>
                     Weekly Giveaway
                 </h2>
