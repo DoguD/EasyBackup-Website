@@ -282,20 +282,19 @@ export default function Home() {
                          mintNFT={(count) => mintNFT(count)} minted={minted}
                          isMinting={isMinting} isDiscounted={isDiscounted}/>
                 {walletAddress !== "" ?
-                    <div className={styles.mintButton}
-                         style={{width: "unset", flexDirection: "column", cursor: "unset"}}>
+                    <div className={styles.referralBox}>
                         <h1 style={{color: "#3a70ed", marginBottom: 0}}>Refer Your Friends and Get Rewarded</h1>
                         <p style={{marginTop: 4}}>When your link is used, you <b>automatically earn 10% of
                             minting costs</b>.</p>
                         <p style={{marginTop: 0}}><b>Your Referral
                             Link: </b>{userNFTCount > 0 ?
-                            <span>https://club.easyblock.finance?r={walletAddress}</span>
+                            <span style={{wordBreak: "break-all"}}>club.easyblock.finance?r={walletAddress}</span>
                             : <span>Mint 1 NFT to unlock your referral link</span>
                         }
                         </p>
-                        <p style={{margin: 2}}><b>Total Referral Rewards Distributed: </b><span
+                        <p style={{margin: 2}}><b>Total Referral Rewards: </b><span
                             style={{color: "#3a70ed"}}>{totalRefRewards} $FTM</span></p>
-                        <p style={{margin: 2}}><b>Your Referral Earnings: </b><span
+                        <p style={{margin: 2}}><b>Your Referral Rewards: </b><span
                             style={{color: "#3a70ed"}}>{userRefRewards} $FTM</span></p>
                         <p style={{margin: 2}}><b>People Used your Referral Link: </b><span
                             style={{color: "#3a70ed"}}>{userRefCount}</span></p>
