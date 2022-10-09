@@ -28,7 +28,7 @@ let discountedContractWithSigner;
 let signer;
 
 export default function Home() {
-    const giveAwayCutOffCount = 1797;
+    const giveAwayCutOffCount = 1982;
     const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
@@ -302,7 +302,7 @@ export default function Home() {
                 <h2 className={styles.subTitle}>
                     Weekly Giveaway
                 </h2>
-                <h3>Next Draw: <span style={{color: "#3a70ed"}}>October 9</span></h3>
+                <h3>Next Draw: <span style={{color: "#3a70ed"}}>October 16</span></h3>
                 {/*
                 <div className={styles.mintButton}
                      style={{width: "unset", flexDirection: "column", marginTop: 0, cursor: "unset"}}>
