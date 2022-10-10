@@ -15,8 +15,11 @@ export default function MintBox(props) {
             <p className={styles.generationText} style={{textDecoration: "line-through"}}>
                 <b>Generation 1:</b> Sold-out
             </p>
+            <p className={styles.generationText} style={{textDecoration: "line-through"}}>
+                <b>Generation 2:</b> Sold-out
+            </p>
             <p className={styles.generationText}>
-                <b>Generation 2 left:</b>
+                <b>Generation 3 left:</b>
                 {props.minted === 0 ? "1000" :
                 1000 - props.minted % 1000 }
                 / 1000
