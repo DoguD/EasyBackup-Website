@@ -9,7 +9,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0 20px 4rem;
+    padding: 0 0 4rem;
 }
 
 .footer {
@@ -80,7 +80,6 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    max-width: 800px;
 }
 
 .nftGrid {
@@ -101,7 +100,7 @@
     border-radius: 10px;
     transition: color 0.15s ease, border-color 0.15s ease;
     max-width: 300px;
-    height: 250px;
+    height: 150px;
 }
 
 .card:hover,
@@ -125,24 +124,20 @@
 .card h2 {
     margin: 0 0 1rem 0;
     font-size: 1.5rem;
+    text-align: center;
 }
 
 .card p {
     margin: 0;
     font-size: 1.25rem;
     line-height: 1.5;
+    text-align: center;
+    font-weight: bold;
 }
 
 .logo {
     height: 1em;
     margin-left: 0.5rem;
-}
-
-@media (max-width: 600px) {
-    .grid {
-        width: 100%;
-        flex-direction: column;
-    }
 }
 
 .description-emphasis {

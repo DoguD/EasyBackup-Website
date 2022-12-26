@@ -47,14 +47,6 @@ export default function Home() {
     const [totalRefRewards, setTotalRefRewards] = useState(0);
     const [userRefRewards, setUserRefRewards] = useState(0);
     const [userRefCount, setUserRefCount] = useState(0);
-    /*
-    useEffect(() => {
-        toasts
-            .filter((t) => t.visible) // Only consider visible toasts
-            .filter((_, i) => i >= TOAST_LIMIT) // Is toast index over limit?
-            .forEach((t) => toast.remove(t.id)); // Dismiss – Use toast.remove(t.id) for no exit animation
-    }, [toasts]);
-     */
 
     // Referrer
     useEffect(() => {
@@ -251,29 +243,24 @@ export default function Home() {
         <div className={styles.container}>
             <Toaster/>
             <Head>
-                <title>The Easy Club</title>
-                <meta name="description" content="Utility-enabled fully on chain Fantom NFTs"/>
+                <title>EasyBackup - Never loose your wallet</title>
+                <meta name="description" content="Backup your crypto wallets easily"/>
                 <link rel="icon" href="/favicon.png"/>
             </Head>
 
             <main className={styles.main}>
                 <NavBar/>
-                <img className={styles.longBanner} src={"/bannerLong.png"} alt="Samples Banner"/>
-                <img className={styles.shortBanner} src={'/bannerShort.png'} alt="Samples Banner"/>
-                <div className={styles.line}/>
-                <h1 className={styles.title}>
-                    The Easy Club
-                </h1>
-
                 <p className={styles.description}>
-                    Official EasyBlock Genesis NFTs | <span style={{fontWeight: 'bold'}}>5000 Limited</span>
+                    <span style={{fontWeight: 'bold'}}>Never loose access to your funds in your crypto wallets</span>
                     <br/>
-                    All artwork and metadata are <span style={{fontWeight: 'bold'}}>fully on-chain and randomly generated at mint.</span>
-                    <br/>
-                    Each NFT grants holders many <span style={{fontWeight: 'bold'}}>community benefits and financial advantages</span> under
-                    the EasyBlock
-                    ecosystem.
+                    Create backups or assign inheritance wallets with ease
                 </p>
+
+                <h2 className={styles.subTitle}>
+                    Stats
+                </h2>
+
+                <UtilityBox/>
 
                 <h2 className={styles.subTitle}>
                     Mint Now
@@ -351,12 +338,6 @@ export default function Home() {
                     }</h3>
                     <NFTsContainer userNFTs={userNFTs} userNFTCount={userNFTCount} nftContract={nftContract}/>
                 </> : null}
-
-                <h2 className={styles.subTitle}>
-                    Utility and Benefits
-                </h2>
-
-                <UtilityBox/>
             </main>
 
             <footer className={styles.footer}>
