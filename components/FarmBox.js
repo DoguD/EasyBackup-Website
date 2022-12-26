@@ -3,6 +3,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import {AiOutlineMinusCircle, AiOutlinePlusCircle} from "react-icons/ai";
 import {useState} from "react";
 import {CircleLoader} from "react-spinners";
+import {EASY_ADDRESS} from "../contracts/EasyToken";
 
 import {useTimer} from 'react-timer-hook';
 
@@ -55,6 +56,7 @@ export default function FarmBox(props) {
                     compounded)</p>
                 <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>130%</p>
 
+                <p className={styles.getTokenText} onClick={() => window.open("https://spooky.fi/#/add/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75/"+EASY_ADDRESS, "_blank")}>Get $EASY-$USDC LP →</p>
                 <div className={styles.stakingInnerCard}>
                     <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>$EASY-$USDC Balance</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>

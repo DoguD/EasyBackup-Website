@@ -5,6 +5,7 @@ import {useState} from "react";
 import {CircleLoader} from "react-spinners";
 
 import {useTimer} from 'react-timer-hook';
+import {EASY_ADDRESS} from "../contracts/EasyToken";
 
 function MyTimer({expiryTimestamp}) {
     const {
@@ -82,6 +83,9 @@ export default function StakeBox(props) {
                     </div>
                 </div>
 
+                <p className={styles.getTokenText}
+                   onClick={() => window.open("https://spooky.fi/#/swap?inputCurrency=0x04068DA6C83AFCFA0e13ba15A6696662335D5B75&outputCurrency=" + EASY_ADDRESS, "_blank")}>Buy
+                    $EASY →</p>
                 <div className={styles.stakingInnerCard}>
                     <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>xEASY Balance</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
