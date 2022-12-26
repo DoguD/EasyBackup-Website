@@ -31,12 +31,47 @@ function MyTimer({expiryTimestamp}) {
 
 
 export default function PresaleBox(props) {
-    const [toMint, setToMint] = useState(1);
-    const [preSaleEnabled, setPreSaleEnabled] = useState(false);
+    const [preSaleEnabled, setPreSaleEnabled] = useState(true);
+    const [toMint, setToMint] = useState(200);
+    const [totalMinted, setTotalMinted] = useState(1000000);
 
     return (
         preSaleEnabled ?
-            null
+            <>
+                <p><b>Total Presale Allocation: </b> 3,500,000 $EASY</p>
+                <p><b>Minted: </b> {totalMinted}</p>
+                <p><b>Presale Price: </b> 0.005 $USDC / $EASY</p>
+                <ProgressBar bgColor={"#3a70ed"}
+                             completed={(100 * totalMinted / 3500000).toFixed(2)}
+                             width={300}/>
+                {
+                    props.walletAddress === "" ?
+                        <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
+                            <p className={styles.mintText}>Connect</p>
+                        </div> :
+                        <>
+                            <div className={styles.mintCountController}>
+                                <p className={styles.mintCountTitle}><b>Mint: </b></p>
+                                <input className={styles.mintCount} type={"text"} id={"mintCount"} value={toMint}
+                                       onChange={(b) => {
+                                           let newValue = b.target.value;
+                                           if (newValue) {
+                                               setToMint(parseInt(newValue));
+                                           } else {
+                                               setToMint(0);
+                                           }
+                                       }}></input>
+                            </div>
+                            <p className={styles.mintCostText}>Cost: {0.005 * toMint} <b>$USDC</b></p>
+                            <div className={styles.mintButton} onClick={async () => props.mintNFT(toMint)}>
+                                {props.isMinting ?
+                                    <CircleLoader color={"#3a70ed"} size={25}/>
+                                    :
+                                    <p className={styles.mintText}>Mint</p>}
+                            </div>
+                        </>
+                }
+            </>
             :
             <>
                 <p>Buy $EASY token, stake it, and earn from protocol revenues.</p>
