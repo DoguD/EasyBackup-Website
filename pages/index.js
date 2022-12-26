@@ -224,22 +224,6 @@ export default function Home() {
         }
     }
 
-    function getUserGiveAwayEligibleNFTCount() {
-        let count = 0;
-        for (let i = 0; i < userNFTs.length; i++) {
-            if (userNFTs[i] > giveAwayCutOffCount) {
-                count += 1;
-            }
-        }
-        return count;
-    }
-
-    function getWinningChance(userCount, allCount) {
-        allCount -= giveAwayCutOffCount;
-        allCount -= discountContractBalance;
-        return 100 - (((allCount - userCount) / allCount) ** giveAwayRewardCount) * 100;
-    }
-
     return (
         <div className={styles.container}>
             <Toaster/>

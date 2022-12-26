@@ -37,42 +37,64 @@ export default function StakeBox(props) {
 
     return (
         <>
-            <p>Stake $EASY and earn 90% of protocol revenues weekly</p>
-            <p>(Staking starts after presale ends)</p>
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                <img style={{width: 50, height: 50}}/>
-                <p>Staked TVL</p>
-                <p>$1,000,000</p>
-                <p>APR Estimate</p>
-                <p>1.13%</p>
-                <div>
-                    <div>
-                        <img style={{width: 50, height: 50}}/>
-                        <p>1</p>
-                        <p>xEASY</p>
+            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of protocol revenues weekly</p>
+            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts after presale ends)</p>
+            <div className={styles.stakingCard}>
+                <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
+                <p className={styles.stakingTitle}>Staked TVL</p>
+                <p className={styles.stakingText}>$1,000,000</p>
+                <p className={styles.stakingTitle}>APR Estimate</p>
+                <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>1.13%</p>
+
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginTop: 32,
+                    width: '100%',
+                    justifyContent: 'center'
+                }}>
+                    <div style={{
+                        margin: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
+                        <p style={{width: '100%', textAlign: 'center', marginTop: 8, marginBottom: 8}}>1</p>
+                        <p style={{margin: 0}}>xEASY</p>
                     </div>
-                    <p>=</p>
-                    <div>
-                        <img style={{width: 50, height: 50}}/>
-                        <p>1.1</p>
-                        <p>EASY</p>
+                    <p style={{fontWeight: 'bold', fontSize: 16, height: 20}}>=</p>
+                    <div style={{
+                        margin: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
+                        <p style={{width: '100%', textAlign: 'center', marginTop: 8, marginBottom: 8}}>1.12</p>
+                        <p style={{margin: 0}}>EASY</p>
                     </div>
                 </div>
-                <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-                    <p>xEASY Balance</p>
+
+                <div className={styles.stakingInnerCard}>
+                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>xEASY Balance</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p>0</p><img style={{width: 20, height: 20, marginLeft: 8}}/>
+                        <p>0</p><img src="/favicon.png"
+                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
-                    <p>Claimable EASY</p>
+                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>Claimable EASY</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p>0</p><img style={{width: 20, height: 20, marginLeft: 8}}/>
+                        <p>0</p><img src="/favicon.png"
+                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <div>
-                            <p>Stake</p>
+                        <div className={styles.stakingButton}>
+                            <p className={styles.stakingButtonText}>Stake</p>
                         </div>
-                        <div>
-                            <p>Unstake</p>
+                        <div className={styles.stakingButton}>
+                            <p className={styles.stakingButtonText}>Unstake</p>
                         </div>
                     </div>
                 </div>
