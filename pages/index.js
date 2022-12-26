@@ -19,6 +19,7 @@ import NFTsContainer from "../components/NFTsContainer";
 // Circular Progress Bar
 import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import FarmBox from "../components/FarmBox";
 
 // Web3 Global Vars
 let provider;
@@ -74,21 +75,6 @@ export default function Home() {
             nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider)
             discountedContract = new ethers.Contract(DISCOUNTED_ADDRESS, DISCOUNTED_ABI, provider);
             getNFTData();
-
-            // LISTENERS
-            /* TODO: listener disabled
-            nftContract.on("Transfer", async (from, to, tokenId, event) => {
-                console.log("Inside event.");
-                console.log(event);
-                if (event.event === "Transfer" && to === await signer.getAddress()) {
-                    console.log("Transfer occured.")
-
-                    await getUserNFTData(await signer.getAddress());
-                    toast.success("Successfully minted The Easy Club NFTs!");
-                    setIsMinting(false);
-                }
-            })
-             */
         } else {
             console.log("Metamask not installed.");
             provider = new ethers.providers.getDefaultProvider("https://rpc.ftm.tools");
@@ -247,27 +233,11 @@ export default function Home() {
 
                 <UtilityBox/>
 
-                <h2 className={styles.subTitle}>
-                    Presale
-                </h2>
                 <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
-                         mintNFT={(count) => mintNFT(count)} minted={minted}
-                         isMinting={isMinting} isDiscounted={isDiscounted}/>
-                <h2 className={styles.subTitle}>
-                    Stake $EASY
-                </h2>
+                            mintNFT={(count) => mintNFT(count)} minted={minted}
+                            isMinting={isMinting} isDiscounted={isDiscounted}/>
                 <StakeBox/>
-
-                {walletAddress !== "" ? <>
-                    <h2 className={styles.subTitle}>
-                        Your NFTs
-                    </h2>
-                    <h3>VIP Status: {
-                        userNFTCount >= 5 ? <span style={{color: "#4caf50"}}>You are a VIP holder!</span> :
-                            <span style={{color: "#b71c1c"}}>You need {5 - userNFTCount} more NFTs to become VIP.</span>
-                    }</h3>
-                    <NFTsContainer userNFTs={userNFTs} userNFTCount={userNFTCount} nftContract={nftContract}/>
-                </> : null}
+                <FarmBox/>
             </main>
 
             <footer className={styles.footer}>

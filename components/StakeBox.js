@@ -37,7 +37,11 @@ export default function StakeBox(props) {
 
     return (
         <>
-            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of protocol revenues weekly</p>
+            <h2 className={styles.subTitle}>
+                Stake $EASY
+            </h2>
+            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of protocol
+                revenues weekly</p>
             <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts after presale ends)</p>
             <div className={styles.stakingCard}>
                 <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
