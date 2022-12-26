@@ -20,6 +20,8 @@ import NFTsContainer from "../components/NFTsContainer";
 import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import FarmBox from "../components/FarmBox";
+import CreateBackupBox from "../components/CreateBackupBox";
+import ClaimableBackupsBox from "../components/ClaimableBackupsBox";
 
 // Web3 Global Vars
 let provider;
@@ -227,6 +229,9 @@ export default function Home() {
                     Create backups or assign inheritance wallets with ease
                 </p>
 
+                <CreateBackupBox/>
+
+                <ClaimableBackupsBox/>
 
                 <StatsBox/>
 
