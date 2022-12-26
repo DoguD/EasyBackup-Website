@@ -11,6 +11,7 @@ import {useEffect, useState} from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import UtilityBox from "../components/UtilityBox";
 import PresaleBox from "../components/PresaleBox";
+import StakeBox from "../components/StakeBox";
 import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
 import NFTsContainer from "../components/NFTsContainer";
@@ -269,46 +270,9 @@ export default function Home() {
                          mintNFT={(count) => mintNFT(count)} minted={minted}
                          isMinting={isMinting} isDiscounted={isDiscounted}/>
                 <h2 className={styles.subTitle}>
-                    Weekly Giveaway
+                    Stake $EASY
                 </h2>
-                <h3>Next Draw: <span style={{color: "#3a70ed"}}>October 16</span></h3>
-                {/*
-                <div className={styles.mintButton}
-                     style={{width: "unset", flexDirection: "column", marginTop: 0, cursor: "unset"}}>
-                    <h3>Surprise Giveaway Only For This Week 🎁</h3>
-                    <h2 style={{color: "#3a70ed", marginTop: 0, textDecoration: "underline"}}><a
-                        href={"https://paintswap.finance/marketplace/assets/0x5d6f546f2357e84720371a0510f64dbc3fbace33/17"}
-                        target={"_blank"}
-                        rel="noreferrer">
-                        Generation 0 Easy Club NFT
-                    </a>
-                    </h2>
-                    <img
-                        src={`data:image/svg+xml;base64,PHN2ZyBpZD0ieCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWluWU1pbiBtZWV0IiB2aWV3Qm94PSIwIDAgMzAgMzAiPjxwYXRoIGQ9Ik00IDRoMjJ2MjJINHoiIGZpbGw9IiM3MzNmMTciLz48cGF0aCBkPSJNNCA0LjVoMW01IDBoMW01IDBoMW01IDBoMW0tMTkgMWgxbTIwIDFoMW0tMjIgMmgxbS0xIDFoMW0yMCAxaDFtLTEgMmgxbS0yMiAxaDFtMjAgMGgxbS0xIDJoMW0tMSAxaDFtLTIyIDFoMW0tMSAyaDFtLTEgMWgxbTIwIDBoMW0tMSAxaDFtLTIyIDFoMW0tMSAxaDFtLTEgMWgxbTIgMWgxbTIgMGgxbTIgMGgxbTggMGgxbTIgMGgxTTUgNC41aDFtMiAwaDFtNiAwaDFtLTEwIDIxaDFtNSAwaDFtNSAwaDFtNSAwaDFNNiA0LjVoMW0yIDBoMW04IDBoMW0yIDIxaDFNNyA0LjVoMW00IDBoMm01IDBoM20xIDBoM20tMSAxaDFtLTIyIDFoMW0tMSAxaDFtMjAgMGgxbS0xIDFoMW0tMSAxaDFtLTIyIDFoMW0tMSAxaDFtMjAgMGgxbS0yMiAxaDFtLTEgMmgxbTIwIDBoMW0tMjIgMWgxbS0xIDFoMW0yMCAxaDFtLTIyIDFoMW0yMCAwaDFtLTEgMWgxbS0yMiAyaDFtMjAgMWgxbS0xIDFoMW0tMSAxaDFtLTIyIDFoMm0zIDBoMW00IDBoM20yIDBoMW0zIDBoMW0tMTMtMjFoMW0yIDBoMW0yIDBoMW0tMTAgMjFoMW0yIDBoMW01IDBoMW0yIDBoMSIgc3Ryb2tlPSIjMDAwIi8+PHBhdGggZD0iTTggMTBoM3YzSDh6bTExIDBoM3YzaC0zeiIgZmlsbD0iIzI1YTIyYiIvPjxwYXRoIGZpbGw9IiMwMDAiIGQ9Ik05IDExaDF2MUg5em0xMSAwaDF2MWgtMXoiLz48cGF0aCBzdHJva2U9IiM0MjI2MTYiIGQ9Ik04IDguNWgxbTExIDBoMW0tOSAzaDFtMTAgMWgxbS0xNiAyaDFtMTEgMGgxbS0xMi02aDJtOCAwaDFtMSAwaDFtLTExIDFoMW01IDFoMW01IDBoMW0tMSAxaDFtLTE4IDFoMW0xMCAwaDFtLTcgMWgxbS0yIDFoMW04IDBoMW0tMTMtNWgxbTE0IDBoMW0tMTYgNGgxbTE0IDBoMW0tNS00aDFtLTcgMWgxbS03IDFoMW0xMCAwaDFtLTEyLTFoMW01IDJoMW01IDFoMW0tMTAgMWgxbTExIDBoMSIvPjxwYXRoIHN0cm9rZT0iIzRmNGY0ZiIgZD0iTTggOS41aDNtMTAgMGgxbS0xNCAxaDFtMSAwaDJtNyAwaDFtMSAwaDJtLTE0IDFoM20xMCAwaDFtLTE0IDFoMW0xIDBoMW03IDBoMW0xIDBoMW0tMyAxaDFtLTEtNGgxbS0xMyAxaDFtLTEgMWgxbTExIDBoMW0tMTMgMWgxbTIgMGgxbTExIDBoMW0tMTMgMWgxbTktNGgxbS0zIDJoMW0tMTEgMWgxbTAgMWgxbTEwIDBoMm0tMTMtM2gxbTggMGgxbTEgMGgxbS0xMyAxaDFtMTEgMGgybS0yIDFoMW0tMTMgMWgxbTAtM2gxbTggMGgxbTEgMGgxbS0xMyAxaDFtMTEgMGgybS0yIDFoMW0tMTMgMWgxbTktMWgxIi8+PHBhdGggc3Ryb2tlPSIjMDAwIiBkPSJNMTMgMTAuNWgxbTIgMWgxbS0xMyAxaDFtOCAwaDFtMTEgMGgxbS0yMSAwaDFtLTItMmgxbTkgMGgzbTggMGgxbS0xMyAxaDFtMSAwaDFtLTEgMWgybS0xMi0yaDFtMTggMGgxbS0xMSAxaDFtLTEgMWgxbTkgMGgxIi8+PHBhdGggc3Ryb2tlPSIjYmI4OTUxIiBkPSJNOCAxNi41aDFtMTIgMGgxIi8+PHBhdGggc3Ryb2tlPSIjOWY2ZjM4IiBkPSJNOSAxNi41aDFtOCAzaDFtLTktM2gxbTggMGgxbS0xMCAzaDFtMiAwaDFtMiAwaDFtMiAwaDFtMC0zaDFtLTMgMWgxbTIgMGgxbS0xIDFoMW0tOCAxaDFtMiAwaDFtLTEwLTJoMW0yIDBoMW0tNCAxaDFtMCAxaDFtMSAwaDFtMyAwaDFtNCAwaDFtLTkgMGgxIi8+PHBhdGggc3Ryb2tlPSIjMDAwIiBkPSJNMTAgMjAuNWgxbTggMGgxbS05IDBoMW01IDBoMW0tNiAwaDFtNSAwaDFtLTYgMGgxbTIgMGgxbS0zIDBoMiIvPjxzdHlsZT4jeHtzaGFwZS1yZW5kZXJpbmc6IGNyaXNwZWRnZXM7fTwvc3R5bGU+PC9zdmc+`}
-                        style={{width: 150}}/>
-                </div>
-                */}
-                <p className={styles.description} style={{marginBottom: 16}}>Every week <span
-                    style={{fontWeight: 'bold'}}>5 Easy Club NFTs each will be gifted to 2 people.</span><br/>
-                    All you need to do is to mint an NFT during the week. Each NFT minted is one entry for the
-                    giveaway. <br/>
-                    Results announced every <b>Sunday</b>.<br/>
-                </p>
-                <p className={styles.entryText}><b>Your Minted:</b> {getUserGiveAwayEligibleNFTCount()}</p>
-                <p className={styles.entryText}><b>Minted
-                    Total:</b> {Math.max((minted - giveAwayCutOffCount - discountContractBalance), 0)}</p>
-                <p className={styles.winningChanceText}>Winning Chance</p>
-                <div style={{width: 150, height: 150}}>
-                    <CircularProgressbar value={getWinningChance(getUserGiveAwayEligibleNFTCount(), minted)}
-                                         text={`${getWinningChance(getUserGiveAwayEligibleNFTCount(), minted).toFixed(3)}%`}
-                                         styles={buildStyles({
-                                             // Colors
-                                             pathColor: `#3a70ed`,
-                                             textColor: '#3a70ed',
-                                             trailColor: '#d6d6d6',
-                                             backgroundColor: '#3a70ed',
-                                         })}/>;
-                </div>
+                <StakeBox/>
 
                 {walletAddress !== "" ? <>
                     <h2 className={styles.subTitle}>
