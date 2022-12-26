@@ -265,6 +265,13 @@
     margin-bottom: 4px;
 }
 
+.presaleDescription {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
 .navbarTitleContainer {
     cursor: pointer;
     display: flex;
@@ -332,10 +339,6 @@
     cursor: pointer;
 }
 
-.mintCount {
-    font-size: 24px;
-    margin: 0;
-}
 
 .mintCountTitle {
     font-size: 24px;
@@ -411,6 +414,15 @@
 .discountNotificationText {
     color: #3a70ed;
     font-weight: bold;
+}
+
+.input {
+    border: 1px solid #afafaf;
+    border-radius: 20px;
+    font-size: 24px;
+    margin: 0 0 0 8px;
+    padding: 4px;
+    text-align: center;
 }
 
 /*Main color: #3a70ed*/

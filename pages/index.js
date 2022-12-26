@@ -9,7 +9,7 @@ import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 
 import {useEffect, useState} from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
-import UtilityBox from "../components/UtilityBox";
+import StatsBox from "../components/StatsBox";
 import PresaleBox from "../components/PresaleBox";
 import StakeBox from "../components/StakeBox";
 import NavBar from "../components/NavBar";
@@ -231,7 +231,7 @@ export default function Home() {
                     Stats
                 </h2>
 
-                <UtilityBox/>
+                <StatsBox/>
 
                 <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                             mintNFT={(count) => mintNFT(count)} minted={minted}

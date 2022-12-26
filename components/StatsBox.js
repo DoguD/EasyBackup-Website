@@ -1,6 +1,6 @@
 import styles from "../styles/Home.module.css";
 
-export default function UtilityBox(props) {
+export default function StatsBox(props) {
     return (
         <>
             <div className={styles.grid}>
