@@ -214,7 +214,7 @@ export default function Home() {
         <div className={styles.container}>
             <Toaster/>
             <Head>
-                <title>EasyBackup - Never loose your wallet</title>
+                <title>EasyBackup - Never lose your wallet</title>
                 <meta name="description" content="Backup your crypto wallets easily"/>
                 <link rel="icon" href="/favicon.png"/>
             </Head>
@@ -222,21 +222,20 @@ export default function Home() {
             <main className={styles.main}>
                 <NavBar/>
                 <p className={styles.description}>
-                    <span style={{fontWeight: 'bold'}}>Never loose access to your funds in your crypto wallets</span>
+                    <span style={{fontWeight: 'bold'}}>Never lose access to your funds in your crypto wallets</span>
                     <br/>
                     Create backups or assign inheritance wallets with ease
                 </p>
 
-                <h2 className={styles.subTitle}>
-                    Stats
-                </h2>
 
                 <StatsBox/>
 
                 <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                             mintNFT={(count) => mintNFT(count)} minted={minted}
                             isMinting={isMinting} isDiscounted={isDiscounted}/>
+
                 <StakeBox/>
+
                 <FarmBox/>
             </main>
 
