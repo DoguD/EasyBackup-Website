@@ -10,7 +10,7 @@ import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 import {useEffect, useState} from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 import UtilityBox from "../components/UtilityBox";
-import MintBox from "../components/MintBox";
+import PresaleBox from "../components/PresaleBox";
 import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
 import NFTsContainer from "../components/NFTsContainer";
@@ -263,9 +263,9 @@ export default function Home() {
                 <UtilityBox/>
 
                 <h2 className={styles.subTitle}>
-                    Mint Now
+                    Presale
                 </h2>
-                <MintBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
+                <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                          mintNFT={(count) => mintNFT(count)} minted={minted}
                          isMinting={isMinting} isDiscounted={isDiscounted}/>
                 {walletAddress !== "" ?
