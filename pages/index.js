@@ -83,6 +83,10 @@ export default function Home() {
             // CONTRACTS
             nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider)
             discountedContract = new ethers.Contract(DISCOUNTED_ADDRESS, DISCOUNTED_ABI, provider);
+
+            presaleContract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, provider);
+            usdcContract = new ethers.Contract(USDC_ADDRESS, USDC_ABI, provider);
+            easyContract = new ethers.Contract(EASY_ADDRESS, EASY_ABI, provider);
             getNFTData();
         } else {
             console.log("Metamask not installed.");
