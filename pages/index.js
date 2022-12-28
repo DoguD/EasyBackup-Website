@@ -16,6 +16,8 @@ import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
 import NFTsContainer from "../components/NFTsContainer";
 
+import 'semantic-ui-css/semantic.min.css'
+
 // Circular Progress Bar
 import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -229,11 +231,11 @@ export default function Home() {
                     Create backups or assign inheritance wallets with ease
                 </p>
 
+                <StatsBox/>
+
                 <CreateBackupBox/>
 
                 <ClaimableBackupsBox/>
-
-                <StatsBox/>
 
                 <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
                             mintNFT={(count) => mintNFT(count)} minted={minted}

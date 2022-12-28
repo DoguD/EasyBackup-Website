@@ -3,9 +3,6 @@ import styles from "../styles/Home.module.css";
 export default function StatsBox(props) {
     return (
         <>
-            <h2 className={styles.subTitle}>
-                Stats
-            </h2>
             <div className={styles.grid}>
                 <div className={styles.card}>
                     <h2>Total Backed-Up Assets</h2>
