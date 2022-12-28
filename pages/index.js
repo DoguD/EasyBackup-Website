@@ -37,7 +37,9 @@ let discountedContractWithSigner;
 let signer;
 
 let presaleContract;
+let presaleContractWithSigner;
 let usdcContract;
+let usdcContractWithSigner;
 let easyContract;
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
@@ -137,6 +139,8 @@ export default function Home() {
                 console.log("Is signer null ?", signer == null)
                 nftContractWithSigner = nftContract.connect(signer);
                 discountedContractWithSigner = discountedContract.connect(signer);
+                usdcContractWithSigner = usdcContract.connect(signer);
+                presaleContractWithSigner = presaleContract.connect(signer);
                 let userAddress = await signer.getAddress();
                 setWalletAddress(userAddress);
                 // Discounted data
@@ -148,7 +152,7 @@ export default function Home() {
                     setUserRefCount(parseInt(await discountedContract.referralSaleOccured(userAddress), 10));
                 }
                 // All NFT Data
-                await getUserNFTData(userAddress);
+                await getUsdcAllowance();
             }
         } catch (e) {
             console.log(e);
@@ -176,10 +180,6 @@ export default function Home() {
         }
     }
 
-    async function mintPresale(amount) {
-
-    }
-
     async function getUsdcAllowance() {
         try {
             // Info about signer
@@ -193,13 +193,31 @@ export default function Home() {
             }
             if (signer != null && shouldProceed) {
                 // NFT
-                let allowance = parseInt(await usdcContract.allowance(walletAddress, PRESALE_ADDRESS), 10);
+                let allowance = parseInt(await usdcContract.allowance(await signer.getAddress(), PRESALE_ADDRESS), 10);
                 setUsdcAllowance(allowance);
             }
         } catch (e) {
-            console.log("Get user data error: ");
+            console.log("USDC allowance error: ");
             console.log(e);
             await getUsdcAllowance(walletAddress);
+        }
+    }
+
+    async function approveUsdc() {
+        try {
+            await usdcContractWithSigner.approve(PRESALE_ADDRESS, BigInt(1000000000000000000000000000));
+        } catch (e) {
+            console.log("Approve error: ");
+            console.log(e);
+        }
+    }
+
+    async function presaleMint(_amount) {
+        try {
+            await presaleContractWithSigner.buyTokens(_amount);
+        } catch (e) {
+            console.log("Buy error: ");
+            console.log(e)
         }
     }
 
@@ -219,34 +237,6 @@ export default function Home() {
             } else {
                 await getNFTData()
             }
-        }
-    }
-
-    async function getUserNFTData(walletAddress) {
-        try {
-            // Info about signer
-            signer = provider.getSigner();
-            let shouldProceed = false;
-            try {
-                await signer.getAddress();
-                shouldProceed = true;
-            } catch (e) {
-                console.log("User data error.")
-            }
-            if (signer != null && shouldProceed) {
-                // NFT
-                let balance = parseInt(await nftContract.balanceOf(walletAddress), 10);
-                setUserNFTCount(balance);
-                let userNfts = [];
-                for (let i = 0; i < balance; i++) {
-                    userNfts.push(parseInt(await nftContract.tokenOfOwnerByIndex(walletAddress, i), 10));
-                }
-                setUserNFTs(userNfts);
-            }
-        } catch (e) {
-            console.log("Get user data error: ");
-            console.log(e);
-            await getUserNFTData(walletAddress);
         }
     }
 
@@ -296,7 +286,9 @@ export default function Home() {
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
-                                    easyContract={easyContract} usdcAllowance={usdcAllowance}/>
+                                    easyContract={easyContract} usdcAllowance={usdcAllowance}
+                                    approveUsdc={async () => await approveUsdc()}
+                                    presaleMint={async (amount) => await presaleMint(amount)}/>
                         : menuItem === 2 ?
                             <StakeBox/>
                             :

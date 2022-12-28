@@ -42,7 +42,7 @@ export default function PresaleBox(props) {
     async function getPresaleData() {
         console.log("Minted Tokens");
         if (typeof props.easyContract != "undefined") {
-            setTotalMinted(parseInt(await props.easyContract.mintedPresaleTokens(), 10));
+            setTotalMinted(parseInt(await props.easyContract.mintedPresaleTokens(), 10) / 10 ** 18);
         }
     }
 
@@ -94,12 +94,19 @@ export default function PresaleBox(props) {
                                     </div>
                                     <p className={styles.mintCostText}>{(0.005 * toMint).toLocaleString("en-US")}
                                         <b>$USDC</b></p>
-                                    <div className={styles.mintButton} onClick={async () => props.mintNFT(toMint)}>
+                                    <div className={styles.mintButton} onClick={async () => {
+                                        if (props.usdcAllowance < toMint * 0.05 * 1 ** 6) {
+                                            console.log("test");
+                                            props.approveUsdc();
+                                        } else {
+                                            props.presaleMint(BigInt(toMint * 10 ** 18));
+                                        }
+                                    }}>
                                         {props.isMinting ?
                                             <CircleLoader color={"#3a70ed"} size={25}/>
                                             :
                                             <p className={styles.mintText}>
-                                                {props.usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve USDC" : "Mint"}</p>}
+                                                {props.usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve" : "Mint"}</p>}
                                     </div>
                                 </>
                         }
