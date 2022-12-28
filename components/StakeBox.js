@@ -89,13 +89,16 @@ export default function StakeBox(props) {
                 <div className={styles.stakingInnerCard}>
                     <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>xEASY Balance</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p>0</p><img src="/favicon.png"
-                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
+                        <p className={styles.balanceText}>0</p>
+                        <img src="/favicon.png"
+                             style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
-                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>Claimable EASY</p>
+                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold', marginTop: 16}}>Claimable
+                        EASY</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p>0</p><img src="/favicon.png"
-                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
+                        <p className={styles.balanceText}>0</p>
+                        <img src="/favicon.png"
+                             style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row'}}>
                         <div className={styles.stakingButton}>

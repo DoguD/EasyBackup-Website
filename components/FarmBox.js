@@ -56,20 +56,24 @@ export default function FarmBox(props) {
                     compounded)</p>
                 <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>130%</p>
 
-                <p className={styles.getTokenText} onClick={() => window.open("https://spooky.fi/#/add/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75/"+EASY_ADDRESS, "_blank")}>Get $EASY-$USDC LP →</p>
+                <p className={styles.getTokenText}
+                   onClick={() => window.open("https://spooky.fi/#/add/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75/" + EASY_ADDRESS, "_blank")}>Get
+                    $EASY-$USDC LP →</p>
                 <div className={styles.stakingInnerCard}>
                     <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>$EASY-$USDC Balance</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p>0</p>
+                        <p className={styles.balanceText}>0</p>
                         <img src="/favicon.png"
                              style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                         <img src="/usdc.png"
                              style={{width: 20, height: 20, borderRadius: 10, marginLeft: -8}}/>
                     </div>
-                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>Claimable Reward</p>
+                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold', marginTop: 16}}>Claimable
+                        Reward</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p>0</p><img src="/favicon.png"
-                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
+                        <p className={styles.balanceText}>0</p>
+                        <img src="/favicon.png"
+                             style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row'}}>
                         <div className={styles.stakingButton}>
