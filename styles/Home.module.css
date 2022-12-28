@@ -82,6 +82,39 @@
     flex-wrap: wrap;
 }
 
+.claimableBackupsContainer {
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.claimableBackupsRow {
+    padding: 4px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin: 1rem;
+    text-align: left;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    height: 60px;
+}
+
+.claimableBackupText {
+    font-size: 16px;
+    margin: 0 4px;
+}
+
 .nftGrid {
     display: flex;
     align-items: center;
