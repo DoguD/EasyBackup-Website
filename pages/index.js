@@ -214,6 +214,8 @@ export default function Home() {
         }
     }
 
+    const [menuItem, setMenuItem] = useState(0);
+
     return (
         <div className={styles.container}>
             <Toaster/>
@@ -233,17 +235,37 @@ export default function Home() {
 
                 <StatsBox/>
 
-                <CreateBackupBox/>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100%',
+                    justifyContent: 'center',
+                    marginTop: 24
+                }}>
+                    <p className={styles.menuText} style={{color: menuItem === 0 ? "#3a70ed" : "#000000"}}
+                       onClick={() => setMenuItem(0)}>Backup</p>
+                    <p className={styles.menuText} style={{color: menuItem === 1 ? "#3a70ed" : "#000000"}}
+                       onClick={() => setMenuItem(1)}>Presale</p>
+                    <p className={styles.menuText} style={{color: menuItem === 2 ? "#3a70ed" : "#000000"}}
+                       onClick={() => setMenuItem(2)}>Stake</p>
+                    <p className={styles.menuText} style={{color: menuItem === 3 ? "#3a70ed" : "#000000"}}
+                       onClick={() => setMenuItem(3)}>Farm</p>
+                </div>
 
-                <ClaimableBackupsBox/>
+                {menuItem === 0 ?
+                    <>
+                        <CreateBackupBox/>
 
-                <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
-                            mintNFT={(count) => mintNFT(count)} minted={minted}
-                            isMinting={isMinting} isDiscounted={isDiscounted}/>
-
-                <StakeBox/>
-
-                <FarmBox/>
+                        <ClaimableBackupsBox/>
+                    </>
+                    : menuItem === 1 ?
+                        <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
+                                    mintNFT={(count) => mintNFT(count)} minted={minted}
+                                    isMinting={isMinting} isDiscounted={isDiscounted}/>
+                        : menuItem === 2 ?
+                            <StakeBox/>
+                            :
+                            <FarmBox/>}
             </main>
 
             <footer className={styles.footer}>
