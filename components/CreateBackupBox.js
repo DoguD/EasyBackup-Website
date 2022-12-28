@@ -1,6 +1,6 @@
 import styles from "../styles/Home.module.css";
 import React, {useState} from 'react'
-import {Dropdown} from 'semantic-ui-react';
+import {Button, Dropdown} from 'semantic-ui-react';
 import {EASY_ADDRESS} from "../contracts/EasyToken";
 import {Radio} from 'semantic-ui-react'
 import {CircleLoader} from "react-spinners";
@@ -177,6 +177,32 @@ export default function CreateBackupBox(props) {
                             :
                             <p className={styles.mintText}>Create Backup</p>}
                     </div>
+                </div>
+            </div>
+
+
+            <h2 className={styles.subTitle}>
+                My Backups
+            </h2>
+            <div className={styles.claimableBackupsContainer}>
+                <div className={styles.claimableBackupsRow}>
+                    <p className={styles.claimableBackupText}><b>To: </b></p>
+                    <p className={styles.claimableBackupText}>0x14453a83131012F4DbB4c9c98830A0DE04B38c10</p>
+
+                    <div style={{width: 16}}/>
+                    <p className={styles.claimableBackupText}><b>Token: </b></p>
+                    <p className={styles.claimableBackupText}>$ETH</p>
+
+                    <div style={{width: 16}}/>
+                    <p className={styles.claimableBackupText}><b>Amount: </b></p>
+                    <p className={styles.claimableBackupText}>0.1463</p>
+
+                    <div style={{width: 16}}/>
+                    <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
+                    <p className={styles.claimableBackupText}>12 days</p>
+
+                    <div style={{width: 32}}/>
+                    <Button basic color={'red'}>Delete</Button>
                 </div>
             </div>
         </>
