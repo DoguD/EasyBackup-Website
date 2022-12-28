@@ -24,6 +24,9 @@ import 'react-circular-progressbar/dist/styles.css';
 import FarmBox from "../components/FarmBox";
 import CreateBackupBox from "../components/CreateBackupBox";
 import ClaimableBackupsBox from "../components/ClaimableBackupsBox";
+import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/Presale";
+import {USDC_ABI, USDC_ADDRESS} from "../contracts/USDC";
+import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
 
 // Web3 Global Vars
 let provider;
@@ -33,9 +36,10 @@ let nftContractWithSigner;
 let discountedContractWithSigner;
 let signer;
 
+let presaleContract;
+let usdcContract;
+let easyContract;
 export default function Home() {
-    const giveAwayCutOffCount = 1982;
-    const giveAwayRewardCount = 2;
     const [walletAddress, setWalletAddress] = useState("");
     const [minted, setMinted] = useState(0);
     const [userNFTCount, setUserNFTCount] = useState(0);
@@ -54,6 +58,7 @@ export default function Home() {
     const [userRefRewards, setUserRefRewards] = useState(0);
     const [userRefCount, setUserRefCount] = useState(0);
 
+    const [usdcAllowance, setUsdcAllowance] = useState(0);
     // Referrer
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -167,6 +172,33 @@ export default function Home() {
         }
     }
 
+    async function mintPresale(amount) {
+
+    }
+
+    async function getUsdcAllowance() {
+        try {
+            // Info about signer
+            signer = provider.getSigner();
+            let shouldProceed = false;
+            try {
+                await signer.getAddress();
+                shouldProceed = true;
+            } catch (e) {
+                console.log("User data error.")
+            }
+            if (signer != null && shouldProceed) {
+                // NFT
+                let allowance = parseInt(await usdcContract.allowance(walletAddress, PRESALE_ADDRESS), 10);
+                setUsdcAllowance(allowance);
+            }
+        } catch (e) {
+            console.log("Get user data error: ");
+            console.log(e);
+            await getUsdcAllowance(walletAddress);
+        }
+    }
+
     async function getNFTData() {
         try {
             setMinted(parseInt(await nftContract.numTokensMinted(), 10));
@@ -260,8 +292,7 @@ export default function Home() {
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
-                                    mintNFT={(count) => mintNFT(count)} minted={minted}
-                                    isMinting={isMinting} isDiscounted={isDiscounted}/>
+                                    easyContract={easyContract} usdcAllowance={usdcAllowance}/>
                         : menuItem === 2 ?
                             <StakeBox/>
                             :
