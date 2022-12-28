@@ -1,7 +1,7 @@
 import styles from "../styles/Home.module.css";
 import ProgressBar from "@ramonak/react-progress-bar";
 import {AiOutlineMinusCircle, AiOutlinePlusCircle} from "react-icons/ai";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {CircleLoader} from "react-spinners";
 
 import {useTimer} from 'react-timer-hook';
@@ -35,6 +35,17 @@ export default function PresaleBox(props) {
     const [toMint, setToMint] = useState(200);
     const [totalMinted, setTotalMinted] = useState(1000000);
 
+    useEffect(() => {
+        getPresaleData();
+    }, [props.walletAddress])
+
+    async function getPresaleData() {
+        console.log("Minted Tokens");
+        if (typeof props.easyContract != "undefined") {
+            setTotalMinted(parseInt(await props.easyContract.mintedPresaleTokens(), 10));
+        }
+    }
+
     return (
         <>
             <h2 className={styles.subTitle}>
@@ -43,7 +54,7 @@ export default function PresaleBox(props) {
             <p className={styles.presaleDescription}><b>35%</b> of EasyBlock token is allocated for presale. Presale
                 starts on <b>January 15th, 11:59</b> and will last for <b>2 weeks.</b><br/>First 24-hours is reserved
                 for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
-                       target={"_blank"}>EasyClub</a> holders.</p>
+                       target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>
             {
                 preSaleEnabled ?
                     <>
@@ -87,7 +98,8 @@ export default function PresaleBox(props) {
                                         {props.isMinting ?
                                             <CircleLoader color={"#3a70ed"} size={25}/>
                                             :
-                                            <p className={styles.mintText}>Mint</p>}
+                                            <p className={styles.mintText}>
+                                                {props.usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve USDC" : "Mint"}</p>}
                                     </div>
                                 </>
                         }
