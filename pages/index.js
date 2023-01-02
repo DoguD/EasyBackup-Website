@@ -27,6 +27,7 @@ import ClaimableBackupsBox from "../components/ClaimableBackupsBox";
 import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/Presale";
 import {USDC_ABI, USDC_ADDRESS} from "../contracts/USDC";
 import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
+import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/xEasy";
 
 // Web3 Global Vars
 let provider;
@@ -41,13 +42,12 @@ let presaleContractWithSigner;
 let usdcContract;
 let usdcContractWithSigner;
 let easyContract;
+let easyContractWithSigner;
+let xEasyContract;
+let xEasyWithSigner;
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
-    const [minted, setMinted] = useState(0);
-    const [userNFTCount, setUserNFTCount] = useState(0);
-    const [userNFTs, setUserNFTs] = useState([]);
     const [isDiscounted, setIsDiscounted] = useState(false);
-    const [discountContractBalance, setDiscountContractBalance] = useState(0);
     // UI Controllers
     const [isMinting, setIsMinting] = useState(false);
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
@@ -61,6 +61,8 @@ export default function Home() {
     const [userRefCount, setUserRefCount] = useState(0);
 
     const [usdcAllowance, setUsdcAllowance] = useState(0);
+    const [easyPrice, setEasyPrice] = useState(0.005);
+    const [easySupply, setEasySupply] = useState(0);
     // Referrer
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -89,7 +91,8 @@ export default function Home() {
             presaleContract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, provider);
             usdcContract = new ethers.Contract(USDC_ADDRESS, USDC_ABI, provider);
             easyContract = new ethers.Contract(EASY_ADDRESS, EASY_ABI, provider);
-            getNFTData();
+            xEasyContract = new ethers.Contract(X_EASY_ADDRESS, X_EASY_ABI, provider);
+            getGeneralData();
         } else {
             console.log("Metamask not installed.");
             provider = new ethers.providers.getDefaultProvider("https://rpc.ftm.tools");
@@ -141,6 +144,8 @@ export default function Home() {
                 discountedContractWithSigner = discountedContract.connect(signer);
                 usdcContractWithSigner = usdcContract.connect(signer);
                 presaleContractWithSigner = presaleContract.connect(signer);
+                easyContractWithSigner = easyContract.connect(signer);
+                xEasyWithSigner = xEasyContract.connect(signer);
                 let userAddress = await signer.getAddress();
                 setWalletAddress(userAddress);
                 // Discounted data
@@ -212,6 +217,24 @@ export default function Home() {
         }
     }
 
+    async function approveEasy(target) {
+        try {
+            await easyContractWithSigner.approve(target, BigInt(1000000000000000000000000000));
+        } catch (e) {
+            console.log("Easy Approve Error: ");
+            console.log(e);
+        }
+    }
+
+    async function stakeEasy(amount) {
+        try {
+            await xEasyWithSigner.enter(amount);
+        } catch (e) {
+            console.log("Stake Error: ");
+            console.log(e);
+        }
+    }
+
     async function presaleMint(_amount) {
         try {
             await presaleContractWithSigner.buyTokens(_amount);
@@ -221,10 +244,10 @@ export default function Home() {
         }
     }
 
-    async function getNFTData() {
+    async function getGeneralData() {
         try {
-            setMinted(parseInt(await nftContract.numTokensMinted(), 10));
-            setDiscountContractBalance(parseInt(await nftContract.balanceOf(DISCOUNTED_ADDRESS), 10));
+            let supply = parseInt(await easyContract.totalSupply(), 10);
+            setEasySupply(supply);
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -235,7 +258,7 @@ export default function Home() {
                     await changeNetworkToFTM();
                 }
             } else {
-                await getNFTData()
+                await getGeneralData();
             }
         }
     }
@@ -259,7 +282,7 @@ export default function Home() {
                     Create backups or assign inheritance wallets with ease
                 </p>
 
-                <StatsBox/>
+                <StatsBox easyPrice={easyPrice} easySupply={easySupply}/>
 
                 <div style={{
                     display: 'flex',
@@ -290,7 +313,10 @@ export default function Home() {
                                     approveUsdc={async () => await approveUsdc()}
                                     presaleMint={async (amount) => await presaleMint(amount)}/>
                         : menuItem === 2 ?
-                            <StakeBox/>
+                            <StakeBox easyPrice={easyPrice} xEasyContract={xEasyContract} walletAddress={walletAddress}
+                                      easyContract={easyContract}
+                                      approveEasy={async (target) => await approveEasy(target)}
+                                      stakeEasy={async (amount) => await stakeEasy(amount)}/>
                             :
                             <FarmBox/>}
             </main>

@@ -10,11 +10,11 @@ export default function StatsBox(props) {
                 </div>
                 <div className={styles.card}>
                     <h2>$EASY Token Value</h2>
-                    <p>$0.01</p>
+                    <p>${props.easyPrice}</p>
                 </div>
                 <div className={styles.card}>
                     <h2>$EASY Market Cap</h2>
-                    <p>$50,000</p>
+                    <p>${(props.easySupply * props.easyPrice / 10 ** 18).toFixed(0)}</p>
                 </div>
                 <div className={styles.card}>
                     <h2>Total Protocol Revenue</h2>

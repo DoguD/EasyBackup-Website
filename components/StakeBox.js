@@ -1,43 +1,73 @@
 import styles from "../styles/Home.module.css";
-import ProgressBar from "@ramonak/react-progress-bar";
-import {AiOutlineMinusCircle, AiOutlinePlusCircle} from "react-icons/ai";
-import {useState} from "react";
-import {CircleLoader} from "react-spinners";
-
-import {useTimer} from 'react-timer-hook';
 import {EASY_ADDRESS} from "../contracts/EasyToken";
-
-function MyTimer({expiryTimestamp}) {
-    const {
-        seconds,
-        minutes,
-        hours,
-        days,
-        isRunning,
-        start,
-        pause,
-        resume,
-        restart,
-    } = useTimer({expiryTimestamp, onExpire: () => console.warn('onExpire called')});
+import {useEffect, useState} from "react";
+import {X_EASY_ADDRESS} from "../contracts/xEasy";
+import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
 
 
+function StakeModal(props) {
+    const [stakeAmount, setStakeAmount] = useState(0);
     return (
-        <div style={{textAlign: 'center'}}>
-            <div style={{fontSize: '100px'}}>
-                <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
-            </div>
-        </div>
-    );
+        <Modal
+            onClose={() => props.setOpen(false)}
+            onOpen={() => props.setOpen(true)}
+            open={props.open}
+        >
+            <Modal.Content>
+                <Modal.Description>
+                    <Header>Stake in xEASY</Header>
+                    <p>
+                        <b>Available:</b> {(props.easyBalance.toFixed(2)).toLocaleString("en-US")} EASY
+                    </p>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <Button onClick={() => setStakeAmount(props.easyBalance)}>Max</Button>
+                        <Input value={stakeAmount} onChange={(b, {value}) => setStakeAmount(parseFloat(value))}/>
+                        <p style={{marginLeft: 8}}>$EASY</p>
+                    </div>
+                    <Button
+                        style={{marginTop: 16}} onClick={() => {
+                        if (props.easyAllowance < stakeAmount * 10 ** 18) {
+                            props.approveEasy();
+                        } else {
+                            props.stakeEasy(BigInt(stakeAmount * 10 ** 18));
+                        }
+                    }}>{props.easyAllowance < stakeAmount * 10 ** 18 ? "Approve" : "Stake"}</Button>
+                </Modal.Description>
+            </Modal.Content>
+        </Modal>
+    )
 }
 
 
 export default function StakeBox(props) {
-    const [preSaleEnabled, setPreSaleEnabled] = useState(true);
-    const [toMint, setToMint] = useState(200);
-    const [totalMinted, setTotalMinted] = useState(1000000);
+    const [lockedEasy, setLockedEasy] = useState(0);
+    const [open, setOpen] = useState(false);
+    const [easyBalance, setEasyBalance] = useState(0);
+    const [easyAllowance, setEasyAllowance] = useState(0);
+    const [xEasyBalance, setXEasyBalance] = useState(0);
+    const [stakedEasyBalance, setStakedEasyBalance] = useState(0);
+    const [easyForXEasy, setEasyForXEasy] = useState(0);
+
+    useEffect(() => {
+        getStakeData();
+    }, [props.walletAddress])
+
+    async function getStakeData() {
+        if (typeof props.easyContract != "undefined" && typeof props.walletAddress != "undefined") {
+            setLockedEasy(parseInt(await props.easyContract.balanceOf(X_EASY_ADDRESS), 10) / 10 ** 18);
+            setEasyBalance(parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
+            setEasyAllowance(parseInt(await props.easyContract.allowance(props.walletAddress, X_EASY_ADDRESS), 10));
+            setXEasyBalance(parseInt(await props.xEasyContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
+            setStakedEasyBalance(parseInt(await props.xEasyContract.EASYBalance(props.walletAddress), 10) / 10 ** 18);
+            setEasyForXEasy(parseInt(await props.xEasyContract.xEasyForEasy(BigInt(10 ** 18)), 10) / 10 ** 18);
+        }
+    }
 
     return (
         <>
+            <StakeModal setOpen={(v) => setOpen(v)} open={open} easyBalance={easyBalance}
+                        easyAllowance={easyAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
+                        stakeEasy={async (amount) => props.stakeEasy(amount)}/>
             <h2 className={styles.subTitle}>
                 Stake $EASY
             </h2>
@@ -47,7 +77,7 @@ export default function StakeBox(props) {
             <div className={styles.stakingCard}>
                 <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
                 <p className={styles.stakingTitle}>Staked TVL</p>
-                <p className={styles.stakingText}>$1,000,000</p>
+                <p className={styles.stakingText}>${props.easyPrice * lockedEasy}</p>
                 <p className={styles.stakingTitle}>APR Estimate</p>
                 <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>1.13%</p>
 
@@ -56,7 +86,8 @@ export default function StakeBox(props) {
                     flexDirection: 'row',
                     marginTop: 32,
                     width: '100%',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    alignItems: 'center'
                 }}>
                     <div style={{
                         margin: 8,
@@ -69,7 +100,7 @@ export default function StakeBox(props) {
                         <p style={{width: '100%', textAlign: 'center', marginTop: 8, marginBottom: 8}}>1</p>
                         <p style={{margin: 0}}>xEASY</p>
                     </div>
-                    <p style={{fontWeight: 'bold', fontSize: 16, height: 20}}>=</p>
+                    <p style={{fontWeight: 'bold', fontSize: 16, height: 20, margin: 0}}>=</p>
                     <div style={{
                         margin: 8,
                         display: 'flex',
@@ -78,7 +109,12 @@ export default function StakeBox(props) {
                         justifyContent: 'center'
                     }}>
                         <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
-                        <p style={{width: '100%', textAlign: 'center', marginTop: 8, marginBottom: 8}}>1.12</p>
+                        <p style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            marginTop: 8,
+                            marginBottom: 8
+                        }}>{easyForXEasy.toFixed(4)}</p>
                         <p style={{margin: 0}}>EASY</p>
                     </div>
                 </div>
@@ -89,19 +125,19 @@ export default function StakeBox(props) {
                 <div className={styles.stakingInnerCard}>
                     <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>xEASY Balance</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p className={styles.balanceText}>0</p>
+                        <p className={styles.balanceText}>{xEasyBalance}</p>
                         <img src="/favicon.png"
                              style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
                     <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold', marginTop: 16}}>Claimable
                         EASY</p>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p className={styles.balanceText}>0</p>
+                        <p className={styles.balanceText}>{stakedEasyBalance}</p>
                         <img src="/favicon.png"
                              style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <div className={styles.stakingButton}>
+                        <div className={styles.stakingButton} onClick={() => setOpen(true)}>
                             <p className={styles.stakingButtonText}>Stake</p>
                         </div>
                         <div className={styles.stakingButton}>
