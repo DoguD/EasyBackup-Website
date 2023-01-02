@@ -235,6 +235,15 @@ export default function Home() {
         }
     }
 
+    async function withdrawEasy(amount) {
+        try {
+            await xEasyWithSigner.leave(amount);
+        } catch (e) {
+            console.log("Unstake Error: ");
+            console.log(e);
+        }
+    }
+
     async function presaleMint(_amount) {
         try {
             await presaleContractWithSigner.buyTokens(_amount);
@@ -308,17 +317,24 @@ export default function Home() {
                         <ClaimableBackupsBox/>
                     </>
                     : menuItem === 1 ?
-                        <PresaleBox walletAddress={walletAddress} connectWalletHandler={() => connectWalletHandler()}
-                                    easyContract={easyContract} usdcAllowance={usdcAllowance}
+                        <PresaleBox walletAddress={walletAddress}
+                                    easyContract={easyContract}
+                                    usdcAllowance={usdcAllowance}
+                                    connectWalletHandler={() => connectWalletHandler()}
                                     approveUsdc={async () => await approveUsdc()}
                                     presaleMint={async (amount) => await presaleMint(amount)}/>
                         : menuItem === 2 ?
-                            <StakeBox easyPrice={easyPrice} xEasyContract={xEasyContract} walletAddress={walletAddress}
+                            <StakeBox easyPrice={easyPrice}
+                                      xEasyContract={xEasyContract}
+                                      walletAddress={walletAddress}
                                       easyContract={easyContract}
+                                      connectWalletHandler={() => connectWalletHandler()}
                                       approveEasy={async (target) => await approveEasy(target)}
-                                      stakeEasy={async (amount) => await stakeEasy(amount)}/>
+                                      stakeEasy={async (amount) => await stakeEasy(amount)}
+                                      withdrawEasy={async (amount) => await withdrawEasy(amount)}/>
                             :
-                            <FarmBox/>}
+                            <FarmBox
+                                connectWalletHandler={() => connectWalletHandler()}/>}
             </main>
 
             <footer className={styles.footer}>

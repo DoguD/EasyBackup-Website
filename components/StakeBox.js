@@ -21,7 +21,10 @@ function StakeModal(props) {
                     </p>
                     <div style={{display: 'flex', alignItems: 'center'}}>
                         <Button onClick={() => setStakeAmount(props.easyBalance)}>Max</Button>
-                        <Input value={stakeAmount} onChange={(b, {value}) => setStakeAmount(parseFloat(value))}/>
+                        <Input value={stakeAmount} onChange={(b, {value}) => {
+                            if (value) setStakeAmount(parseFloat(value))
+                            else setStakeAmount(0);
+                        }}/>
                         <p style={{marginLeft: 8}}>$EASY</p>
                     </div>
                     <Button
@@ -38,18 +41,52 @@ function StakeModal(props) {
     )
 }
 
+function WithdrawModal(props) {
+    const [stakeAmount, setStakeAmount] = useState(0);
+    return (
+        <Modal
+            onClose={() => props.setOpen(false)}
+            onOpen={() => props.setOpen(true)}
+            open={props.open}
+        >
+            <Modal.Content>
+                <Modal.Description>
+                    <Header>Withdraw xEASY</Header>
+                    <p>
+                        <b>Available:</b> {(props.xEasyBalance.toFixed(2)).toLocaleString("en-US")} xEASY
+                    </p>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <Button onClick={() => setStakeAmount(props.xEasyBalance)}>Max</Button>
+                        <Input value={stakeAmount} onChange={(b, {value}) => {
+                            if (value) setStakeAmount(parseFloat(value))
+                            else setStakeAmount(0);
+                        }}/>
+                        <p style={{marginLeft: 8}}>$xEASY</p>
+                    </div>
+                    <Button
+                        style={{marginTop: 16}} onClick={() => {
+                        props.withdrawEasy(BigInt(stakeAmount * 10 ** 18));
+                    }}>{"Withdraw"}</Button>
+                </Modal.Description>
+            </Modal.Content>
+        </Modal>
+    )
+}
+
 
 export default function StakeBox(props) {
     const [lockedEasy, setLockedEasy] = useState(0);
-    const [open, setOpen] = useState(false);
+    const [easyForXEasy, setEasyForXEasy] = useState(0);
     const [easyBalance, setEasyBalance] = useState(0);
     const [easyAllowance, setEasyAllowance] = useState(0);
     const [xEasyBalance, setXEasyBalance] = useState(0);
     const [stakedEasyBalance, setStakedEasyBalance] = useState(0);
-    const [easyForXEasy, setEasyForXEasy] = useState(0);
+
+    const [open, setOpen] = useState(false);
+    const [withdrawOpen, setWithdrawOpen] = useState(false);
 
     useEffect(() => {
-        getStakeData();
+        if (props.walletAddress !== "") getStakeData();
     }, [props.walletAddress])
 
     async function getStakeData() {
@@ -68,84 +105,98 @@ export default function StakeBox(props) {
             <StakeModal setOpen={(v) => setOpen(v)} open={open} easyBalance={easyBalance}
                         easyAllowance={easyAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
                         stakeEasy={async (amount) => props.stakeEasy(amount)}/>
+            <WithdrawModal setOpen={(v) => setWithdrawOpen(v)} open={withdrawOpen} xEasyBalance={xEasyBalance}
+                           withdrawEasy={async (amount) => props.withdrawEasy(amount)}/>
             <h2 className={styles.subTitle}>
                 Stake $EASY
             </h2>
             <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of protocol
                 revenues weekly</p>
-            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts after presale ends)</p>
-            <div className={styles.stakingCard}>
-                <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
-                <p className={styles.stakingTitle}>Staked TVL</p>
-                <p className={styles.stakingText}>${props.easyPrice * lockedEasy}</p>
-                <p className={styles.stakingTitle}>APR Estimate</p>
-                <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>1.13%</p>
+            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts after presale
+                ends)</p>
 
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginTop: 32,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <div style={{
-                        margin: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
-                        <p style={{width: '100%', textAlign: 'center', marginTop: 8, marginBottom: 8}}>1</p>
-                        <p style={{margin: 0}}>xEASY</p>
-                    </div>
-                    <p style={{fontWeight: 'bold', fontSize: 16, height: 20, margin: 0}}>=</p>
-                    <div style={{
-                        margin: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
-                        <p style={{
+            {props.walletAddress === "" ?
+                <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
+                    <p className={styles.mintText}>Connect</p>
+                </div> :
+                <>
+                    <div className={styles.stakingCard}>
+                        <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
+                        <p className={styles.stakingTitle}>Staked TVL</p>
+                        <p className={styles.stakingText}>${props.easyPrice * lockedEasy}</p>
+                        <p className={styles.stakingTitle}>APR Estimate</p>
+                        <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>1.13%</p>
+
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            marginTop: 32,
                             width: '100%',
-                            textAlign: 'center',
-                            marginTop: 8,
-                            marginBottom: 8
-                        }}>{easyForXEasy.toFixed(4)}</p>
-                        <p style={{margin: 0}}>EASY</p>
-                    </div>
-                </div>
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <div style={{
+                                margin: 8,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
+                                <p style={{width: '100%', textAlign: 'center', marginTop: 8, marginBottom: 8}}>1</p>
+                                <p style={{margin: 0}}>xEASY</p>
+                            </div>
+                            <p style={{fontWeight: 'bold', fontSize: 16, height: 20, margin: 0}}>=</p>
+                            <div style={{
+                                margin: 8,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <img src="/favicon.png" style={{width: 30, height: 30, borderRadius: 15}}/>
+                                <p style={{
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    marginTop: 8,
+                                    marginBottom: 8
+                                }}>{easyForXEasy.toFixed(4)}</p>
+                                <p style={{margin: 0}}>EASY</p>
+                            </div>
+                        </div>
 
-                <p className={styles.getTokenText}
-                   onClick={() => window.open("https://spooky.fi/#/swap?inputCurrency=0x04068DA6C83AFCFA0e13ba15A6696662335D5B75&outputCurrency=" + EASY_ADDRESS, "_blank")}>Buy
-                    $EASY →</p>
-                <div className={styles.stakingInnerCard}>
-                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>xEASY Balance</p>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p className={styles.balanceText}>{xEasyBalance}</p>
-                        <img src="/favicon.png"
-                             style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
-                    </div>
-                    <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold', marginTop: 16}}>Claimable
-                        EASY</p>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <p className={styles.balanceText}>{stakedEasyBalance}</p>
-                        <img src="/favicon.png"
-                             style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
-                    </div>
-                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <div className={styles.stakingButton} onClick={() => setOpen(true)}>
-                            <p className={styles.stakingButtonText}>Stake</p>
+                        <p className={styles.getTokenText}
+                           onClick={() => window.open("https://spooky.fi/#/swap?inputCurrency=0x04068DA6C83AFCFA0e13ba15A6696662335D5B75&outputCurrency=" + EASY_ADDRESS, "_blank")}>Buy
+                            $EASY →</p>
+                        <div className={styles.stakingInnerCard}>
+                            <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>xEASY Balance</p>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <p className={styles.balanceText}>{xEasyBalance}</p>
+                                <img src="/favicon.png"
+                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
+                            </div>
+                            <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold', marginTop: 16}}>Claimable
+                                EASY</p>
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <p className={styles.balanceText}>{stakedEasyBalance}</p>
+                                <img src="/favicon.png"
+                                     style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
+                            </div>
+                            <div style={{display: 'flex', flexDirection: 'row'}}>
+                                <div className={styles.stakingButton} onClick={() => {
+                                    setOpen(true);
+                                }}>
+                                    <p className={styles.stakingButtonText}>Stake</p>
+                                </div>
+                                <div className={styles.stakingButton} onClick={() => {
+                                    setWithdrawOpen(true);
+                                }}>
+                                    <p className={styles.stakingButtonText}>Withdraw</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className={styles.stakingButton}>
-                            <p className={styles.stakingButtonText}>Unstake</p>
-                        </div>
                     </div>
-                </div>
-            </div>
+                </>}
         </>
     )
 }
