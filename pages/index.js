@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 // Web3
 import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/EasyClub";
@@ -8,18 +7,15 @@ import {ethers} from "ethers";
 import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 
 import {useEffect, useState} from "react";
-import ProgressBar from "@ramonak/react-progress-bar";
 import StatsBox from "../components/StatsBox";
 import PresaleBox from "../components/PresaleBox";
 import StakeBox from "../components/StakeBox";
 import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
-import NFTsContainer from "../components/NFTsContainer";
 
 import 'semantic-ui-css/semantic.min.css'
 
 // Circular Progress Bar
-import {CircularProgressbar, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import FarmBox from "../components/FarmBox";
 import CreateBackupBox from "../components/CreateBackupBox";
@@ -28,6 +24,8 @@ import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/Presale";
 import {USDC_ABI, USDC_ADDRESS} from "../contracts/USDC";
 import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
 import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/xEasy";
+import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
+import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
 
 // Web3 Global Vars
 let provider;
@@ -45,24 +43,24 @@ let easyContract;
 let easyContractWithSigner;
 let xEasyContract;
 let xEasyWithSigner;
+let lpContract;
+let lpContractWithSigner;
+let farmContract;
+let farmContractWithSigner;
+
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
-    const [isDiscounted, setIsDiscounted] = useState(false);
     // UI Controllers
-    const [isMinting, setIsMinting] = useState(false);
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
     // Toasts
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
     // Referral
-    const [referer, setReferer] = useState("0x0000000000000000000000000000000000000000");
-    const [totalRefRewards, setTotalRefRewards] = useState(0);
-    const [userRefRewards, setUserRefRewards] = useState(0);
-    const [userRefCount, setUserRefCount] = useState(0);
-
     const [usdcAllowance, setUsdcAllowance] = useState(0);
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
+
+    const [menuItem, setMenuItem] = useState(0);
     // Referrer
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -71,7 +69,7 @@ export default function Home() {
             let params = splitUrl[1];
             if (params.indexOf("r=") != -1) {
                 let referer = params.slice(2, 44);
-                setReferer(referer);
+                // REFERRAL SYSTEM
             }
         }
     }, []);
@@ -92,6 +90,9 @@ export default function Home() {
             usdcContract = new ethers.Contract(USDC_ADDRESS, USDC_ABI, provider);
             easyContract = new ethers.Contract(EASY_ADDRESS, EASY_ABI, provider);
             xEasyContract = new ethers.Contract(X_EASY_ADDRESS, X_EASY_ABI, provider);
+            lpContract = new ethers.Contract(LP_ADDRESS, LP_ABI, provider);
+            farmContract = new ethers.Contract(FARM_ADDRESS, FARM_ABI, provider);
+
             getGeneralData();
         } else {
             console.log("Metamask not installed.");
@@ -139,23 +140,18 @@ export default function Home() {
                 }
             } else {
                 signer = provider.getSigner();
-                console.log("Is signer null ?", signer == null)
+                let userAddress = await signer.getAddress();
+                setWalletAddress(userAddress);
+
                 nftContractWithSigner = nftContract.connect(signer);
                 discountedContractWithSigner = discountedContract.connect(signer);
                 usdcContractWithSigner = usdcContract.connect(signer);
                 presaleContractWithSigner = presaleContract.connect(signer);
                 easyContractWithSigner = easyContract.connect(signer);
                 xEasyWithSigner = xEasyContract.connect(signer);
-                let userAddress = await signer.getAddress();
-                setWalletAddress(userAddress);
-                // Discounted data
-                if (typeof userAddress != "undefined") {
-                    console.log("Hey, ", await discountedContract.isEligible(userAddress));
-                    setIsDiscounted(await discountedContract.isEligible(userAddress));
-                    setTotalRefRewards(parseInt(await discountedContract.referralRewardDistributedTotal(), 10) / 10 ** 18);
-                    setUserRefRewards(parseInt(await discountedContract.referralRewardDistributed(userAddress), 10) / 10 ** 18);
-                    setUserRefCount(parseInt(await discountedContract.referralSaleOccured(userAddress), 10));
-                }
+                lpContractWithSigner = lpContract.connect(signer);
+                farmContractWithSigner = farmContract.connect(signer);
+
                 // All NFT Data
                 await getUsdcAllowance();
             }
@@ -163,27 +159,6 @@ export default function Home() {
             console.log(e);
         }
     };
-
-    // Contract Methods
-    async function mintNFT(count) {
-        setIsMinting(true);
-        try {
-            console.log('Hey');
-            setIsMinting(true);
-            if (!isDiscounted) {
-                const options = {value: ethers.utils.parseEther((100 * count).toString())}
-                await discountedContractWithSigner.mintForSelf(count, referer, options);
-            } else {
-                const options = {value: ethers.utils.parseEther((20 * count).toString())}
-                await discountedContractWithSigner.mintForSelf(count, referer, options);
-            }
-        } catch (e) {
-            setIsMinting(false);
-            console.log(e);
-            toast.error("You don't have enough FTM in your wallet.", {duration: 5000,});
-            setIsMinting(false);
-        }
-    }
 
     async function getUsdcAllowance() {
         try {
@@ -255,8 +230,15 @@ export default function Home() {
 
     async function getGeneralData() {
         try {
-            let supply = parseInt(await easyContract.totalSupply(), 10);
+            let supply = parseInt(await easyContract.totalSupply(), 10) / 10 ** 18;
+
+            let reserves = await lpContract.getReserves();
+            let usdcInLp = parseInt(reserves[0], 10) / 10 ** 6;
+            let easyInLp = parseInt(reserves[1], 10) / 10 ** 18;
+
             setEasySupply(supply);
+            // TODO: Before Release
+            setEasyPrice(usdcInLp / easyInLp);
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -271,8 +253,6 @@ export default function Home() {
             }
         }
     }
-
-    const [menuItem, setMenuItem] = useState(0);
 
     return (
         <div className={styles.container}>
@@ -334,6 +314,14 @@ export default function Home() {
                                       withdrawEasy={async (amount) => await withdrawEasy(amount)}/>
                             :
                             <FarmBox
+                                walletAddress={walletAddress}
+                                lpContract={lpContract}
+                                lpContractWithSigner={lpContractWithSigner}
+                                usdcContract={usdcContract}
+                                easyContract={easyContract}
+                                farmContract={farmContract}
+                                farmContractWithSigner={farmContractWithSigner}
+                                easyPrice={easyPrice}
                                 connectWalletHandler={() => connectWalletHandler()}/>}
             </main>
 

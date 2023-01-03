@@ -123,7 +123,7 @@ export default function StakeBox(props) {
                     <div className={styles.stakingCard}>
                         <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
                         <p className={styles.stakingTitle}>Staked TVL</p>
-                        <p className={styles.stakingText}>${props.easyPrice * lockedEasy}</p>
+                        <p className={styles.stakingText}>${(props.easyPrice * lockedEasy).toFixed(0)}</p>
                         <p className={styles.stakingTitle}>APR Estimate</p>
                         <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>1.13%</p>
 
