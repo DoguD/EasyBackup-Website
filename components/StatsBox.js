@@ -1,5 +1,10 @@
 import styles from "../styles/Home.module.css";
 
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
 export default function StatsBox(props) {
     return (
         <>
@@ -14,11 +19,11 @@ export default function StatsBox(props) {
                 </div>
                 <div className={styles.card}>
                     <h2>$EASY Market Cap</h2>
-                    <p>${((props.easySupply * props.easyPrice).toFixed(0)).toLocaleString("en-US")}</p>
+                    <p>{USDollar.format((props.easySupply * props.easyPrice))}</p>
                 </div>
                 <div className={styles.card}>
                     <h2>Total Protocol Revenue</h2>
-                    <p>$100</p>
+                    <p>{USDollar.format(100)}</p>
                 </div>
             </div>
         </>

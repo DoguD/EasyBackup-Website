@@ -4,6 +4,10 @@ import {useEffect, useState} from "react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
 
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 function StakeModal(props) {
     const [stakeAmount, setStakeAmount] = useState(0);
@@ -17,7 +21,7 @@ function StakeModal(props) {
                 <Modal.Description>
                     <Header>Stake in xEASY</Header>
                     <p>
-                        <b>Available:</b> {(props.easyBalance.toFixed(2)).toLocaleString("en-US")} EASY
+                        <b>Available:</b> {USDollar.format(props.easyBalance.toFixed(2))} EASY
                     </p>
                     <div style={{display: 'flex', alignItems: 'center'}}>
                         <Button onClick={() => setStakeAmount(props.easyBalance)}>Max</Button>
@@ -53,7 +57,7 @@ function WithdrawModal(props) {
                 <Modal.Description>
                     <Header>Withdraw xEASY</Header>
                     <p>
-                        <b>Available:</b> {(props.xEasyBalance.toFixed(2)).toLocaleString("en-US")} xEASY
+                        <b>Available:</b> {USDollar.format(props.xEasyBalance.toFixed(2))} xEASY
                     </p>
                     <div style={{display: 'flex', alignItems: 'center'}}>
                         <Button onClick={() => setStakeAmount(props.xEasyBalance)}>Max</Button>
@@ -175,7 +179,12 @@ export default function StakeBox(props) {
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
-                            <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold', marginTop: 16}}>Claimable
+                            <p style={{
+                                marginBottom: 0,
+                                color: '#424242',
+                                fontWeight: 'semi-bold',
+                                marginTop: 16
+                            }}>Claimable
                                 EASY</p>
                             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <p className={styles.balanceText}>{stakedEasyBalance}</p>

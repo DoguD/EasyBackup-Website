@@ -29,6 +29,10 @@ function MyTimer({expiryTimestamp}) {
     );
 }
 
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 export default function PresaleBox(props) {
     const [preSaleEnabled, setPreSaleEnabled] = useState(true);
@@ -60,7 +64,7 @@ export default function PresaleBox(props) {
                     <>
                         <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Total Presale
                             Allocation: </b> 3,500,000 $EASY</p>
-                        <p className={styles.sectionDescription}><b>Minted: </b> {totalMinted.toLocaleString("en-US")}
+                        <p className={styles.sectionDescription}><b>Minted: </b> {USDollar.format(totalMinted)}
                         </p>
                         <p className={styles.sectionDescription} style={{marginBottom: 32}}><b>Presale Price: </b> 0.005
                             $USDC</p>
@@ -92,8 +96,8 @@ export default function PresaleBox(props) {
                                                    }
                                                }}></input>
                                     </div>
-                                    <p className={styles.mintCostText}>{(0.005 * toMint).toLocaleString("en-US")}
-                                        <b>$USDC</b></p>
+                                    <p className={styles.mintCostText}>{(0.005 * toMint)}
+                                        <b> $USDC</b></p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (props.usdcAllowance < toMint * 0.05 * 1 ** 6) {
                                             console.log("test");
