@@ -60,8 +60,39 @@ const expiryOptions = [
 
 ]
 
+let tokenMap = {
+    "0xeab84a5EF8E740F4a9254f6A0ceb887F0eDC4979": "EASY"
+}
+
 let tokenContract;
 let tokenContractWithSigner;
+
+function BackupRow(props) {
+    return (
+        <div className={styles.claimableBackupsRow}>
+            <p className={styles.claimableBackupText}><b>To: </b></p>
+            <p className={styles.claimableBackupText}>{props.backup.to}</p>
+
+            <div style={{width: 16}}/>
+            <p className={styles.claimableBackupText}><b>Token: </b></p>
+            <p className={styles.claimableBackupText}>{typeof tokenMap[props.backup.token] !== "undefined" ? "$" + tokenMap[props.backup.token] : props.backup.token.slice(0, 4) + "..." + props.backup.token.slice(39, 42)}</p>
+
+            <div style={{width: 16}}/>
+            <p className={styles.claimableBackupText}><b>Amount: </b></p>
+            <p>{BigInt(props.backup.amount)}</p>
+            <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
+                ? "Infinite"
+                : parseInt(props.backup.amount / 10 ** 18).toFixed(4)}</p>
+
+            <div style={{width: 16}}/>
+            <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
+            <p className={styles.claimableBackupText}>{((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0)} days</p>
+
+            <div style={{width: 32}}/>
+            <Button basic color={'red'}>Delete</Button>
+        </div>
+    )
+}
 
 export default function CreateBackupBox(props) {
     const [token, setToken] = useState("");
@@ -73,12 +104,14 @@ export default function CreateBackupBox(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [fee, setFee] = useState(0);
 
-    const [allowance, setAllowance] = useState(0);
     let maxAllowance = BigInt(115792089237316195423570985008687907853269984665640564039457584007913129639935);
     const [approvalNeeded, setApprovalNeeded] = useState(true);
+    const [createdBackupCount, setCreatedBackupCount] = useState(0);
+    const [createdBackups, setCreatedBackups] = useState([]);
 
     useEffect(() => {
         getBackupData();
+        getCreatedBackups();
     }, [props.walletAddress]);
 
     async function getBackupData() {
@@ -88,12 +121,34 @@ export default function CreateBackupBox(props) {
         }
     }
 
+    async function getCreatedBackups() {
+        if (props.walletAddress !== "") {
+            let createdBackupCount = parseInt(await props.backupContract.createdBackupsCount(props.walletAddress), 10);
+            setCreatedBackupCount(createdBackupCount);
+            let parsedBackups = [];
+            for (let i = 0; i < createdBackupCount; i++) {
+                let backup = await props.backupContract.backups(parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10));
+                let parsedBackup = {
+                    amount: backup[3],
+                    expiry: backup[4],
+                    from: backup[0],
+                    isActive: backup[5],
+                    to: backup[1],
+                    token: backup[2],
+                    lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10)
+                }
+                console.log(parsedBackup);
+                parsedBackups.push(parsedBackup);
+            }
+            setCreatedBackups(parsedBackups);
+        }
+    }
+
     async function getAllowance(tokenAddress) {
         try {
             tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
             tokenContractWithSigner = tokenContract.connect(props.signer);
             let allowance = parseInt(await tokenContract.allowance(props.walletAddress, BACKUP_ADDRESS), 10);
-            setAllowance(0);
             setApprovalNeeded(BigInt(allowance) < maxAllowance);
         } catch (e) {
             console.log("Backup Box, get allowance error:");
@@ -113,8 +168,7 @@ export default function CreateBackupBox(props) {
     async function createBackup() {
         try {
             const options = {value: fee}
-            console.log(options);
-            await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : amount * 10 ** 18, expiry * 24 * 60 * 60, options);
+            await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** 18), expiry * 24 * 60 * 60, options);
         } catch (e) {
             console.log("Create Backup Error: ");
             console.log(e);
@@ -260,25 +314,8 @@ export default function CreateBackupBox(props) {
                         My Backups
                     </h2>
                     <div className={styles.claimableBackupsContainer}>
-                        <div className={styles.claimableBackupsRow}>
-                            <p className={styles.claimableBackupText}><b>To: </b></p>
-                            <p className={styles.claimableBackupText}>0x14453a83131012F4DbB4c9c98830A0DE04B38c10</p>
-
-                            <div style={{width: 16}}/>
-                            <p className={styles.claimableBackupText}><b>Token: </b></p>
-                            <p className={styles.claimableBackupText}>$ETH</p>
-
-                            <div style={{width: 16}}/>
-                            <p className={styles.claimableBackupText}><b>Amount: </b></p>
-                            <p className={styles.claimableBackupText}>0.1463</p>
-
-                            <div style={{width: 16}}/>
-                            <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
-                            <p className={styles.claimableBackupText}>12 days</p>
-
-                            <div style={{width: 32}}/>
-                            <Button basic color={'red'}>Delete</Button>
-                        </div>
+                        {/* eslint-disable-next-line react/jsx-key */}
+                        {createdBackups.length !== 0 ? createdBackups.map((item) => <BackupRow backup={item}/>) : null}
                     </div>
                 </>}
         </>
