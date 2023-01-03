@@ -26,6 +26,8 @@ import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
 import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/xEasy";
 import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
+import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/Backup";
+import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/Oracle";
 
 // Web3 Global Vars
 let provider;
@@ -47,6 +49,9 @@ let lpContract;
 let lpContractWithSigner;
 let farmContract;
 let farmContractWithSigner;
+let backupContract;
+let backupContractWithSigner;
+let oracleContract;
 
 export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
@@ -59,6 +64,7 @@ export default function Home() {
     const [usdcAllowance, setUsdcAllowance] = useState(0);
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
+    const [totalBackups, setTotalBackups] = useState(0);
 
     const [menuItem, setMenuItem] = useState(0);
     // Referrer
@@ -92,6 +98,8 @@ export default function Home() {
             xEasyContract = new ethers.Contract(X_EASY_ADDRESS, X_EASY_ABI, provider);
             lpContract = new ethers.Contract(LP_ADDRESS, LP_ABI, provider);
             farmContract = new ethers.Contract(FARM_ADDRESS, FARM_ABI, provider);
+            backupContract = new ethers.Contract(BACKUP_ADDRESS, BACKUP_ABI, provider);
+            oracleContract = new ethers.Contract(ORACLE_ADDRESS, ORACLE_ABI, provider);
 
             getGeneralData();
         } else {
@@ -151,6 +159,7 @@ export default function Home() {
                 xEasyWithSigner = xEasyContract.connect(signer);
                 lpContractWithSigner = lpContract.connect(signer);
                 farmContractWithSigner = farmContract.connect(signer);
+                backupContractWithSigner = backupContract.connect(signer);
 
                 // All NFT Data
                 await getUsdcAllowance();
@@ -239,6 +248,7 @@ export default function Home() {
             setEasySupply(supply);
             // TODO: Before Release
             setEasyPrice(usdcInLp / easyInLp);
+            setTotalBackups(parseInt(await backupContract.backupCount(), 10));
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -271,7 +281,7 @@ export default function Home() {
                     Create backups or assign inheritance wallets with ease
                 </p>
 
-                <StatsBox easyPrice={easyPrice} easySupply={easySupply}/>
+                <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
 
                 <div style={{
                     display: 'flex',
@@ -292,9 +302,16 @@ export default function Home() {
 
                 {menuItem === 0 ?
                     <>
-                        <CreateBackupBox/>
-
-                        <ClaimableBackupsBox/>
+                        <CreateBackupBox walletAddress={walletAddress}
+                                         connectWalletHandler={() => connectWalletHandler()}
+                                         backupContract={backupContract}
+                                         backupContractWithSigner={backupContractWithSigner}
+                                         provider={provider}
+                                         signer={signer}
+                                         oracleContract={oracleContract}/>
+                        <ClaimableBackupsBox walletAddress={walletAddress}
+                                             backupContract={backupContract}
+                                             backupContractWithSigner={backupContractWithSigner}/>
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress}

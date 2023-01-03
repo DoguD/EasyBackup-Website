@@ -23,7 +23,7 @@ export default function StatsBox(props) {
                 </div>
                 <div className={styles.card}>
                     <h2>Total Protocol Revenue</h2>
-                    <p>{USDollar.format(100)}</p>
+                    <p>{USDollar.format(props.totalBackups)}</p>
                 </div>
             </div>
         </>
