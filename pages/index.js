@@ -201,24 +201,6 @@ export default function Home() {
         }
     }
 
-    async function approveEasy(target) {
-        try {
-            await easyContractWithSigner.approve(target, BigInt(1000000000000000000000000000));
-        } catch (e) {
-            console.log("Easy Approve Error: ");
-            console.log(e);
-        }
-    }
-
-    async function stakeEasy(amount) {
-        try {
-            await xEasyWithSigner.enter(amount);
-        } catch (e) {
-            console.log("Stake Error: ");
-            console.log(e);
-        }
-    }
-
     async function withdrawEasy(amount) {
         try {
             await xEasyWithSigner.leave(amount);
@@ -318,14 +300,15 @@ export default function Home() {
                                     approveUsdc={async () => await approveUsdc()}
                                     presaleMint={async (amount) => await presaleMint(amount)}/>
                         : menuItem === 2 ?
-                            <StakeBox easyPrice={easyPrice}
-                                      xEasyContract={xEasyContract}
-                                      walletAddress={walletAddress}
-                                      easyContract={easyContract}
-                                      connectWalletHandler={() => connectWalletHandler()}
-                                      approveEasy={async (target) => await approveEasy(target)}
-                                      stakeEasy={async (amount) => await stakeEasy(amount)}
-                                      withdrawEasy={async (amount) => await withdrawEasy(amount)}/>
+                            <StakeBox
+                                provider={provider}
+                                walletAddress={walletAddress}
+                                connectWalletHandler={() => connectWalletHandler()}
+                                easyPrice={easyPrice}
+                                xEasyContract={xEasyContract}
+                                xEasyWithSigner={xEasyWithSigner}
+                                easyContract={easyContract}
+                                easyContractWithSigner={easyContractWithSigner}/>
                             :
                             <FarmBox
                                 walletAddress={walletAddress}

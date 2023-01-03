@@ -4,11 +4,9 @@ import {EASY_ADDRESS} from "../contracts/EasyToken";
 
 import {FARM_ADDRESS} from "../contracts/Farm";
 import {LP_ADDRESS} from "../contracts/LP";
-import {USDC_ADDRESS} from "../contracts/USDC";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
-import {PRESALE_ADDRESS} from "../contracts/Presale";
-import {CircleLoader, ClipLoader, ClockLoader, RingLoader, RotateLoader, SyncLoader} from "react-spinners";
+import {ClipLoader} from "react-spinners";
 
 function StakeModal(props) {
     const [stakeAmount, setStakeAmount] = useState(0);
@@ -86,7 +84,6 @@ export default function FarmBox(props) {
     const [userFarmBalance, setUserFarmBalance] = useState(0);
     const [userReward, setUserReward] = useState(0);
 
-    const [apr, setApr] = useState(0);
     const [apy, setApy] = useState(0);
     const [tvl, setTvl] = useState(0);
 
@@ -118,9 +115,6 @@ export default function FarmBox(props) {
             let apy = (1 + dailyApr) ** 365;
 
             setTvl(tvl);
-            console.log(tvl);
-            setApr(apr);
-            console.log(dailyApr);
             setApy(apy);
         }
     }
@@ -177,20 +171,21 @@ export default function FarmBox(props) {
         props.provider.once(txHash, (transaction) => {
             console.log(transaction);
             setIsLoading(false);
+            getFarmData();
         })
     }
 
     return (
         <>
             <StakeModal setOpen={(v) => setOpen(v)} open={open} userLpBalance={userLpBalance}
-                        lpAllowance={lpAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
+                        lpAllowance={lpAllowance}
                         stakeInFarm={async (amount) => stakeInFarm(amount)}
                         approveLp={() => approveLp()}
                         isLoading={isLoading}/>
 
             <WithdrawModal
                 setOpen={(v) => setWithdrawOpen(v)} open={withdrawOpen} userFarmBalance={userFarmBalance}
-                lpAllowance={lpAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
+                lpAllowance={lpAllowance}
                 withdrawFarm={(amount) => withdrawFarm(amount)}
                 isLoading={isLoading}
             />

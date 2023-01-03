@@ -1,8 +1,9 @@
 import styles from "../styles/Home.module.css";
 import {EASY_ADDRESS} from "../contracts/EasyToken";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
+import {ClipLoader} from "react-spinners";
 
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -38,7 +39,8 @@ function StakeModal(props) {
                         } else {
                             props.stakeEasy(BigInt(stakeAmount * 10 ** 18));
                         }
-                    }}>{props.easyAllowance < stakeAmount * 10 ** 18 ? "Approve" : "Stake"}</Button>
+                    }}>{props.isLoading ? <ClipLoader
+                        size={15}/> : props.easyAllowance < stakeAmount * 10 ** 18 ? "Approve" : "Stake"}</Button>
                 </Modal.Description>
             </Modal.Content>
         </Modal>
@@ -70,7 +72,8 @@ function WithdrawModal(props) {
                     <Button
                         style={{marginTop: 16}} onClick={() => {
                         props.withdrawEasy(BigInt(stakeAmount * 10 ** 18));
-                    }}>{"Withdraw"}</Button>
+                    }}>{props.isLoading ? <ClipLoader
+                        size={15}/> : "Withdraw"}</Button>
                 </Modal.Description>
             </Modal.Content>
         </Modal>
@@ -89,6 +92,8 @@ export default function StakeBox(props) {
     const [open, setOpen] = useState(false);
     const [withdrawOpen, setWithdrawOpen] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         if (props.walletAddress !== "") getStakeData();
     }, [props.walletAddress])
@@ -104,13 +109,59 @@ export default function StakeBox(props) {
         }
     }
 
+    function setListener(txHash) {
+        props.provider.once(txHash, (transaction) => {
+            console.log(transaction);
+            setIsLoading(false);
+            getStakeData();
+        })
+    }
+
+    async function stakeEasy(amount) {
+        setIsLoading(true);
+        try {
+            let transaction = await props.xEasyWithSigner.enter(amount);
+            console.log(transaction.hash);
+            setListener(transaction.hash);
+        } catch (e) {
+            setIsLoading(false);
+            console.log("Stake Error: ");
+            console.log(e);
+        }
+    }
+
+    async function withdrawEasy(amount) {
+        setIsLoading(true);
+        try {
+            let transaction = await props.xEasyWithSigner.leave(amount);
+            setListener(transaction.hash);
+        } catch (e) {
+            setIsLoading(false);
+            console.log("Unstake Error: ");
+            console.log(e);
+        }
+    }
+
+    async function approveEasy(target) {
+        setIsLoading(true);
+        try {
+            await props.easyContractWithSigner.approve(target, BigInt(1000000000000000000000000000));
+        } catch (e) {
+            setIsLoading(false);
+            console.log("Easy Approve Error: ");
+            console.log(e);
+        }
+    }
+
     return (
         <>
             <StakeModal setOpen={(v) => setOpen(v)} open={open} easyBalance={easyBalance}
-                        easyAllowance={easyAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
-                        stakeEasy={async (amount) => props.stakeEasy(amount)}/>
+                        easyAllowance={easyAllowance} approveEasy={async () => approveEasy(X_EASY_ADDRESS)}
+                        stakeEasy={async (amount) => stakeEasy(amount)}
+                        isLoading={isLoading}/>
             <WithdrawModal setOpen={(v) => setWithdrawOpen(v)} open={withdrawOpen} xEasyBalance={xEasyBalance}
-                           withdrawEasy={async (amount) => props.withdrawEasy(amount)}/>
+                           withdrawEasy={async (amount) => withdrawEasy(amount)}
+                           isLoading={isLoading}/>
             <h2 className={styles.subTitle}>
                 Stake $EASY
             </h2>
@@ -195,12 +246,14 @@ export default function StakeBox(props) {
                                 <div className={styles.stakingButton} onClick={() => {
                                     setOpen(true);
                                 }}>
-                                    <p className={styles.stakingButtonText}>Stake</p>
+                                    <p className={styles.stakingButtonText}>{isLoading ?
+                                        <ClipLoader color={"#424242"} size={15}/> : "Stake"}</p>
                                 </div>
                                 <div className={styles.stakingButton} onClick={() => {
                                     setWithdrawOpen(true);
                                 }}>
-                                    <p className={styles.stakingButtonText}>Withdraw</p>
+                                    <p className={styles.stakingButtonText}>{isLoading ?
+                                        <ClipLoader color={"#424242"} size={15}/> : "Withdraw"}</p>
                                 </div>
                             </div>
                         </div>
