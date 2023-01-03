@@ -309,9 +309,6 @@ export default function Home() {
                                          provider={provider}
                                          signer={signer}
                                          oracleContract={oracleContract}/>
-                        <ClaimableBackupsBox walletAddress={walletAddress}
-                                             backupContract={backupContract}
-                                             backupContractWithSigner={backupContractWithSigner}/>
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress}

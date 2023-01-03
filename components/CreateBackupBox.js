@@ -9,6 +9,8 @@ import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {ERC20_ABI} from "../contracts/ERC20";
 import {BACKUP_ADDRESS} from "../contracts/Backup";
 import {PRESALE_ADDRESS} from "../contracts/Presale";
+import ClaimableBackupsBox from "./ClaimableBackupsBox";
+import {TOKEN_MAP} from "./subComponents/TokenMap";
 
 const friendOptions = [
     {
@@ -60,10 +62,6 @@ const expiryOptions = [
 
 ]
 
-let tokenMap = {
-    "0xeab84a5EF8E740F4a9254f6A0ceb887F0eDC4979": "EASY"
-}
-
 let tokenContract;
 let tokenContractWithSigner;
 
@@ -75,11 +73,10 @@ function BackupRow(props) {
 
             <div style={{width: 16}}/>
             <p className={styles.claimableBackupText}><b>Token: </b></p>
-            <p className={styles.claimableBackupText}>{typeof tokenMap[props.backup.token] !== "undefined" ? "$" + tokenMap[props.backup.token] : props.backup.token.slice(0, 4) + "..." + props.backup.token.slice(39, 42)}</p>
+            <p className={styles.claimableBackupText}>{typeof TOKEN_MAP[props.backup.token] !== "undefined" ? "$" + TOKEN_MAP[props.backup.token] : props.backup.token.slice(0, 4) + "..." + props.backup.token.slice(39, 42)}</p>
 
             <div style={{width: 16}}/>
             <p className={styles.claimableBackupText}><b>Amount: </b></p>
-            <p>{BigInt(props.backup.amount)}</p>
             <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
                 ? "Infinite"
                 : parseInt(props.backup.amount / 10 ** 18).toFixed(4)}</p>
@@ -108,7 +105,6 @@ export default function CreateBackupBox(props) {
 
     let maxAllowance = BigInt(115792089237316195423570985008687907853269984665640564039457584007913129639935);
     const [approvalNeeded, setApprovalNeeded] = useState(true);
-    const [createdBackupCount, setCreatedBackupCount] = useState(0);
     const [createdBackups, setCreatedBackups] = useState([]);
 
     useEffect(() => {
@@ -126,7 +122,6 @@ export default function CreateBackupBox(props) {
     async function getCreatedBackups() {
         if (props.walletAddress !== "") {
             let createdBackupCount = parseInt(await props.backupContract.createdBackupsCount(props.walletAddress), 10);
-            setCreatedBackupCount(createdBackupCount);
             let parsedBackups = [];
             for (let i = 0; i < createdBackupCount; i++) {
                 let backupId = parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10);
@@ -326,6 +321,9 @@ export default function CreateBackupBox(props) {
                         {createdBackups.length !== 0 ? createdBackups.map((item) => <BackupRow backup={item}
                                                                                                deleteBackup={(id) => deleteBackup(id)}/>) : null}
                     </div>
+                    <ClaimableBackupsBox walletAddress={props.walletAddress}
+                                         backupContract={props.backupContract}
+                                         backupContractWithSigner={props.backupContractWithSigner}/>
                 </>}
         </>
     );
