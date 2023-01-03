@@ -89,7 +89,9 @@ function BackupRow(props) {
             <p className={styles.claimableBackupText}>{((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0)} days</p>
 
             <div style={{width: 32}}/>
-            <Button basic color={'red'}>Delete</Button>
+            {props.backup.isActive ?
+                <Button basic color={'red'} onClick={() => props.deleteBackup(props.backup.backupId)}>Delete</Button>
+                : <p style={{color: 'red', marginRight: 16, fontWeight: 'bold'}}>Deleted</p>}
         </div>
     )
 }
@@ -127,7 +129,8 @@ export default function CreateBackupBox(props) {
             setCreatedBackupCount(createdBackupCount);
             let parsedBackups = [];
             for (let i = 0; i < createdBackupCount; i++) {
-                let backup = await props.backupContract.backups(parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10));
+                let backupId = parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10);
+                let backup = await props.backupContract.backups(backupId);
                 let parsedBackup = {
                     amount: backup[3],
                     expiry: backup[4],
@@ -135,13 +138,18 @@ export default function CreateBackupBox(props) {
                     isActive: backup[5],
                     to: backup[1],
                     token: backup[2],
-                    lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10)
+                    lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
+                    backupId: backupId
                 }
                 console.log(parsedBackup);
                 parsedBackups.push(parsedBackup);
             }
             setCreatedBackups(parsedBackups);
         }
+    }
+
+    async function deleteBackup(id) {
+        await props.backupContractWithSigner.deletBackup(id);
     }
 
     async function getAllowance(tokenAddress) {
@@ -315,7 +323,8 @@ export default function CreateBackupBox(props) {
                     </h2>
                     <div className={styles.claimableBackupsContainer}>
                         {/* eslint-disable-next-line react/jsx-key */}
-                        {createdBackups.length !== 0 ? createdBackups.map((item) => <BackupRow backup={item}/>) : null}
+                        {createdBackups.length !== 0 ? createdBackups.map((item) => <BackupRow backup={item}
+                                                                                               deleteBackup={(id) => deleteBackup(id)}/>) : null}
                     </div>
                 </>}
         </>
