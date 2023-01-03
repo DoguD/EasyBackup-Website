@@ -61,7 +61,6 @@ export default function Home() {
     const {toasts} = useToasterStore();
     const TOAST_LIMIT = 1;
     // Referral
-    const [usdcAllowance, setUsdcAllowance] = useState(0);
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
     const [totalBackups, setTotalBackups] = useState(0);
@@ -160,64 +159,11 @@ export default function Home() {
                 lpContractWithSigner = lpContract.connect(signer);
                 farmContractWithSigner = farmContract.connect(signer);
                 backupContractWithSigner = backupContract.connect(signer);
-
-                // All NFT Data
-                await getUsdcAllowance();
             }
         } catch (e) {
             console.log(e);
         }
     };
-
-    async function getUsdcAllowance() {
-        try {
-            // Info about signer
-            signer = provider.getSigner();
-            let shouldProceed = false;
-            try {
-                await signer.getAddress();
-                shouldProceed = true;
-            } catch (e) {
-                console.log("User data error.")
-            }
-            if (signer != null && shouldProceed) {
-                // NFT
-                let allowance = parseInt(await usdcContract.allowance(await signer.getAddress(), PRESALE_ADDRESS), 10);
-                setUsdcAllowance(allowance);
-            }
-        } catch (e) {
-            console.log("USDC allowance error: ");
-            console.log(e);
-            await getUsdcAllowance(walletAddress);
-        }
-    }
-
-    async function approveUsdc() {
-        try {
-            await usdcContractWithSigner.approve(PRESALE_ADDRESS, BigInt(1000000000000000000000000000));
-        } catch (e) {
-            console.log("Approve error: ");
-            console.log(e);
-        }
-    }
-
-    async function withdrawEasy(amount) {
-        try {
-            await xEasyWithSigner.leave(amount);
-        } catch (e) {
-            console.log("Unstake Error: ");
-            console.log(e);
-        }
-    }
-
-    async function presaleMint(_amount) {
-        try {
-            await presaleContractWithSigner.buyTokens(_amount);
-        } catch (e) {
-            console.log("Buy error: ");
-            console.log(e)
-        }
-    }
 
     async function getGeneralData() {
         try {
@@ -295,10 +241,11 @@ export default function Home() {
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress}
                                     easyContract={easyContract}
-                                    usdcAllowance={usdcAllowance}
+                                    usdcContract={usdcContract}
+                                    usdcContractWithSigner={usdcContractWithSigner}
+                                    presaleContractWithSigner={presaleContractWithSigner}
                                     connectWalletHandler={() => connectWalletHandler()}
-                                    approveUsdc={async () => await approveUsdc()}
-                                    presaleMint={async (amount) => await presaleMint(amount)}/>
+                                    provider={provider}/>
                         : menuItem === 2 ?
                             <StakeBox
                                 provider={provider}

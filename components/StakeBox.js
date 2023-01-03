@@ -145,7 +145,8 @@ export default function StakeBox(props) {
     async function approveEasy(target) {
         setIsLoading(true);
         try {
-            await props.easyContractWithSigner.approve(target, BigInt(1000000000000000000000000000));
+            let transaction = await props.easyContractWithSigner.approve(target, BigInt(1000000000000000000000000000));
+            setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
             console.log("Easy Approve Error: ");

@@ -104,9 +104,9 @@ export default function FarmBox(props) {
             let userInfo;
 
             setUserLpBalance(parseInt(await props.lpContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
-            userInfo = await props.farmContract.userInfo(0, props.walletAddress);
+            userInfo = await props.farmContract.userInfo(1, props.walletAddress);
             setUserFarmBalance(parseInt(userInfo[0], 10) / 10 ** 18);
-            setUserReward(parseInt(await props.farmContract.pendingEASY(0, props.walletAddress), 10) / 10 ** 18);
+            setUserReward(parseInt(await props.farmContract.pendingEASY(1, props.walletAddress), 10) / 10 ** 18);
             setLpAllowance(parseInt(await props.lpContract.allowance(props.walletAddress, FARM_ADDRESS)));
 
             let tvl = (lockedLp / lpSupply) * usdcInLp * 2
@@ -122,7 +122,7 @@ export default function FarmBox(props) {
     async function stakeInFarm(amount) {
         setIsLoading(true);
         try {
-            let transaction = await props.farmContractWithSigner.deposit(0, amount);
+            let transaction = await props.farmContractWithSigner.deposit(1, amount);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -134,7 +134,7 @@ export default function FarmBox(props) {
     async function withdrawFarm(amount) {
         setIsLoading(true);
         try {
-            let transaction = await props.farmContractWithSigner.withdraw(0, amount);
+            let transaction = await props.farmContractWithSigner.withdraw(1, amount);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -158,7 +158,7 @@ export default function FarmBox(props) {
     async function harvest() {
         setIsLoading(true);
         try {
-            let transaction = await props.farmContractWithSigner.harvest(0);
+            let transaction = await props.farmContractWithSigner.harvest(1);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -215,7 +215,7 @@ export default function FarmBox(props) {
                            style={{color: "green", fontWeight: 'bold'}}>{(apy * 100).toFixed(4)}%</p>
 
                         <p className={styles.getTokenText}
-                           onClick={() => window.open("https://spooky.fi/#/add/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75/" + EASY_ADDRESS, "_blank")}>Get
+                           onClick={() => window.open("https://spooky.fi/#/add/" + EASY_ADDRESS + "/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75", "_blank")}>Get
                             $EASY-$USDC LP →</p>
                         <div className={styles.stakingInnerCard}>
                             <p style={{marginBottom: 0, color: '#424242', fontWeight: 'semi-bold'}}>$EASY-$USDC

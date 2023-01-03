@@ -1,10 +1,11 @@
 import styles from "../styles/Home.module.css";
 import ProgressBar from "@ramonak/react-progress-bar";
 import {AiOutlineMinusCircle, AiOutlinePlusCircle} from "react-icons/ai";
-import {useEffect, useState} from "react";
-import {CircleLoader} from "react-spinners";
+import React, {useEffect, useState} from "react";
+import {CircleLoader, ClipLoader} from "react-spinners";
 
 import {useTimer} from 'react-timer-hook';
+import {PRESALE_ADDRESS} from "../contracts/Presale";
 
 function MyTimer({expiryTimestamp}) {
     const {
@@ -38,9 +39,12 @@ export default function PresaleBox(props) {
     const [preSaleEnabled, setPreSaleEnabled] = useState(true);
     const [toMint, setToMint] = useState(200);
     const [totalMinted, setTotalMinted] = useState(1000000);
+    const [isLoading, setIsLoading] = useState(false);
+    const [usdcAllowance, setUsdcAllowance] = useState(0);
 
     useEffect(() => {
         getPresaleData();
+        getUsdcAllowance();
     }, [props.walletAddress])
 
     async function getPresaleData() {
@@ -48,6 +52,52 @@ export default function PresaleBox(props) {
         if (typeof props.easyContract != "undefined") {
             setTotalMinted(parseInt(await props.easyContract.mintedPresaleTokens(), 10) / 10 ** 18);
         }
+    }
+
+    async function approveUsdc() {
+        setIsLoading(true);
+        try {
+            let transaction = await props.usdcContractWithSigner.approve(PRESALE_ADDRESS, BigInt(1000000000000000000000000000));
+            setListener(transaction.hash);
+        } catch (e) {
+            setIsLoading(false);
+            console.log("Approve error: ");
+            console.log(e);
+        }
+    }
+
+    async function presaleMint(_amount) {
+        setIsLoading(true);
+        try {
+            let transaction = await props.presaleContractWithSigner.buyTokens(_amount);
+            setListener(transaction.hash);
+        } catch (e) {
+            setIsLoading(false);
+            console.log("Buy error: ");
+            console.log(e)
+        }
+    }
+
+    async function getUsdcAllowance() {
+        try {
+            if (props.walletAddress !== "") {
+                let allowance = parseInt(await props.usdcContract.allowance(props.walletAddress, PRESALE_ADDRESS), 10);
+                console.log(allowance);
+                setUsdcAllowance(allowance);
+            }
+        } catch (e) {
+            console.log("USDC allowance error: ");
+            console.log(e);
+        }
+    }
+
+    function setListener(txHash) {
+        props.provider.once(txHash, (transaction) => {
+            console.log(transaction);
+            setIsLoading(false);
+            getPresaleData();
+            getUsdcAllowance();
+        })
     }
 
     return (
@@ -64,7 +114,7 @@ export default function PresaleBox(props) {
                     <>
                         <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Total Presale
                             Allocation: </b> 3,500,000 $EASY</p>
-                        <p className={styles.sectionDescription}><b>Minted: </b> {USDollar.format(totalMinted)}
+                        <p className={styles.sectionDescription}><b>Minted: </b> {totalMinted}
                         </p>
                         <p className={styles.sectionDescription} style={{marginBottom: 32}}><b>Presale Price: </b> 0.005
                             $USDC</p>
@@ -99,18 +149,20 @@ export default function PresaleBox(props) {
                                     <p className={styles.mintCostText}>{(0.005 * toMint)}
                                         <b> $USDC</b></p>
                                     <div className={styles.mintButton} onClick={async () => {
-                                        if (props.usdcAllowance < toMint * 0.05 * 1 ** 6) {
+                                        if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
                                             console.log("test");
-                                            props.approveUsdc();
+                                            approveUsdc();
                                         } else {
-                                            props.presaleMint(BigInt(toMint * 10 ** 18));
+                                            presaleMint(BigInt(toMint * 10 ** 18));
                                         }
                                     }}>
                                         {props.isMinting ?
                                             <CircleLoader color={"#3a70ed"} size={25}/>
                                             :
                                             <p className={styles.mintText}>
-                                                {props.usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve" : "Mint"}</p>}
+                                                {isLoading ?
+                                                    <ClipLoader color={"#3a70ed"}
+                                                                size={25}/> : usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve" : "Mint"}</p>}
                                     </div>
                                 </>
                         }
