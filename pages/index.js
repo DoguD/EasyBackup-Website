@@ -336,7 +336,8 @@ export default function Home() {
                                 farmContract={farmContract}
                                 farmContractWithSigner={farmContractWithSigner}
                                 easyPrice={easyPrice}
-                                connectWalletHandler={() => connectWalletHandler()}/>}
+                                connectWalletHandler={() => connectWalletHandler()}
+                                provider={provider}/>}
             </main>
 
             <footer className={styles.footer}>

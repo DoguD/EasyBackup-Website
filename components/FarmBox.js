@@ -1,5 +1,5 @@
 import styles from "../styles/Home.module.css";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {EASY_ADDRESS} from "../contracts/EasyToken";
 
 import {FARM_ADDRESS} from "../contracts/Farm";
@@ -8,6 +8,7 @@ import {USDC_ADDRESS} from "../contracts/USDC";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {PRESALE_ADDRESS} from "../contracts/Presale";
+import {CircleLoader, ClipLoader, ClockLoader, RingLoader, RotateLoader, SyncLoader} from "react-spinners";
 
 function StakeModal(props) {
     const [stakeAmount, setStakeAmount] = useState(0);
@@ -38,7 +39,8 @@ function StakeModal(props) {
                         } else {
                             props.stakeInFarm(BigInt(parseInt(stakeAmount * 10 ** 18)));
                         }
-                    }}>{props.lpAllowance < stakeAmount * 10 ** 18 ? "Approve" : "Stake"}</Button>
+                    }}>{props.isLoading ? <ClipLoader
+                        size={15}/> : props.lpAllowance < stakeAmount * 10 ** 18 ? "Approve" : "Stake"}</Button>
                 </Modal.Description>
             </Modal.Content>
         </Modal>
@@ -70,7 +72,8 @@ function WithdrawModal(props) {
                     <Button
                         style={{marginTop: 16}} onClick={() => {
                         props.withdrawFarm(BigInt(parseInt(stakeAmount * 10 ** 18)));
-                    }}>{"Withdraw"}</Button>
+                    }}>{props.isLoading ? <ClipLoader
+                        size={15}/> : "Withdraw"}</Button>
                 </Modal.Description>
             </Modal.Content>
         </Modal>
@@ -89,6 +92,8 @@ export default function FarmBox(props) {
 
     const [open, setOpen] = useState(false);
     const [withdrawOpen, setWithdrawOpen] = useState(false);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (props.walletAddress !== "") getFarmData();
@@ -121,39 +126,58 @@ export default function FarmBox(props) {
     }
 
     async function stakeInFarm(amount) {
+        setIsLoading(true);
         try {
-            await props.farmContractWithSigner.deposit(0, amount);
+            let transaction = await props.farmContractWithSigner.deposit(0, amount);
+            setListener(transaction.hash);
         } catch (e) {
+            setIsLoading(false);
             console.log("Stake Error: ");
             console.log(e);
         }
     }
 
     async function withdrawFarm(amount) {
+        setIsLoading(true);
         try {
-            await props.farmContractWithSigner.withdraw(0, amount);
+            let transaction = await props.farmContractWithSigner.withdraw(0, amount);
+            setListener(transaction.hash);
         } catch (e) {
+            setIsLoading(false);
             console.log("Stake Error: ");
             console.log(e);
         }
     }
 
     async function approveLp() {
+        setIsLoading(true);
         try {
-            await props.lpContractWithSigner.approve(FARM_ADDRESS, BigInt(1000000000000000000000000000));
+            let transaction = await props.lpContractWithSigner.approve(FARM_ADDRESS, BigInt(1000000000000000000000000000));
+            setListener(transaction.hash);
         } catch (e) {
+            setIsLoading(false);
             console.log("Approve error: ");
             console.log(e);
         }
     }
 
     async function harvest() {
+        setIsLoading(true);
         try {
-            await props.farmContractWithSigner.harvest(0);
+            let transaction = await props.farmContractWithSigner.harvest(0);
+            setListener(transaction.hash);
         } catch (e) {
+            setIsLoading(false);
             console.log("Harvest error: ");
             console.log(e);
         }
+    }
+
+    function setListener(txHash) {
+        props.provider.once(txHash, (transaction) => {
+            console.log(transaction);
+            setIsLoading(false);
+        })
     }
 
     return (
@@ -161,12 +185,14 @@ export default function FarmBox(props) {
             <StakeModal setOpen={(v) => setOpen(v)} open={open} userLpBalance={userLpBalance}
                         lpAllowance={lpAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
                         stakeInFarm={async (amount) => stakeInFarm(amount)}
-                        approveLp={() => approveLp()}/>
+                        approveLp={() => approveLp()}
+                        isLoading={isLoading}/>
 
             <WithdrawModal
                 setOpen={(v) => setWithdrawOpen(v)} open={withdrawOpen} userFarmBalance={userFarmBalance}
                 lpAllowance={lpAllowance} approveEasy={async () => props.approveEasy(X_EASY_ADDRESS)}
                 withdrawFarm={(amount) => withdrawFarm(amount)}
+                isLoading={isLoading}
             />
             <h2 className={styles.subTitle}>
                 Farm $EASY-$USDC LP
@@ -234,13 +260,17 @@ export default function FarmBox(props) {
                             </div>
                             <div style={{display: 'flex', flexDirection: 'row'}}>
                                 <div className={styles.stakingButton} onClick={() => harvest()}>
-                                    <p className={styles.stakingButtonText}>Claim</p>
+                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                        <p className={styles.stakingButtonText}>Claim</p>}
                                 </div>
                                 <div className={styles.stakingButton} onClick={() => setOpen(true)}>
-                                    <p className={styles.stakingButtonText}>Stake</p>
+                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                        <p className={styles.stakingButtonText}>Stake</p>}
                                 </div>
                                 <div className={styles.stakingButton} onClick={() => setWithdrawOpen(true)}>
-                                    <p className={styles.stakingButtonText}>Unstake</p>
+                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                        <p className={styles.stakingButtonText}>Unstake</p>
+                                    }
                                 </div>
                             </div>
                         </div>
