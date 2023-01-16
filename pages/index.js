@@ -250,11 +250,12 @@ export default function Home() {
                                 provider={provider}
                                 walletAddress={walletAddress}
                                 connectWalletHandler={() => connectWalletHandler()}
-                                easyPrice={easyPrice}
                                 xEasyContract={xEasyContract}
                                 xEasyWithSigner={xEasyWithSigner}
                                 easyContract={easyContract}
-                                easyContractWithSigner={easyContractWithSigner}/>
+                                easyContractWithSigner={easyContractWithSigner}
+
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
                             :
                             <FarmBox
                                 walletAddress={walletAddress}
@@ -264,9 +265,10 @@ export default function Home() {
                                 easyContract={easyContract}
                                 farmContract={farmContract}
                                 farmContractWithSigner={farmContractWithSigner}
-                                easyPrice={easyPrice}
                                 connectWalletHandler={() => connectWalletHandler()}
-                                provider={provider}/>}
+                                provider={provider}
+
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>}
             </main>
 
             <footer className={styles.footer}>

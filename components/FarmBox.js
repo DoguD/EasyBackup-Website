@@ -8,6 +8,7 @@ import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {ClipLoader} from "react-spinners";
 import {MAX_BIG_INT} from "./subComponents/Constants";
+import CoinStatBox from "./CoinStats";
 
 function StakeModal(props) {
     const [stakeAmount, setStakeAmount] = useState(0);
@@ -196,6 +197,7 @@ export default function FarmBox(props) {
             <p className={styles.sectionDescription}><b>40% $EASY</b> supply is allocated for <b>$EASY-$USDC
                 LP</b> farmers</p>
             <p className={styles.sectionDescription} style={{color: "#424242"}}>(Farming starts after presale ends)</p>
+            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
             {
                 props.walletAddress === "" ?
                     <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>

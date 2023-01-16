@@ -5,6 +5,7 @@ import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
 import {ClipLoader} from "react-spinners";
 import {MAX_BIG_INT} from "./subComponents/Constants";
+import CoinStatBox from "./CoinStats";
 
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -171,6 +172,7 @@ export default function StakeBox(props) {
                 revenues weekly</p>
             <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts after presale
                 ends)</p>
+            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
 
             {props.walletAddress === "" ?
                 <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
