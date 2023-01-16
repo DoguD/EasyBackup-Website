@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
 import {ClipLoader} from "react-spinners";
+import {MAX_BIG_INT} from "./subComponents/Constants";
 
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -145,7 +146,7 @@ export default function StakeBox(props) {
     async function approveEasy(target) {
         setIsLoading(true);
         try {
-            let transaction = await props.easyContractWithSigner.approve(target, BigInt(1000000000000000000000000000));
+            let transaction = await props.easyContractWithSigner.approve(target, MAX_BIG_INT);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);

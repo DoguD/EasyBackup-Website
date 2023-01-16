@@ -14,16 +14,16 @@ export default function StatsBox(props) {
                     <p>$1,000,000</p>
                 </div>
                 <div className={styles.card}>
+                    <h2>Total Protocol Revenue</h2>
+                    <p>{USDollar.format(props.totalBackups)}</p>
+                </div>
+                <div className={styles.card}>
                     <h2>$EASY Token Value</h2>
                     <p>${props.easyPrice.toFixed(4)}</p>
                 </div>
                 <div className={styles.card}>
                     <h2>$EASY Market Cap</h2>
                     <p>{USDollar.format((props.easySupply * props.easyPrice))}</p>
-                </div>
-                <div className={styles.card}>
-                    <h2>Total Protocol Revenue</h2>
-                    <p>{USDollar.format(props.totalBackups)}</p>
                 </div>
             </div>
         </>

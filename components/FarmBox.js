@@ -7,6 +7,7 @@ import {LP_ADDRESS} from "../contracts/LP";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {X_EASY_ADDRESS} from "../contracts/xEasy";
 import {ClipLoader} from "react-spinners";
+import {MAX_BIG_INT} from "./subComponents/Constants";
 
 function StakeModal(props) {
     const [stakeAmount, setStakeAmount] = useState(0);
@@ -146,7 +147,7 @@ export default function FarmBox(props) {
     async function approveLp() {
         setIsLoading(true);
         try {
-            let transaction = await props.lpContractWithSigner.approve(FARM_ADDRESS, BigInt(1000000000000000000000000000));
+            let transaction = await props.lpContractWithSigner.approve(FARM_ADDRESS, MAX_BIG_INT);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);

@@ -19,7 +19,6 @@ import 'semantic-ui-css/semantic.min.css'
 import 'react-circular-progressbar/dist/styles.css';
 import FarmBox from "../components/FarmBox";
 import CreateBackupBox from "../components/CreateBackupBox";
-import ClaimableBackupsBox from "../components/ClaimableBackupsBox";
 import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/Presale";
 import {USDC_ABI, USDC_ADDRESS} from "../contracts/USDC";
 import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
@@ -203,7 +202,7 @@ export default function Home() {
 
             <main className={styles.main}>
                 <NavBar/>
-                <p className={styles.description}>
+                <p className={styles.description} style={{marginTop: 128}}>
                     <span style={{fontWeight: 'bold'}}>Never lose access to your funds in your crypto wallets</span>
                     <br/>
                     Create backups or assign inheritance wallets with ease

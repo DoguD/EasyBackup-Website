@@ -5,11 +5,12 @@ import {TOKEN_MAP} from "./subComponents/TokenMap";
 
 function ClaimableBackupRow(props) {
     let remainingDays;
-    if (((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0) < 0) {
+    if (((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction)))) < 0) {
         remainingDays = 0;
     } else {
         remainingDays = ((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0)
     }
+    console.log(remainingDays);
     return (
         props.backup.isActive ?
             <div className={styles.claimableBackupsRow}>
@@ -30,8 +31,8 @@ function ClaimableBackupRow(props) {
                 <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
                 <p className={styles.claimableBackupText}>{remainingDays} days</p>
 
-                <div style={{width: 32}} onClick={() => props.claimBackup(props.backup.backupId)}/>
-                <Button primary disabled={remainingDays !== 0}>Claim</Button>
+                <div style={{width: 32}}/>
+                <Button primary disabled={remainingDays !== 0} onClick={() => props.claimBackup(props.backup.backupId)}>Claim</Button>
             </div> : null
     )
 }
@@ -69,7 +70,21 @@ export default function ClaimableBackupsBox(props) {
     }
 
     async function claimBackup(id) {
-        await props.backupContractWithSigner.claimBackup(id);
+        console.log("In claim");
+        try {
+            let transaction = await props.backupContractWithSigner.claimBackup(id);
+            setListener(transaction.hash);
+        } catch(e) {
+            console.log("Claim Error: ");
+            console.log(e);
+        }
+    }
+
+    function setListener(txHash) {
+        props.provider.once(txHash, (transaction) => {
+            console.log(transaction);
+            getClaimableBackups();
+        })
     }
 
     return (
@@ -80,7 +95,10 @@ export default function ClaimableBackupsBox(props) {
             <div className={styles.claimableBackupsContainer}>
                 {/* eslint-disable-next-line react/jsx-key */}
                 {claimableBackups.length !== 0 ? claimableBackups.map((item) => <ClaimableBackupRow
-                    backup={item} claimBackup={(id) => claimBackup(id)}/>) : null}
+                        backup={item} claimBackup={(id) => claimBackup(id)}/>) :
+                    // eslint-disable-next-line react/no-unescaped-entities
+                    <p className={styles.sectionDescription}>You don't have any backups assigned to your wallet, if
+                        someone assigns a backup, you will be able to see it here.</p>}
             </div>
         </>
     );

@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {Button, Dropdown} from 'semantic-ui-react';
 import {EASY_ADDRESS} from "../contracts/EasyToken";
 import {Radio} from 'semantic-ui-react'
-import {CircleLoader} from "react-spinners";
+import {CircleLoader, ClipLoader} from "react-spinners";
 import {ethers} from "ethers";
 import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {ERC20_ABI} from "../contracts/ERC20";
@@ -11,6 +11,7 @@ import {BACKUP_ADDRESS} from "../contracts/Backup";
 import {PRESALE_ADDRESS} from "../contracts/Presale";
 import ClaimableBackupsBox from "./ClaimableBackupsBox";
 import {TOKEN_MAP} from "./subComponents/TokenMap";
+import {MAX_BIG_INT} from "./subComponents/Constants";
 
 const friendOptions = [
     {
@@ -83,7 +84,7 @@ function BackupRow(props) {
 
             <div style={{width: 16}}/>
             <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
-            <p className={styles.claimableBackupText}>{((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0)} days</p>
+            <p className={styles.claimableBackupText}>{Math.max(0, ((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24)).toFixed(0)} days</p>
 
             <div style={{width: 32}}/>
             {props.backup.isActive ?
@@ -103,7 +104,6 @@ export default function CreateBackupBox(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [fee, setFee] = useState(0);
 
-    let maxAllowance = BigInt(115792089237316195423570985008687907853269984665640564039457584007913129639935);
     const [approvalNeeded, setApprovalNeeded] = useState(true);
     const [createdBackups, setCreatedBackups] = useState([]);
 
@@ -152,7 +152,7 @@ export default function CreateBackupBox(props) {
             tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
             tokenContractWithSigner = tokenContract.connect(props.signer);
             let allowance = parseInt(await tokenContract.allowance(props.walletAddress, BACKUP_ADDRESS), 10);
-            setApprovalNeeded(BigInt(allowance) < maxAllowance);
+            setApprovalNeeded(BigInt(allowance) < MAX_BIG_INT);
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
@@ -160,22 +160,38 @@ export default function CreateBackupBox(props) {
     }
 
     async function approve() {
+        setIsLoading(true);
         try {
-            await tokenContractWithSigner.approve(BACKUP_ADDRESS, "115792089237316195423570985008687907853269984665640564039457584007913129639935");
+            let transaction = await tokenContractWithSigner.approve(BACKUP_ADDRESS, "115792089237316195423570985008687907853269984665640564039457584007913129639935");
+            setListener(transaction.hash);
         } catch (e) {
+            setIsLoading(false);
             console.log("Approve error: ");
             console.log(e);
         }
     }
 
     async function createBackup() {
+        setIsLoading(true);
         try {
             const options = {value: fee}
-            await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** 18), expiry * 24 * 60 * 60, options);
+            // let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** 18), expiry * 24 * 60 * 60, options);
+            let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** 18), 60, options);
+            setListener(transaction.hash);
         } catch (e) {
+            setIsLoading(false);
             console.log("Create Backup Error: ");
             console.log(e);
         }
+    }
+
+    function setListener(txHash) {
+        props.provider.once(txHash, (transaction) => {
+            console.log(transaction);
+            setIsLoading(false);
+            getBackupData();
+            getCreatedBackups();
+        })
     }
 
     return (
@@ -299,15 +315,14 @@ export default function CreateBackupBox(props) {
                                     createBackup();
                                 }
                             }} style={{width: '100%'}}>
-                                {props.isLoading ?
-                                    <CircleLoader color={"#3a70ed"} size={25}/>
-                                    :
-                                    <p className={styles.mintText}>
-                                        {
-                                            approvalNeeded ?
-                                                "Approve" :
-                                                "Create Backup"
-                                        }</p>}
+                                {
+                                    isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
+                                        <p className={styles.mintText}>
+                                            {
+                                                approvalNeeded ?
+                                                    "Approve" :
+                                                    "Create Backup"
+                                            }</p>}
                             </div>
                         </div>
                     </div>
@@ -319,11 +334,13 @@ export default function CreateBackupBox(props) {
                     <div className={styles.claimableBackupsContainer}>
                         {/* eslint-disable-next-line react/jsx-key */}
                         {createdBackups.length !== 0 ? createdBackups.map((item) => <BackupRow backup={item}
-                                                                                               deleteBackup={(id) => deleteBackup(id)}/>) : null}
+                                                                                               deleteBackup={(id) => deleteBackup(id)}/>) :
+                            <p className={styles.sectionDescription}>You haven't created any backups yet.</p>}
                     </div>
                     <ClaimableBackupsBox walletAddress={props.walletAddress}
                                          backupContract={props.backupContract}
-                                         backupContractWithSigner={props.backupContractWithSigner}/>
+                                         backupContractWithSigner={props.backupContractWithSigner}
+                                         provider={props.provider}/>
                 </>}
         </>
     );
