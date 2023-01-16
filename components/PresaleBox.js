@@ -106,9 +106,15 @@ export default function PresaleBox(props) {
                 Presale
             </h2>
             <p className={styles.presaleDescription}><b>35%</b> of EasyBlock token is allocated for presale. Presale
-                starts on <b>January 15th, 11:59</b> and will last for <b>2 weeks.</b><br/>First 24-hours is reserved
+                starts on <b>February 1st, 11:59 UTC</b> and will last for <b>2 weeks.</b><br/>First 24-hours is
+                reserved
                 for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
                        target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>
+
+            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup
+                protocol revenues will be
+                distributed to $EASY
+                holders.</p>
             {
                 preSaleEnabled ?
                     <>
@@ -151,7 +157,8 @@ export default function PresaleBox(props) {
                                                    if (toMint < 2000) setToMint(2000)
                                                }}></input>
                                     </div>
-                                    <p className={styles.mintCostText}><b>Total: </b>{(0.005 * toMint).toFixed(3)} $USDC</p>
+                                    <p className={styles.mintCostText}><b>Total: </b>{(0.005 * toMint).toFixed(3)} $USDC
+                                    </p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
                                             console.log("test");
