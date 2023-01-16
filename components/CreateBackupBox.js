@@ -107,6 +107,9 @@ export default function CreateBackupBox(props) {
     const [approvalNeeded, setApprovalNeeded] = useState(true);
     const [createdBackups, setCreatedBackups] = useState([]);
 
+    const [balance, setBalance] = useState(0);
+    const [decimals, setDecimals] = useState(18);
+
     useEffect(() => {
         getBackupData();
         getCreatedBackups();
@@ -126,7 +129,7 @@ export default function CreateBackupBox(props) {
             for (let i = 0; i < createdBackupCount; i++) {
                 let backupId = parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10);
                 let backup = await props.backupContract.backups(backupId);
-                if(backup[5]) {
+                if (backup[5]) {
                     let parsedBackup = {
                         amount: backup[3],
                         expiry: backup[4],
@@ -148,16 +151,43 @@ export default function CreateBackupBox(props) {
         await props.backupContractWithSigner.deletBackup(id);
     }
 
-    async function getAllowance(tokenAddress) {
+    async function getAllowance(tokenAddress, tokenContract) {
         try {
-            tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
-            tokenContractWithSigner = tokenContract.connect(props.signer);
             let allowance = parseInt(await tokenContract.allowance(props.walletAddress, BACKUP_ADDRESS), 10);
             setApprovalNeeded(BigInt(allowance) < MAX_BIG_INT);
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
         }
+    }
+
+    async function getBalance(tokenAddress, tokenContract, decimal) {
+        try {
+            let balance = parseInt(await tokenContract.balanceOf(props.walletAddress), 10) / 10 ** decimal;
+            setBalance(balance);
+        } catch (e) {
+            console.log("Backup Box, get allowance error:");
+            console.log(e);
+        }
+    }
+
+    async function getDecimal(tokenAddress, tokenContract) {
+        try {
+            let decimal = parseInt(await tokenContract.decimals(), 10);
+            setBalance(decimal);
+            return decimal;
+        } catch (e) {
+            console.log("Backup Box, get allowance error:");
+            console.log(e);
+        }
+    }
+
+    async function getTokenData(tokenAddress) {
+        tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
+
+        await getAllowance(tokenAddress, tokenContract);
+        let decimal = await getDecimal(tokenAddress, tokenContract);
+        await getBalance(tokenAddress, tokenContract, decimal);
     }
 
     async function approve() {
@@ -219,10 +249,13 @@ export default function CreateBackupBox(props) {
                                 options={friendOptions}
                                 onChange={(e, {value}) => {
                                     setToken(value);
-                                    getAllowance(value);
+                                    getTokenData(value);
                                 }}
                             />
                         </div>
+                        {token !== "" ?
+                            <p><b className={styles.backupTitle}>Balance:</b> {balance}</p>
+                            : null}
 
                         <div className={styles.backupRow}>
                             <p className={styles.backupTitle}>Amount: </p>
@@ -334,13 +367,15 @@ export default function CreateBackupBox(props) {
                     </h2>
                     <div className={styles.claimableBackupsContainer}>
                         {createdBackups.length !== 0 ? <>
-                                <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups you have created</p>
+                                <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups you
+                                    have created</p>
                                 {/* eslint-disable-next-line react/jsx-key */}
                                 {createdBackups.map((item) => <BackupRow backup={item}
                                                                          deleteBackup={(id) => deleteBackup(id)}/>)}
                             </>
                             :
-                            <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any active backups.</p>}
+                            <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any active
+                                backups.</p>}
                     </div>
                     <ClaimableBackupsBox walletAddress={props.walletAddress}
                                          backupContract={props.backupContract}
