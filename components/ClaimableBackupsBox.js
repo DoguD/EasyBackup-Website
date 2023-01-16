@@ -32,7 +32,8 @@ function ClaimableBackupRow(props) {
                 <p className={styles.claimableBackupText}>{remainingDays} days</p>
 
                 <div style={{width: 32}}/>
-                <Button primary disabled={remainingDays !== 0} onClick={() => props.claimBackup(props.backup.backupId)}>Claim</Button>
+                <Button primary disabled={remainingDays !== 0}
+                        onClick={() => props.claimBackup(props.backup.backupId)}>Claim</Button>
             </div> : null
     )
 }
@@ -74,7 +75,7 @@ export default function ClaimableBackupsBox(props) {
         try {
             let transaction = await props.backupContractWithSigner.claimBackup(id);
             setListener(transaction.hash);
-        } catch(e) {
+        } catch (e) {
             console.log("Claim Error: ");
             console.log(e);
         }
@@ -93,11 +94,14 @@ export default function ClaimableBackupsBox(props) {
                 Claimable Backups
             </h2>
             <div className={styles.claimableBackupsContainer}>
-                {/* eslint-disable-next-line react/jsx-key */}
-                {claimableBackups.length !== 0 ? claimableBackups.map((item) => <ClaimableBackupRow
-                        backup={item} claimBackup={(id) => claimBackup(id)}/>) :
+                {claimableBackups.length !== 0 ? <>
+                        <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups assigned to your wallet</p>
+                        {/* eslint-disable-next-line react/jsx-key */}
+                        {claimableBackups.map((item) => <ClaimableBackupRow
+                            backup={item} claimBackup={(id) => claimBackup(id)}/>)}
+                    </> :
                     // eslint-disable-next-line react/no-unescaped-entities
-                    <p className={styles.sectionDescription}>You don't have any backups assigned to your wallet, if
+                    <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any backups assigned to your wallet, if
                         someone assigns a backup, you will be able to see it here.</p>}
             </div>
         </>

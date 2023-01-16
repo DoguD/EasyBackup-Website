@@ -126,18 +126,19 @@ export default function CreateBackupBox(props) {
             for (let i = 0; i < createdBackupCount; i++) {
                 let backupId = parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10);
                 let backup = await props.backupContract.backups(backupId);
-                let parsedBackup = {
-                    amount: backup[3],
-                    expiry: backup[4],
-                    from: backup[0],
-                    isActive: backup[5],
-                    to: backup[1],
-                    token: backup[2],
-                    lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
-                    backupId: backupId
+                if(backup[5]) {
+                    let parsedBackup = {
+                        amount: backup[3],
+                        expiry: backup[4],
+                        from: backup[0],
+                        isActive: backup[5],
+                        to: backup[1],
+                        token: backup[2],
+                        lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
+                        backupId: backupId
+                    }
+                    parsedBackups.push(parsedBackup);
                 }
-                console.log(parsedBackup);
-                parsedBackups.push(parsedBackup);
             }
             setCreatedBackups(parsedBackups);
         }
@@ -332,10 +333,14 @@ export default function CreateBackupBox(props) {
                         My Backups
                     </h2>
                     <div className={styles.claimableBackupsContainer}>
-                        {/* eslint-disable-next-line react/jsx-key */}
-                        {createdBackups.length !== 0 ? createdBackups.map((item) => <BackupRow backup={item}
-                                                                                               deleteBackup={(id) => deleteBackup(id)}/>) :
-                            <p className={styles.sectionDescription}>You haven't created any backups yet.</p>}
+                        {createdBackups.length !== 0 ? <>
+                                <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups you have created</p>
+                                {/* eslint-disable-next-line react/jsx-key */}
+                                {createdBackups.map((item) => <BackupRow backup={item}
+                                                                         deleteBackup={(id) => deleteBackup(id)}/>)}
+                            </>
+                            :
+                            <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any active backups.</p>}
                     </div>
                     <ClaimableBackupsBox walletAddress={props.walletAddress}
                                          backupContract={props.backupContract}
