@@ -11,57 +11,7 @@ import {BACKUP_ADDRESS} from "../contracts/Backup";
 import {PRESALE_ADDRESS} from "../contracts/Presale";
 import ClaimableBackupsBox from "./ClaimableBackupsBox";
 import {TOKEN_MAP} from "./subComponents/TokenMap";
-import {MAX_BIG_INT} from "./subComponents/Constants";
-
-const friendOptions = [
-    {
-        key: 'EASY',
-        text: 'EASY',
-        value: EASY_ADDRESS,
-        image: {avatar: true, src: '/favicon.png'},
-    },
-    {
-        key: 'ETH',
-        text: 'ETH',
-        value: '0x74b23882a30290451A17c44f4F05243b6b58C76d',
-        image: {avatar: true, src: '/favicon.png'},
-    },
-    {
-        key: 'WFTM',
-        text: 'WFTM',
-        value: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
-        image: {avatar: true, src: '/favicon.png'},
-    },
-]
-
-const expiryOptions = [
-    {
-        key: '1month',
-        text: "1 Month",
-        value: 30
-    },
-    {
-        key: '3month',
-        text: "3 Months",
-        value: 90
-    },
-    {
-        key: '6month',
-        text: "6 Months",
-        value: 180
-    },
-    {
-        key: '12month',
-        text: "1 Year",
-        value: 360
-    },
-    {
-        key: 'custom',
-        text: "Custom",
-        value: 0
-    },
-
-]
+import {EXPIRY_OPTIONS, MAX_BIG_INT, TOKENS} from "./subComponents/Constants";
 
 let tokenContract;
 let tokenContractWithSigner;
@@ -246,7 +196,7 @@ export default function CreateBackupBox(props) {
                                 placeholder='Select Token'
                                 fluid
                                 selection
-                                options={friendOptions}
+                                options={TOKENS}
                                 onChange={(e, {value}) => {
                                     setToken(value);
                                     getTokenData(value);
@@ -310,7 +260,7 @@ export default function CreateBackupBox(props) {
                                 placeholder='Select Access Time'
                                 fluid
                                 selection
-                                options={expiryOptions}
+                                options={EXPIRY_OPTIONS}
                                 onChange={(e, {value}) => {
                                     if (value == 0) {
                                         setIsExpiryCustom(true);
