@@ -1,7 +1,7 @@
 import styles from "../styles/Home.module.css";
 import React, {useEffect, useState} from "react";
 import {Button} from 'semantic-ui-react'
-import {TOKEN_MAP} from "./subComponents/TokenMap";
+import {TOKEN_MAP} from "./subComponents/Constants";
 
 function ClaimableBackupRow(props) {
     let remainingDays;

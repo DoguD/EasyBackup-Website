@@ -10,7 +10,7 @@ import {ERC20_ABI} from "../contracts/ERC20";
 import {BACKUP_ADDRESS} from "../contracts/Backup";
 import {PRESALE_ADDRESS} from "../contracts/Presale";
 import ClaimableBackupsBox from "./ClaimableBackupsBox";
-import {TOKEN_MAP} from "./subComponents/TokenMap";
+import {TOKEN_MAP} from "./subComponents/Constants";
 import {EXPIRY_OPTIONS, MAX_BIG_INT, TOKENS} from "./subComponents/Constants";
 
 let tokenContract;
@@ -30,7 +30,7 @@ function BackupRow(props) {
             <p className={styles.claimableBackupText}><b>Amount: </b></p>
             <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
                 ? "Infinite"
-                : parseInt(props.backup.amount / 10 ** 18).toFixed(4)}</p>
+                : parseInt(props.backup.amount / 10 ** props.backup.decimals).toFixed(4)}</p>
 
             <div style={{width: 16}}/>
             <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
@@ -88,7 +88,8 @@ export default function CreateBackupBox(props) {
                         to: backup[1],
                         token: backup[2],
                         lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
-                        backupId: backupId
+                        backupId: backupId,
+                        decimals: parseInt(await new ethers.Contract(backup[2], ERC20_ABI, props.provider).decimals(), 10)
                     }
                     parsedBackups.push(parsedBackup);
                 }
@@ -101,7 +102,7 @@ export default function CreateBackupBox(props) {
         await props.backupContractWithSigner.deletBackup(id);
     }
 
-    async function getAllowance(tokenAddress, tokenContract) {
+    async function getAllowance() {
         try {
             let allowance = parseInt(await tokenContract.allowance(props.walletAddress, BACKUP_ADDRESS), 10);
             setApprovalNeeded(BigInt(allowance) < MAX_BIG_INT);
@@ -111,7 +112,7 @@ export default function CreateBackupBox(props) {
         }
     }
 
-    async function getBalance(tokenAddress, tokenContract, decimal) {
+    async function getBalance(decimal) {
         try {
             let balance = parseInt(await tokenContract.balanceOf(props.walletAddress), 10) / 10 ** decimal;
             setBalance(balance);
@@ -121,7 +122,7 @@ export default function CreateBackupBox(props) {
         }
     }
 
-    async function getDecimal(tokenAddress, tokenContract) {
+    async function getDecimal() {
         try {
             let decimal = parseInt(await tokenContract.decimals(), 10);
             setBalance(decimal);
@@ -134,10 +135,11 @@ export default function CreateBackupBox(props) {
 
     async function getTokenData(tokenAddress) {
         tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
+        tokenContractWithSigner = tokenContract.connect(props.signer);
 
-        await getAllowance(tokenAddress, tokenContract);
-        let decimal = await getDecimal(tokenAddress, tokenContract);
-        await getBalance(tokenAddress, tokenContract, decimal);
+        await getAllowance();
+        let decimal = await getDecimal();
+        await getBalance(decimal);
     }
 
     async function approve() {
@@ -156,8 +158,7 @@ export default function CreateBackupBox(props) {
         setIsLoading(true);
         try {
             const options = {value: fee}
-            // let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** 18), expiry * 24 * 60 * 60, options);
-            let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** 18), 60, options);
+            let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals), expiry * 24 * 60 * 60, options);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -170,7 +171,6 @@ export default function CreateBackupBox(props) {
         props.provider.once(txHash, (transaction) => {
             console.log(transaction);
             setIsLoading(false);
-            getBackupData();
             getCreatedBackups();
         })
     }
