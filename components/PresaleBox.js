@@ -37,7 +37,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
 
 export default function PresaleBox(props) {
     const [preSaleEnabled, setPreSaleEnabled] = useState(true);
-    const [toMint, setToMint] = useState(200);
+    const [toMint, setToMint] = useState(2000);
     const [totalMinted, setTotalMinted] = useState(1000000);
     const [isLoading, setIsLoading] = useState(false);
     const [usdcAllowance, setUsdcAllowance] = useState(0);
@@ -114,10 +114,12 @@ export default function PresaleBox(props) {
                     <>
                         <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Total Presale
                             Allocation: </b> 3,500,000 $EASY</p>
-                        <p className={styles.sectionDescription}><b>Minted: </b> {totalMinted}
-                        </p>
-                        <p className={styles.sectionDescription} style={{marginBottom: 32}}><b>Presale Price: </b> 0.005
+                        <p className={styles.sectionDescription}><b>Presale Price: </b> 0.005
                             $USDC</p>
+                        <p className={styles.sectionDescription}><b>Minimum Mint Amount: </b>2000 $EASY (=10 $USDC)</p>
+                        <p className={styles.sectionDescription} style={{marginBottom: 32}}>
+                            <b>Minted: </b> {totalMinted}
+                        </p>
                         <ProgressBar bgColor={"#3a70ed"}
                                      completed={(100 * totalMinted / 3500000).toFixed(2)}
                                      width={300}/>
@@ -144,10 +146,12 @@ export default function PresaleBox(props) {
                                                    } else {
                                                        setToMint(0);
                                                    }
+                                               }}
+                                               onBlur={() => {
+                                                   if (toMint < 2000) setToMint(2000)
                                                }}></input>
                                     </div>
-                                    <p className={styles.mintCostText}>{(0.005 * toMint)}
-                                        <b> $USDC</b></p>
+                                    <p className={styles.mintCostText}><b>Total: </b>{(0.005 * toMint).toFixed(3)} $USDC</p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
                                             console.log("test");
@@ -169,7 +173,8 @@ export default function PresaleBox(props) {
                     </>
                     :
                     <>
-                        <p className={styles.sectionDescription} style={{marginTop: 16}}>Buy $EASY, stake it, and earn
+                        <p className={styles.sectionDescription} style={{marginTop: 16}}>Buy $EASY,
+                            stake it, and earn
                             from protocol revenues.</p>
                         <MyTimer expiryTimestamp={1673783940000}/>
                     </>}
