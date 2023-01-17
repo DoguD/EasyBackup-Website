@@ -3,12 +3,10 @@ import React, {useEffect, useState} from 'react'
 import {Button, Dropdown} from 'semantic-ui-react';
 import {EASY_ADDRESS} from "../contracts/EasyToken";
 import {Radio} from 'semantic-ui-react'
-import {CircleLoader, ClipLoader} from "react-spinners";
+import {ClipLoader} from "react-spinners";
 import {ethers} from "ethers";
-import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {ERC20_ABI} from "../contracts/ERC20";
 import {BACKUP_ADDRESS} from "../contracts/Backup";
-import {PRESALE_ADDRESS} from "../contracts/Presale";
 import ClaimableBackupsBox from "./ClaimableBackupsBox";
 import {TOKEN_MAP} from "./subComponents/Constants";
 import {EXPIRY_OPTIONS, MAX_BIG_INT, TOKENS} from "./subComponents/Constants";
@@ -310,6 +308,7 @@ export default function CreateBackupBox(props) {
                             </div>
                         </div>
                     </div>
+                    <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $1, if you hold more than 2000 $EASY in your wallet you don't pay this fee. There is also a 1% fee applied only on backup claims.</p>
 
 
                     <h2 className={styles.subTitle}>
