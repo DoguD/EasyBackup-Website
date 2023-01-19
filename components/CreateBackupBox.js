@@ -322,6 +322,7 @@ export default function CreateBackupBox(props) {
                                                                              deleteBackup={(id) => deleteBackup(id)}/>)}
                                 </>
                                 :
+                                // eslint-disable-next-line react/no-unescaped-entities
                                 <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any active
                                     backups.</p>}
                         </div>
