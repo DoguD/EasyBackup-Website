@@ -305,6 +305,7 @@ export default function CreateBackupBox(props) {
                             </div>
                         </div>
                         <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $1, if you hold more
+                            {/* eslint-disable-next-line react/no-unescaped-entities */}
                             than 2000 $EASY in your wallet you don't pay this fee. There is also a 1% fee applied only on
                             backup claims.</p>
 
