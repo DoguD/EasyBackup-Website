@@ -295,10 +295,21 @@
     text-align: center;
 }
 
+.boxTitle {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+    text-align: center;
+    font-weight: bold;
+}
+
 .sectionDescription {
     font-size: 1rem;
     margin-top: 0;
     margin-bottom: 4px;
+}
+
+.sectionSmallDescription {
+    font-size: 0.9rem;
 }
 
 .presaleDescription {
@@ -480,6 +491,19 @@
     border-radius: 10px;
     width: 100%;
     max-width: 400px;
+}
+
+.backupInfoCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 800px;
 }
 
 .backupRow {

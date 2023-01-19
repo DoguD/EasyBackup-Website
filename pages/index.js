@@ -6,7 +6,7 @@ import {ethers} from "ethers";
 // Toast
 import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import StatsBox from "../components/StatsBox";
 import PresaleBox from "../components/PresaleBox";
 import StakeBox from "../components/StakeBox";
@@ -209,6 +209,50 @@ export default function Home() {
                 </p>
 
                 <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
+
+                <div className={styles.backupInfoCard}>
+                    <p className={styles.boxTitle}>What is EasyBackup?</p>
+                    <p className={styles.sectionDescription}>EasyBackup is a protocol which lets you assign backup
+                        wallets
+                        for the tokens in your wallet. This way
+                        if you loose access to your wallet for any reason, the backup wallet will be able to transfer
+                        those
+                        tokens to itself. You never need to transfer your tokens to EasyBackup smart contract and only
+                        the
+                        backup wallet will be able transfer those tokens. Similarly, the backup system can be used for
+                        inheritance.</p>
+                    <p className={styles.boxTitle}>How to use?</p>
+                    <p className={styles.sectionDescription} style={{width: '100%'}}>- Select a token, amount, backup
+                        wallet, and access time.
+                        <br/></p>
+                    <p className={styles.sectionSmallDescription}>
+                        <b>Token:</b>The token you want the backup wallet to be able to access. You can choose from the
+                        list
+                        or use a custom token address.
+                        <br/>
+                        {/* eslint-disable-next-line react/no-unescaped-entities */}
+                        <b>Amount:</b>The amount of tokens the backup wallet can access. If you choose "infinite" the
+                        backup
+                        will able to access all, or you can limit the amount.
+                        <br/>
+                        <b>Backup Wallet:</b>The wallet which you want to be able to access your tokens.
+                        <br/>
+                        <b>Access Time:</b>The time which needs to pass before the backup becomes accesible. For
+                        example,
+                        choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365 days
+                        after
+                        your last interaction with the contract.
+                        <br/><br/>
+                    </p>
+                    <p className={styles.sectionDescription}>- After the access time has passed, the backup wallet can
+                        claim
+                        those tokens from your wallet. You
+                        can reset the access time by interacting with the contract.
+                        <br/>
+                        - You need to complete two transactions, one for token approval, and the other one for creating
+                        the backup.
+                    </p>
+                </div>
 
                 <div style={{
                     display: 'flex',

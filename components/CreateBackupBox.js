@@ -178,159 +178,159 @@ export default function CreateBackupBox(props) {
             <h2 className={styles.subTitle}>
                 Create Backup
             </h2>
-            <p className={styles.sectionDescription}>- Select a token, amount, backup wallet, and expiry time.
-                <br/>- After the expiry time has passed, the backup wallet can claim those tokens from your wallet. You
-                can reset the expiry time by interacting with the contract.
-                <br/>- You need to complete two transactions, one for token spending, and the other one for creating the
-                backup.</p>
-            {props.walletAddress === "" ?
-                <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
-                    <p className={styles.mintText}>Connect</p>
-                </div> : <>
-                    <div className={styles.backupCreationCard}>
-                        <div className={styles.backupRow}>
-                            <p className={styles.backupTitle}>Token: </p>
-                            <Dropdown
-                                placeholder='Select Token'
-                                fluid
-                                selection
-                                options={TOKENS}
-                                onChange={(e, {value}) => {
-                                    setToken(value);
-                                    getTokenData(value);
-                                }}
-                            />
-                        </div>
-                        {token !== "" ?
-                            <p><b className={styles.backupTitle}>Balance:</b> {balance}</p>
-                            : null}
-
-                        <div className={styles.backupRow}>
-                            <p className={styles.backupTitle}>Amount: </p>
-                            <Radio
-                                label='Infinite'
-                                name='radioGroup'
-                                value='this'
-                                checked={isAmountInfinite}
-                                onChange={() => setIsAmountInfinite(true)}
-                            />
-                            <Radio
-                                label='Custom'
-                                name='radioGroup'
-                                value='that'
-                                checked={!isAmountInfinite}
-                                onChange={() => setIsAmountInfinite(false)}
-                                style={{marginLeft: 16}}
-                            />
-                        </div>
-                        {!isAmountInfinite ?
+            {
+                props.walletAddress === "" ?
+                    <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
+                        <p className={styles.mintText}>Connect</p>
+                    </div> : <>
+                        <div className={styles.backupCreationCard}>
                             <div className={styles.backupRow}>
-                                <p className={styles.backupTitle}>Custom Amount: </p>
+                                <p className={styles.backupTitle}>Token: </p>
+                                <Dropdown
+                                    placeholder='Select Token'
+                                    fluid
+                                    selection
+                                    options={TOKENS}
+                                    onChange={(e, {value}) => {
+                                        setToken(value);
+                                        getTokenData(value);
+                                    }}
+                                />
+                            </div>
+                            {token !== "" ?
+                                <p><b className={styles.backupTitle}>Balance:</b> {balance}</p>
+                                : null}
+
+                            <div className={styles.backupRow}>
+                                <p className={styles.backupTitle}>Amount: </p>
+                                <Radio
+                                    label='Infinite'
+                                    name='radioGroup'
+                                    value='this'
+                                    checked={isAmountInfinite}
+                                    onChange={() => setIsAmountInfinite(true)}
+                                />
+                                <Radio
+                                    label='Custom'
+                                    name='radioGroup'
+                                    value='that'
+                                    checked={!isAmountInfinite}
+                                    onChange={() => setIsAmountInfinite(false)}
+                                    style={{marginLeft: 16}}
+                                />
+                            </div>
+                            {!isAmountInfinite ?
+                                <div className={styles.backupRow}>
+                                    <p className={styles.backupTitle}>Custom Amount: </p>
+                                    <input className={styles.walletInput} type={"text"} id={"backup-amount"}
+                                           value={amount}
+                                           onChange={(b) => {
+                                               let newValue = parseInt(b.target.value);
+                                               if (newValue) {
+                                                   setAmount(newValue)
+                                               } else {
+                                                   setAmount(0);
+                                               }
+                                           }}>
+
+                                    </input>
+                                </div>
+                                : null}
+                            <div className={styles.backupRow}>
+                                <p className={styles.backupTitle}>Backup Wallet: </p>
                                 <input className={styles.walletInput} type={"text"} id={"backup-amount"}
-                                       value={amount}
+                                       value={backupWallet}
+                                       placeholder={"0x..."}
                                        onChange={(b) => {
-                                           let newValue = parseInt(b.target.value);
-                                           if (newValue) {
-                                               setAmount(newValue)
-                                           } else {
-                                               setAmount(0);
-                                           }
+                                           setBackupWallet(b.target.value)
                                        }}>
 
                                 </input>
                             </div>
-                            : null}
-                        <div className={styles.backupRow}>
-                            <p className={styles.backupTitle}>Backup Wallet: </p>
-                            <input className={styles.walletInput} type={"text"} id={"backup-amount"}
-                                   value={backupWallet}
-                                   placeholder={"0x..."}
-                                   onChange={(b) => {
-                                       setBackupWallet(b.target.value)
-                                   }}>
 
-                            </input>
-                        </div>
-
-                        <div className={styles.backupRow}>
-                            <p className={styles.backupTitle}>Access Time: </p>
-                            <Dropdown
-                                placeholder='Select Access Time'
-                                fluid
-                                selection
-                                options={EXPIRY_OPTIONS}
-                                onChange={(e, {value}) => {
-                                    if (value == 0) {
-                                        setIsExpiryCustom(true);
-                                        setExpiry(value);
-                                    } else {
-                                        setIsExpiryCustom(false);
-                                        setExpiry(value);
-                                    }
-                                }}
-                            />
-                        </div>
-                        {isExpiryCustom ?
                             <div className={styles.backupRow}>
-                                <p className={styles.backupTitle}>Custom Access Time: </p>
-                                <input className={styles.walletInput} type={"text"} id={"backup-amount"}
-                                       value={expiry}
-                                       onChange={(b) => {
-                                           let newValue = parseInt(b.target.value);
-                                           if (newValue) {
-                                               setExpiry(newValue)
-                                           } else {
-                                               setExpiry(0);
-                                           }
-                                       }}
-                                       style={{marginRight: 8}}>
-
-                                </input>
-                                <p className={styles.backupTitle}>days</p>
+                                <p className={styles.backupTitle}>Access Time: </p>
+                                <Dropdown
+                                    placeholder='Select Access Time'
+                                    fluid
+                                    selection
+                                    options={EXPIRY_OPTIONS}
+                                    onChange={(e, {value}) => {
+                                        if (value == 0) {
+                                            setIsExpiryCustom(true);
+                                            setExpiry(value);
+                                        } else {
+                                            setIsExpiryCustom(false);
+                                            setExpiry(value);
+                                        }
+                                    }}
+                                />
                             </div>
-                            : null}
-                        <div className={styles.backupRow}>
-                            <div className={styles.mintButton} onClick={() => {
-                                if (approvalNeeded) {
-                                    approve();
-                                } else {
-                                    createBackup();
-                                }
-                            }} style={{width: '100%'}}>
-                                {
-                                    isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
-                                        <p className={styles.mintText}>
-                                            {
-                                                approvalNeeded ?
-                                                    "Approve" :
-                                                    "Create Backup"
-                                            }</p>}
+                            {isExpiryCustom ?
+                                <div className={styles.backupRow}>
+                                    <p className={styles.backupTitle}>Custom Access Time: </p>
+                                    <input className={styles.walletInput} type={"text"} id={"backup-amount"}
+                                           value={expiry}
+                                           onChange={(b) => {
+                                               let newValue = parseInt(b.target.value);
+                                               if (newValue) {
+                                                   setExpiry(newValue)
+                                               } else {
+                                                   setExpiry(0);
+                                               }
+                                           }}
+                                           style={{marginRight: 8}}>
+
+                                    </input>
+                                    <p className={styles.backupTitle}>days</p>
+                                </div>
+                                : null}
+                            <div className={styles.backupRow}>
+                                <div className={styles.mintButton} onClick={() => {
+                                    if (approvalNeeded) {
+                                        approve();
+                                    } else {
+                                        createBackup();
+                                    }
+                                }} style={{width: '100%'}}>
+                                    {
+                                        isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
+                                            <p className={styles.mintText}>
+                                                {
+                                                    approvalNeeded ?
+                                                        "Approve" :
+                                                        "Create Backup"
+                                                }</p>}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $1, if you hold more than 2000 $EASY in your wallet you don't pay this fee. There is also a 1% fee applied only on backup claims.</p>
+                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $1, if you hold more
+                            than 2000 $EASY in your wallet you don't pay this fee. There is also a 1% fee applied only on
+                            backup claims.</p>
 
 
-                    <h2 className={styles.subTitle}>
-                        My Backups
-                    </h2>
-                    <div className={styles.claimableBackupsContainer}>
-                        {createdBackups.length !== 0 ? <>
-                                <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups you
-                                    have created</p>
-                                {/* eslint-disable-next-line react/jsx-key */}
-                                {createdBackups.map((item) => <BackupRow backup={item}
-                                                                         deleteBackup={(id) => deleteBackup(id)}/>)}
-                            </>
-                            :
-                            <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any active
-                                backups.</p>}
-                    </div>
-                    <ClaimableBackupsBox walletAddress={props.walletAddress}
-                                         backupContract={props.backupContract}
-                                         backupContractWithSigner={props.backupContractWithSigner}
-                                         provider={props.provider}/>
-                </>}
+                        <h2 className={styles.subTitle}>
+                            My Backups
+                        </h2>
+                        <div className={styles.claimableBackupsContainer}>
+                            {createdBackups.length !== 0 ? <>
+                                    <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups you
+                                        have created</p>
+                                    {/* eslint-disable-next-line react/jsx-key */}
+                                    {createdBackups.map((item) => <BackupRow backup={item}
+                                                                             deleteBackup={(id) => deleteBackup(id)}/>)}
+                                </>
+                                :
+                                <p className={styles.sectionDescription} style={{fontSize: 16}}>You don't have any active
+                                    backups.</p>}
+                        </div>
+                        <ClaimableBackupsBox walletAddress={props.walletAddress}
+                                             backupContract={props.backupContract}
+                                             backupContractWithSigner={props.backupContractWithSigner}
+                                             provider={props.provider}/>
+                    </>
+            }
         </>
-    );
+    )
+        ;
 }
