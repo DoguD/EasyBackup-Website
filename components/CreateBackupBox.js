@@ -49,6 +49,7 @@ export default function CreateBackupBox(props) {
     const [backupWallet, setBackupWallet] = useState("");
     const [isExpiryCustom, setIsExpiryCustom] = useState(false);
     const [expiry, setExpiry] = useState(0);
+    const [isAutomatic, setIsAutomatic] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [fee, setFee] = useState(0);
 
@@ -168,7 +169,7 @@ export default function CreateBackupBox(props) {
         setIsLoading(true);
         try {
             const options = {value: fee}
-            let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals), expiry * 24 * 60 * 60, options);
+            let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals), expiry * 24 * 60 * 60, isAutomatic, options);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -278,6 +279,14 @@ export default function CreateBackupBox(props) {
                                     }}
                                 />
                             </div>
+                            <div className={styles.backupRow}>
+                                <p className={styles.backupTitle}>Automatic Transfer: </p>
+                                <Radio toggle onClick={(evt, data) => setIsAutomatic(data.checked)}/>
+                            </div>
+                            {isAutomatic ?
+                                <p className={styles.backupTitle} style={{color: 'red'}}>If automatic transfer is enabled the tokens will transfer to your backup wallet
+                                    automaticaly when the time comes. Be careful! This means if you lose access to your
+                                    backup wallet, the tokens will be lost forever.</p> : null}
                             {isExpiryCustom ?
                                 <div className={styles.backupRow}>
                                     <p className={styles.backupTitle}>Custom Access Time: </p>
@@ -318,7 +327,8 @@ export default function CreateBackupBox(props) {
                         </div>
                         <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10, if you hold more
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
-                            than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee applied only on
+                            than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee
+                            applied only on
                             backup claims.</p>
                         <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}</p>
 
