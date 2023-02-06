@@ -57,10 +57,12 @@ export default function CreateBackupBox(props) {
 
     const [balance, setBalance] = useState(0);
     const [decimals, setDecimals] = useState(18);
+    const [easyBalance, setEasyBalance] = useState(0);
 
     useEffect(() => {
         getBackupData();
         getCreatedBackups();
+        getEasyBalance();
     }, [props.walletAddress]);
 
     async function getBackupData() {
@@ -114,6 +116,16 @@ export default function CreateBackupBox(props) {
         try {
             let balance = parseInt(await tokenContract.balanceOf(props.walletAddress), 10) / 10 ** decimal;
             setBalance(balance);
+        } catch (e) {
+            console.log("Backup Box, get allowance error:");
+            console.log(e);
+        }
+    }
+
+    async function getEasyBalance() {
+        try {
+            let balance = parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18;
+            setEasyBalance(balance);
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
@@ -304,10 +316,11 @@ export default function CreateBackupBox(props) {
                                 </div>
                             </div>
                         </div>
-                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $1, if you hold more
+                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10, if you hold more
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
-                            than 2000 $EASY in your wallet you don't pay this fee. There is also a 1% fee applied only on
+                            than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee applied only on
                             backup claims.</p>
+                        <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}</p>
 
 
                         <h2 className={styles.subTitle}>

@@ -279,7 +279,8 @@ export default function Home() {
                                          backupContractWithSigner={backupContractWithSigner}
                                          provider={provider}
                                          signer={signer}
-                                         oracleContract={oracleContract}/>
+                                         oracleContract={oracleContract}
+                                         easyContract={easyContract}/>
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress}
