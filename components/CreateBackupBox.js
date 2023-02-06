@@ -168,7 +168,7 @@ export default function CreateBackupBox(props) {
     async function createBackup() {
         setIsLoading(true);
         try {
-            const options = {value: fee}
+            const options = {value: easyBalance > 10000 ? 0 : fee}
             let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals), expiry * 24 * 60 * 60, isAutomatic, options);
             setListener(transaction.hash);
         } catch (e) {
@@ -284,7 +284,8 @@ export default function CreateBackupBox(props) {
                                 <Radio toggle onClick={(evt, data) => setIsAutomatic(data.checked)}/>
                             </div>
                             {isAutomatic ?
-                                <p className={styles.backupTitle} style={{color: 'red'}}>If automatic transfer is enabled the tokens will transfer to your backup wallet
+                                <p className={styles.backupTitle} style={{color: 'red'}}>If automatic transfer is enabled
+                                    the tokens will transfer to your backup wallet
                                     automaticaly when the time comes. Be careful! This means if you lose access to your
                                     backup wallet, the tokens will be lost forever.</p> : null}
                             {isExpiryCustom ?
@@ -325,11 +326,10 @@ export default function CreateBackupBox(props) {
                                 </div>
                             </div>
                         </div>
-                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10, if you hold more
+                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10 in $FTM, if you hold more
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
                             than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee
-                            applied only on
-                            backup claims.</p>
+                            applied only when a backup is claimed.</p>
                         <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}</p>
 
 
