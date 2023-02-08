@@ -178,6 +178,18 @@ export default function CreateBackupBox(props) {
         }
     }
 
+    async function heartbeat() {
+        setIsLoading(true);
+        try {
+            let transaction = await props.backupContractWithSigner.heartBeat();
+            setListener(transaction.hash);
+        } catch (e) {
+            setIsLoading(false);
+            console.log("Heartbeat error: ");
+            console.log(e);
+        }
+    }
+
     function setListener(txHash) {
         props.provider.once(txHash, (transaction) => {
             console.log(transaction);
@@ -326,7 +338,8 @@ export default function CreateBackupBox(props) {
                                 </div>
                             </div>
                         </div>
-                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10 in $FTM, if you hold more
+                        <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10 in $FTM, if you
+                            hold more
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
                             than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee
                             applied only when a backup is claimed.</p>
@@ -338,8 +351,16 @@ export default function CreateBackupBox(props) {
                         </h2>
                         <div className={styles.claimableBackupsContainer}>
                             {createdBackups.length !== 0 ? <>
-                                    <p className={styles.sectionDescription} style={{fontSize: 16}}>These are the backups you
-                                        have created</p>
+                                    <p className={styles.sectionDescription} style={{fontSize: 16, textAlign: 'center'}}>These are the backups you have created.
+                                        {/* eslint-disable-next-line react/no-unescaped-entities */}
+                                        <br/>You can use "Reset Access Time" button to restart the time it needs to pass before your backups become availabe.</p>
+                                    <div className={styles.mintButton} style={{width: 300}} onClick={() => {
+                                        heartbeat();
+                                    }}>
+                                        {
+                                            isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
+                                                <p className={styles.mintText}>Reset Access Time</p>}
+                                    </div>
                                     {/* eslint-disable-next-line react/jsx-key */}
                                     {createdBackups.map((item) => <BackupRow backup={item}
                                                                              deleteBackup={(id) => deleteBackup(id)}/>)}
