@@ -173,7 +173,12 @@ export default function CreateBackupBox(props) {
         setIsLoading(true);
         try {
             const options = {value: easyBalance > 10000 ? 0 : fee}
-            let transaction = await props.backupContractWithSigner.createBackup(backupWallet, token, isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals), expiry * 24 * 60 * 60, isAutomatic, options);
+            let transaction = await props.backupContractWithSigner.createBackup(backupWallet,
+                token,
+                isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals),
+                expiry * 24 * 60 * 60, isAutomatic,
+                "0x0000000000000000000000000000000000000000",
+                options);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -355,9 +360,11 @@ export default function CreateBackupBox(props) {
                         </h2>
                         <div className={styles.claimableBackupsContainer}>
                             {createdBackups.length !== 0 ? <>
-                                    <p className={styles.sectionDescription} style={{fontSize: 16, textAlign: 'center'}}>These are the backups you have created.
+                                    <p className={styles.sectionDescription} style={{fontSize: 16, textAlign: 'center'}}>These
+                                        are the backups you have created.
                                         {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                        <br/>You can use "Reset Access Time" button to restart the time it needs to pass before your backups become availabe.</p>
+                                        <br/>You can use "Reset Access Time" button to restart the time it needs to pass before
+                                        your backups become availabe.</p>
                                     <div className={styles.mintButton} style={{width: 300}} onClick={() => {
                                         heartbeat();
                                     }}>
