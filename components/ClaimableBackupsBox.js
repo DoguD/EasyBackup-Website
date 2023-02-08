@@ -24,12 +24,15 @@ function ClaimableBackupRow(props) {
                 <div style={{width: 16}}/>
                 <p className={styles.claimableBackupText}><b>Amount: </b></p>
                 <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
-                    ? "Infinite"
+                    ? "∞"
                     : parseInt(props.backup.amount / 10 ** 18).toFixed(4)}</p>
 
                 <div style={{width: 16}}/>
                 <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
                 <p className={styles.claimableBackupText}>{remainingDays} days</p>
+
+                <p className={styles.claimableBackupText}><b>Automatic: </b></p>
+                <p className={styles.claimableBackupText}>{props.backup.isAutomatic ? "Yes" : "No"}</p>
 
                 <div style={{width: 32}}/>
                 <Button primary disabled={remainingDays !== 0}
@@ -61,7 +64,8 @@ export default function ClaimableBackupsBox(props) {
                     to: backup[1],
                     token: backup[2],
                     lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
-                    backupId: backupId
+                    backupId: backupId,
+                    automatic: backup[6]
                 }
                 console.log(parsedBackup);
                 parsedBackups.push(parsedBackup);
