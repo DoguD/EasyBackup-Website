@@ -196,7 +196,7 @@ export default function FarmBox(props) {
             </h2>
             <p className={styles.sectionDescription}><b>40% $EASY</b> supply is allocated for <b>$EASY-$USDC
                 LP</b> farmers</p>
-            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Farming starts after presale ends)</p>
+            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Farming starts when presale ends)</p>
             <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
             {
                 props.walletAddress === "" ?
@@ -256,21 +256,26 @@ export default function FarmBox(props) {
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
-                            <div style={{display: 'flex', flexDirection: 'row'}}>
-                                <div className={styles.stakingButton} onClick={() => harvest()}>
-                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
-                                        <p className={styles.stakingButtonText}>Claim</p>}
+                            {Date.now() > props.presaleEndTime ?
+                                <div style={{display: 'flex', flexDirection: 'row'}}>
+                                    <div className={styles.stakingButton} onClick={() => harvest()}>
+                                        {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                            <p className={styles.stakingButtonText}>Claim</p>}
+                                    </div>
+                                    <div className={styles.stakingButton} onClick={() => setOpen(true)}>
+                                        {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                            <p className={styles.stakingButtonText}>Stake</p>}
+                                    </div>
+                                    <div className={styles.stakingButton} onClick={() => setWithdrawOpen(true)}>
+                                        {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                            <p className={styles.stakingButtonText}>Unstake</p>
+                                        }
+                                    </div>
                                 </div>
-                                <div className={styles.stakingButton} onClick={() => setOpen(true)}>
-                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
-                                        <p className={styles.stakingButtonText}>Stake</p>}
-                                </div>
-                                <div className={styles.stakingButton} onClick={() => setWithdrawOpen(true)}>
-                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
-                                        <p className={styles.stakingButtonText}>Unstake</p>
-                                    }
-                                </div>
-                            </div>
+                                :
+                                <p className={styles.sectionDescription} style={{color: "#424242"}}>(Farming starts
+                                    when presale
+                                    ends)</p>}
                         </div>
                     </div>}
         </>

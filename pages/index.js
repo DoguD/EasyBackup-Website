@@ -63,6 +63,8 @@ export default function Home() {
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
     const [totalBackups, setTotalBackups] = useState(0);
+    // Presale related
+    const [presaleStartTime, setPresaleStartTime] = useState(1708252685 * 1000); // Today at 2024 timestamp
 
     const [menuItem, setMenuItem] = useState(0);
     // Referrer
@@ -176,6 +178,7 @@ export default function Home() {
             // TODO: Before Release
             setEasyPrice(usdcInLp / easyInLp);
             setTotalBackups(parseInt(await backupContract.backupCount(), 10));
+            setPresaleStartTime(parseInt(await presaleContract.preSaleStartTime(), 10) * 1000); // To turn into miliseconds
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -289,7 +292,8 @@ export default function Home() {
                                     usdcContractWithSigner={usdcContractWithSigner}
                                     presaleContractWithSigner={presaleContractWithSigner}
                                     connectWalletHandler={() => connectWalletHandler()}
-                                    provider={provider}/>
+                                    provider={provider}
+                                    presaleStartTime={presaleStartTime}/>
                         : menuItem === 2 ?
                             <StakeBox
                                 provider={provider}
@@ -299,8 +303,8 @@ export default function Home() {
                                 xEasyWithSigner={xEasyWithSigner}
                                 easyContract={easyContract}
                                 easyContractWithSigner={easyContractWithSigner}
-
-                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                presaleEndTime={presaleStartTime + 10*24*60*60*1000}/>
                             :
                             <FarmBox
                                 walletAddress={walletAddress}
@@ -312,8 +316,8 @@ export default function Home() {
                                 farmContractWithSigner={farmContractWithSigner}
                                 connectWalletHandler={() => connectWalletHandler()}
                                 provider={provider}
-
-                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>}
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                presaleEndTime={presaleStartTime + 10*24*60*60*1000}/>}
             </main>
 
             <footer className={styles.footer}>

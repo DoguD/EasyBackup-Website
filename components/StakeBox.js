@@ -170,7 +170,7 @@ export default function StakeBox(props) {
             </h2>
             <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of protocol
                 revenues weekly</p>
-            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts after presale
+            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts when presale
                 ends)</p>
             <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
 
@@ -246,20 +246,24 @@ export default function StakeBox(props) {
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
-                            <div style={{display: 'flex', flexDirection: 'row'}}>
-                                <div className={styles.stakingButton} onClick={() => {
-                                    setOpen(true);
-                                }}>
-                                    <p className={styles.stakingButtonText}>{isLoading ?
-                                        <ClipLoader color={"#424242"} size={15}/> : "Stake"}</p>
-                                </div>
-                                <div className={styles.stakingButton} onClick={() => {
-                                    setWithdrawOpen(true);
-                                }}>
-                                    <p className={styles.stakingButtonText}>{isLoading ?
-                                        <ClipLoader color={"#424242"} size={15}/> : "Withdraw"}</p>
-                                </div>
-                            </div>
+                            {Date.now() > props.presaleEndTime ?
+                                <div style={{display: 'flex', flexDirection: 'row'}}>
+                                    <div className={styles.stakingButton} onClick={() => {
+                                        setOpen(true);
+                                    }}>
+                                        <p className={styles.stakingButtonText}>{isLoading ?
+                                            <ClipLoader color={"#424242"} size={15}/> : "Stake"}</p>
+                                    </div>
+                                    <div className={styles.stakingButton} onClick={() => {
+                                        setWithdrawOpen(true);
+                                    }}>
+                                        <p className={styles.stakingButtonText}>{isLoading ?
+                                            <ClipLoader color={"#424242"} size={15}/> : "Withdraw"}</p>
+                                    </div>
+                                </div> :
+                                <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts
+                                    when presale
+                                    ends)</p>}
                         </div>
                     </div>
                 </>}

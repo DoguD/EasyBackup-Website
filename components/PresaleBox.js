@@ -22,7 +22,7 @@ function MyTimer({expiryTimestamp}) {
 
 
     return (
-        <div style={{textAlign: 'center'}}>
+        <div style={{textAlign: 'center', marginTop: 32}}>
             <div style={{fontSize: '100px', color: "#3a70ed"}}>
                 <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
             </div>
@@ -41,6 +41,7 @@ export default function PresaleBox(props) {
     const [totalMinted, setTotalMinted] = useState(1000000);
     const [isLoading, setIsLoading] = useState(false);
     const [usdcAllowance, setUsdcAllowance] = useState(0);
+    const [usdcBalance, setUsdcBalance] = useState(0);
 
     useEffect(() => {
         getPresaleData();
@@ -67,6 +68,7 @@ export default function PresaleBox(props) {
     }
 
     async function presaleMint(_amount) {
+        console.log(_amount);
         setIsLoading(true);
         try {
             let transaction = await props.presaleContractWithSigner.buyTokens(_amount);
@@ -74,7 +76,21 @@ export default function PresaleBox(props) {
         } catch (e) {
             setIsLoading(false);
             console.log("Buy error: ");
-            console.log(e)
+            console.log(e);
+            if(e.toString().indexOf("Amount is lower than minMintAmount") !== -1) {
+                alert("Minimum purchase amount is 2000 $EASY in the presale.");
+            }
+            else if(e.toString().indexOf("Sale not active") !== -1) {
+                alert("Sale hasn't started yet.");
+            }
+            else if(e.toString().indexOf("Presale is only for EasyClub VIPs") !== -1) {
+                alert("You need to own at least 5 EasyClub NFTs to buy $EASY during the first 5 days of presale.");
+            }
+            else if(e.toString().indexOf("Sale is only for EasyClub members") !== -1) {
+                alert("You need to own at least 1 EasyClub NFT to participate in $EASY presale.");
+            } else if(e.toString().indexOf("Presale allocation exceeded") !== -1) {
+                alert("The amount you are trying to buy exceeds presale allocation.");
+            }
         }
     }
 
@@ -82,8 +98,10 @@ export default function PresaleBox(props) {
         try {
             if (props.walletAddress !== "") {
                 let allowance = parseInt(await props.usdcContract.allowance(props.walletAddress, PRESALE_ADDRESS), 10);
+                let balance = parseInt(await props.usdcContract.balanceOf(props.walletAddress), 10) / 10 ** 6;
                 console.log(allowance);
                 setUsdcAllowance(allowance);
+                setUsdcBalance(balance);
             }
         } catch (e) {
             console.log("USDC allowance error: ");
@@ -113,7 +131,7 @@ export default function PresaleBox(props) {
 
             <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup protocol revenues will be distributed to $EASY stakers.</p>
             {
-                preSaleEnabled ?
+                Date.now() > props.presaleStartTime ?
                     <>
                         <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Total Presale
                             Allocation: </b> 3,500,000 $EASY</p>
@@ -156,6 +174,7 @@ export default function PresaleBox(props) {
                                     </div>
                                     <p className={styles.mintCostText}><b>Total: </b>{(0.005 * toMint).toFixed(3)} $USDC
                                     </p>
+                                    <p className={styles.mintCostText}><b>Your Wallet Balance: </b>{usdcBalance.toFixed(3)} $USDC</p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
                                             console.log("test");
@@ -177,10 +196,8 @@ export default function PresaleBox(props) {
                     </>
                     :
                     <>
-                        <p className={styles.sectionDescription} style={{marginTop: 16}}>Buy $EASY,
-                            stake it, and earn
-                            from protocol revenues.</p>
-                        <MyTimer expiryTimestamp={1673783940000}/>
+                        <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Presale Starts In</b></p>
+                        <MyTimer expiryTimestamp={props.presaleStartTime}/>
                     </>}
         </>
     )

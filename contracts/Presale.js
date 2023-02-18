@@ -1,4 +1,4 @@
-export const PRESALE_ADDRESS = "0xf0466C529ee6F28c46D71D4e9481c2C558057b4E";
+export const PRESALE_ADDRESS = "0xE9F10E80812eE87559883C726dc8aBf97e361c9c";
 export const PRESALE_ABI = [
     {
         "inputs": [
@@ -68,6 +68,19 @@ export const PRESALE_ABI = [
     },
     {
         "inputs": [],
+        "name": "minMintAmount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "owner",
         "outputs": [
             {
@@ -81,7 +94,59 @@ export const PRESALE_ABI = [
     },
     {
         "inputs": [],
+        "name": "preSaleDuration",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "preSaleStartTime",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "saleDuration",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "setMinMintAmount",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
