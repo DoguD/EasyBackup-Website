@@ -106,15 +106,12 @@ export default function PresaleBox(props) {
                 Presale
             </h2>
             <p className={styles.presaleDescription}><b>35%</b> of EasyBlock token is allocated for presale. Presale
-                starts on <b>February 1st, 11:59 UTC</b> and will last for <b>2 weeks.</b><br/>First 24-hours is
-                reserved
-                for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
+                starts on <b>February 22nd, 11:59 UTC</b> and will last for <b>10 days.</b><br/>
+                You need to have at least 1 <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"} target={"_blank"} rel="noreferrer">EasyClub NFT</a> to participate in the sale. <br/>
+                First 5 days are reserved for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
                        target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>
 
-            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup
-                protocol revenues will be
-                distributed to $EASY
-                holders.</p>
+            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup protocol revenues will be distributed to $EASY stakers.</p>
             {
                 preSaleEnabled ?
                     <>
