@@ -283,7 +283,8 @@ export default function Home() {
                                          provider={provider}
                                          signer={signer}
                                          oracleContract={oracleContract}
-                                         easyContract={easyContract}/>
+                                         easyContract={easyContract}
+                                         presaleEndTime={presaleStartTime + 10*24*60*60*1000}/>
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress}

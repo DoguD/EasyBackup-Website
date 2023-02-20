@@ -329,22 +329,29 @@ export default function CreateBackupBox(props) {
                                 </div>
                                 : null}
                             <div className={styles.backupRow}>
-                                <div className={styles.mintButton} onClick={() => {
-                                    if (approvalNeeded) {
-                                        approve();
-                                    } else {
-                                        createBackup();
-                                    }
-                                }} style={{width: '100%'}}>
-                                    {
-                                        isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
-                                            <p className={styles.mintText}>
-                                                {
-                                                    approvalNeeded ?
-                                                        "Approve" :
-                                                        "Create Backup"
-                                                }</p>}
-                                </div>
+                                {Date.now() > props.presaleEndTime ?
+                                    <div className={styles.mintButton} onClick={() => {
+                                        if (approvalNeeded) {
+                                            approve();
+                                        } else {
+                                            createBackup();
+                                        }
+                                    }} style={{width: '100%'}}>
+                                        {
+                                            isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
+                                                <p className={styles.mintText}>
+                                                    {
+                                                        approvalNeeded ?
+                                                            "Approve" :
+                                                            "Create Backup"
+                                                    }</p>}
+                                    </div> :
+                                    <p className={styles.sectionDescription} style={{
+                                        color: "#424242",
+                                        width: '100%',
+                                        marginTop: 16,
+                                        fontWeight: 'bold'
+                                    }}>EasyBackup will go live when the presale ends</p>}
                             </div>
                         </div>
                         <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10 in $FTM, if you
