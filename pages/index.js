@@ -198,7 +198,7 @@ export default function Home() {
         <div className={styles.container}>
             <Toaster/>
             <Head>
-                <title>EasyBackup - Never lose your wallet</title>
+                <title>EasyBackup - Never lose your crypto</title>
                 <meta name="description" content="Backup your crypto wallet easily"/>
                 <link rel="icon" href="/favicon.png"/>
             </Head>
