@@ -306,6 +306,7 @@
     font-size: 1rem;
     margin-top: 0;
     margin-bottom: 4px;
+    text-align: center;
 }
 
 .sectionSmallDescription {
@@ -531,6 +532,32 @@
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
+}
+
+
+@media (max-width: 600px) {
+    .menuText {
+        font-size: 20px;
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+
+    .card {
+        height: unset;
+        margin: 8px;
+        padding: 8px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .main {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .stakingCard {
+        width: 350px;
+    }
 }
 
 /*Main color: #3a70ed*/

@@ -199,7 +199,7 @@ export default function Home() {
             <Toaster/>
             <Head>
                 <title>EasyBackup - Never lose your wallet</title>
-                <meta name="description" content="Backup your crypto wallets easily"/>
+                <meta name="description" content="Backup your crypto wallet easily"/>
                 <link rel="icon" href="/favicon.png"/>
             </Head>
 
