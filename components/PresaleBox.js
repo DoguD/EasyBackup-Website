@@ -23,7 +23,7 @@ function MyTimer({expiryTimestamp}) {
 
     return (
         <div style={{textAlign: 'center', marginTop: 32}}>
-            <div style={{fontSize: '100px', color: "#3a70ed"}}>
+            <div className={styles.presaleTimer}>
                 <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
             </div>
         </div>
@@ -124,7 +124,7 @@ export default function PresaleBox(props) {
                 Presale
             </h2>
             <p className={styles.presaleDescription}><b>35%</b> of EasyBlock token is allocated for presale. Presale
-                starts on <b>February 22nd, 11:59 UTC</b> and will last for <b>10 days.</b><br/>
+                starts on <b>February 24th, 11:59 UTC</b> and will last for <b>10 days.</b><br/>
                 You need to have at least 1 <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"} target={"_blank"} rel="noreferrer">EasyClub NFT</a> to participate in the sale. <br/>
                 First 5 days are reserved for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
                        target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>

@@ -64,7 +64,7 @@ export default function Home() {
     const [easySupply, setEasySupply] = useState(0);
     const [totalBackups, setTotalBackups] = useState(0);
     // Presale related
-    const [presaleStartTime, setPresaleStartTime] = useState(1708252685 * 1000); // Today at 2024 timestamp
+    const [presaleStartTime, setPresaleStartTime] = useState(1677239940000); // Today at 2024 timestamp
 
     const [menuItem, setMenuItem] = useState(0);
     // Referrer
@@ -175,10 +175,12 @@ export default function Home() {
             let easyInLp = parseInt(reserves[1], 10) / 10 ** 18;
 
             setEasySupply(supply);
-            // TODO: Before Release
-            setEasyPrice(usdcInLp / easyInLp);
             setTotalBackups(parseInt(await backupContract.backupCount(), 10));
-            setPresaleStartTime(parseInt(await presaleContract.preSaleStartTime(), 10) * 1000); // To turn into miliseconds
+            let presaleTime = parseInt(await presaleContract.preSaleStartTime(), 10) * 1000; // To turn into milliseconds
+            // setPresaleStartTime(presaleTime); // TODO: Re-open
+            if (Date.now() > presaleTime + 10*24*60*60*1000) {
+                setEasyPrice(usdcInLp / easyInLp);
+            }
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);

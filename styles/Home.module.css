@@ -534,6 +534,10 @@
     cursor: pointer;
 }
 
+.presaleTimer {
+    font-size: 100px;
+    color: #3a70ed;
+}
 
 @media (max-width: 600px) {
     .menuText {
@@ -557,6 +561,10 @@
 
     .stakingCard {
         width: 350px;
+    }
+
+    .presaleTimer {
+        font-size: 72px;
     }
 }
 
