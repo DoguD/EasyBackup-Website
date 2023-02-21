@@ -539,6 +539,12 @@
     color: #3a70ed;
 }
 
+.bannerImage {
+    width: 100%;
+    margin-top: 58px;
+    margin-bottom: 16px;
+}
+
 @media (max-width: 600px) {
     .menuText {
         font-size: 20px;
@@ -565,6 +571,16 @@
 
     .presaleTimer {
         font-size: 72px;
+    }
+
+    .bannerImage {
+        display: none;
+    }
+}
+
+@media (min-width: 600px) {
+    .description{
+        display: none;
     }
 }
 

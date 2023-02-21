@@ -178,7 +178,7 @@ export default function Home() {
             setTotalBackups(parseInt(await backupContract.backupCount(), 10));
             let presaleTime = parseInt(await presaleContract.preSaleStartTime(), 10) * 1000; // To turn into milliseconds
             // setPresaleStartTime(presaleTime); // TODO: Re-open
-            if (Date.now() > presaleTime + 10*24*60*60*1000) {
+            if (Date.now() > presaleTime + 10 * 24 * 60 * 60 * 1000) {
                 setEasyPrice(usdcInLp / easyInLp);
             }
         } catch (e) {
@@ -207,8 +207,9 @@ export default function Home() {
 
             <main className={styles.main}>
                 <NavBar/>
+                <img src="/banner.png" alt="Banner" className={styles.bannerImage}/>
                 <p className={styles.description} style={{marginTop: 128}}>
-                    <span style={{fontWeight: 'bold'}}>Never lose access to your funds in your crypto wallets</span>
+                    <span style={{fontWeight: 'bold'}}>Never lose access to your coins in your wallet</span>
                     <br/>
                     Create backups or assign inheritance wallets with ease
                 </p>
@@ -286,7 +287,7 @@ export default function Home() {
                                          signer={signer}
                                          oracleContract={oracleContract}
                                          easyContract={easyContract}
-                                         presaleEndTime={presaleStartTime + 10*24*60*60*1000}/>
+                                         presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
                     </>
                     : menuItem === 1 ?
                         <PresaleBox walletAddress={walletAddress}
@@ -307,7 +308,7 @@ export default function Home() {
                                 easyContract={easyContract}
                                 easyContractWithSigner={easyContractWithSigner}
                                 easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                presaleEndTime={presaleStartTime + 10*24*60*60*1000}/>
+                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
                             :
                             <FarmBox
                                 walletAddress={walletAddress}
@@ -320,7 +321,7 @@ export default function Home() {
                                 connectWalletHandler={() => connectWalletHandler()}
                                 provider={provider}
                                 easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                presaleEndTime={presaleStartTime + 10*24*60*60*1000}/>}
+                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
             </main>
 
             <footer className={styles.footer}>
