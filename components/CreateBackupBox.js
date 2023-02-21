@@ -62,6 +62,7 @@ export default function CreateBackupBox(props) {
     const [balance, setBalance] = useState(0);
     const [decimals, setDecimals] = useState(18);
     const [easyBalance, setEasyBalance] = useState(0);
+    const [isDiscounted, setIsDiscounted] = useState(false);
 
     useEffect(() => {
         getBackupData();
@@ -119,8 +120,7 @@ export default function CreateBackupBox(props) {
 
     async function getBalance(decimal) {
         try {
-            let balance = parseInt(await tokenContract.balanceOf(props.walletAddress), 10) / 10 ** decimal;
-            setBalance(balance);
+            setBalance(parseInt(await tokenContract.balanceOf(props.walletAddress), 10) / 10 ** decimal);
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
@@ -129,8 +129,8 @@ export default function CreateBackupBox(props) {
 
     async function getEasyBalance() {
         try {
-            let balance = parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18;
-            setEasyBalance(balance);
+            setEasyBalance(parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
+            setIsDiscounted(await props.backupContract.isDiscounted(props.walletAddress))
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
@@ -140,7 +140,7 @@ export default function CreateBackupBox(props) {
     async function getDecimal() {
         try {
             let decimal = parseInt(await tokenContract.decimals(), 10);
-            setBalance(decimal);
+            setDecimals(decimal);
             return decimal;
         } catch (e) {
             console.log("Backup Box, get allowance error:");
@@ -172,7 +172,7 @@ export default function CreateBackupBox(props) {
     async function createBackup() {
         setIsLoading(true);
         try {
-            const options = {value: easyBalance > 10000 ? 0 : fee}
+            const options = {value: isDiscounted ? 0 : fee}
             let transaction = await props.backupContractWithSigner.createBackup(backupWallet,
                 token,
                 isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals),
@@ -361,7 +361,7 @@ export default function CreateBackupBox(props) {
                             applied only when a backup is claimed.</p>
                         <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}
                             <br/>
-                            {easyBalance >= 10000 ? <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10 fee.</b> :
+                            {isDiscounted ? <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10 fee.</b> :
                                 <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup without the $10 fee.</b>}
                         </p>
 
