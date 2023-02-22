@@ -48,18 +48,9 @@
 .title,
 .description {
     text-align: center;
-}
-
-.description {
     line-height: 1.5;
     font-size: 1.5rem;
     margin: 1rem 0 0;
-}
-
-@media (max-width: 600px) {
-    .description {
-        font-size: 1.2rem;
-    }
 }
 
 .description-emphasis {
@@ -545,6 +536,14 @@
     margin-bottom: 16px;
 }
 
+.descriptionContainer {
+    background-color: #3a70ed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 96px 24px 24px;
+}
+
 @media (max-width: 600px) {
     .menuText {
         font-size: 20px;
@@ -560,11 +559,6 @@
         padding-right: 16px;
     }
 
-    .main {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
     .stakingCard {
         width: 350px;
     }
@@ -576,10 +570,26 @@
     .bannerImage {
         display: none;
     }
+
+    .description {
+        font-size: 1.2rem;
+        color: white;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .mobilePadding {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
 }
 
 @media (min-width: 600px) {
     .description{
+        display: none;
+    }
+
+    .descriptionContainer {
         display: none;
     }
 }

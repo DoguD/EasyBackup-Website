@@ -7,7 +7,7 @@ export default function StatsBox(props) {
             <div className={styles.grid}>
                 <div className={styles.card}>
                     <h2 className={styles.statsTitle}>Backed-Up Assets</h2>
-                    <p>$1,000,000</p>
+                    <p>$0</p> {/*TODO: Make automatic somehow*/}
                 </div>
                 <div className={styles.card}>
                     <h2 className={styles.statsTitle}>Total Backups</h2>

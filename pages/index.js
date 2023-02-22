@@ -208,120 +208,134 @@ export default function Home() {
             <main className={styles.main}>
                 <NavBar/>
                 <img src="/banner.png" alt="Banner" className={styles.bannerImage}/>
-                <p className={styles.description} style={{marginTop: 128}}>
-                    <span style={{fontWeight: 'bold'}}>Never lose access to your coins in your wallet</span>
-                    <br/>
-                    Create backups or assign inheritance wallets with ease
-                </p>
-
-                <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
-
-                <div className={styles.backupInfoCard}>
-                    <p className={styles.boxTitle}>What is EasyBackup?</p>
-                    <p className={styles.sectionDescription}>EasyBackup is a protocol which lets you assign backup
-                        wallets
-                        for the tokens in your wallet. This way
-                        if you loose access to your wallet for any reason, the backup wallet will be able to transfer
-                        those
-                        tokens to itself. You never need to transfer your tokens to EasyBackup smart contract and only
-                        the
-                        backup wallet will be able transfer those tokens. Similarly, the backup system can be used for
-                        inheritance.</p>
-                    <p className={styles.boxTitle}>How to use?</p>
-                    <p className={styles.sectionDescription} style={{width: '100%'}}>- Select a token, amount, backup
-                        wallet, and access time.
-                        <br/></p>
-                    <p className={styles.sectionSmallDescription}>
-                        <b>Token:</b>The token you want the backup wallet to be able to access. You can choose from the
-                        list
-                        or use a custom token address.
+                <div className={styles.descriptionContainer}>
+                    <img src="/favicon.png" alt="Icon" style={{width: 120, height: 120}}/>
+                    <p className={styles.description}>
+                        <span style={{fontWeight: 'bold', fontSize: '1.5rem'}}>Never lose access to your coins in your wallet</span>
                         <br/>
-                        {/* eslint-disable-next-line react/no-unescaped-entities */}
-                        <b>Amount:</b>The amount of tokens the backup wallet can access. If you choose "infinite" the
-                        backup
-                        will able to access all, or you can limit the amount.
-                        <br/>
-                        <b>Backup Wallet:</b>The wallet which you want to be able to access your tokens.
-                        <br/>
-                        <b>Access Time:</b>The time which needs to pass before the backup becomes accesible. For
-                        example,
-                        choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365 days
-                        after
-                        your last interaction with the contract.
-                        <br/><br/>
-                    </p>
-                    <p className={styles.sectionDescription}>- After the access time has passed, the backup wallet can
-                        claim
-                        those tokens from your wallet. You
-                        can reset the access time by interacting with the contract.
-                        <br/>
-                        - You need to complete two transactions, one for token approval, and the other one for creating
-                        the backup.
+                        Create backups or assign inheritance wallets with ease
                     </p>
                 </div>
 
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100%',
-                    justifyContent: 'center',
-                    marginTop: 24
-                }}>
-                    <p className={styles.menuText} style={{color: menuItem === 0 ? "#3a70ed" : "#000000"}}
-                       onClick={() => setMenuItem(0)}>Backup</p>
-                    <p className={styles.menuText} style={{color: menuItem === 1 ? "#3a70ed" : "#000000"}}
-                       onClick={() => setMenuItem(1)}>Presale</p>
-                    <p className={styles.menuText} style={{color: menuItem === 2 ? "#3a70ed" : "#000000"}}
-                       onClick={() => setMenuItem(2)}>Stake</p>
-                    <p className={styles.menuText} style={{color: menuItem === 3 ? "#3a70ed" : "#000000"}}
-                       onClick={() => setMenuItem(3)}>Farm</p>
-                </div>
+                <div className={styles.mobilePadding}>
+                    <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
 
-                {menuItem === 0 ?
-                    <>
-                        <CreateBackupBox walletAddress={walletAddress}
-                                         connectWalletHandler={() => connectWalletHandler()}
-                                         backupContract={backupContract}
-                                         backupContractWithSigner={backupContractWithSigner}
-                                         provider={provider}
-                                         signer={signer}
-                                         oracleContract={oracleContract}
-                                         easyContract={easyContract}
-                                         presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
-                    </>
-                    : menuItem === 1 ?
-                        <PresaleBox walletAddress={walletAddress}
+                    <div className={styles.backupInfoCard}>
+                        <p className={styles.boxTitle}>What is EasyBackup?</p>
+                        <p className={styles.sectionDescription}>EasyBackup is a protocol which lets you assign backup
+                            wallets
+                            for the tokens in your wallet. This way
+                            if you loose access to your wallet for any reason, the backup wallet will be able to
+                            transfer
+                            those
+                            tokens to itself. You never need to transfer your tokens to EasyBackup smart contract and
+                            only
+                            the
+                            backup wallet will be able transfer those tokens. Similarly, the backup system can be used
+                            for
+                            inheritance.</p>
+                        <p className={styles.boxTitle}>How to use?</p>
+                        <p className={styles.sectionDescription} style={{width: '100%'}}>- Select a token, amount,
+                            backup
+                            wallet, and access time.
+                            <br/></p>
+                        <p className={styles.sectionSmallDescription}>
+                            <b>Token:</b>The token you want the backup wallet to be able to access. You can choose from
+                            the
+                            list
+                            or use a custom token address.
+                            <br/>
+                            {/* eslint-disable-next-line react/no-unescaped-entities */}
+                            <b>Amount:</b>The amount of tokens the backup wallet can access. If you choose "infinite"
+                            the
+                            backup
+                            will able to access all, or you can limit the amount.
+                            <br/>
+                            <b>Backup Wallet:</b>The wallet which you want to be able to access your tokens.
+                            <br/>
+                            <b>Access Time:</b>The time which needs to pass before the backup becomes accesible. For
+                            example,
+                            choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365
+                            days
+                            after
+                            your last interaction with the contract.
+                            <br/><br/>
+                        </p>
+                        <p className={styles.sectionDescription}>- After the access time has passed, the backup wallet
+                            can
+                            claim
+                            those tokens from your wallet. You
+                            can reset the access time by interacting with the contract.
+                            <br/>
+                            - You need to complete two transactions, one for token approval, and the other one for
+                            creating
+                            the backup.
+                        </p>
+                    </div>
+
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%',
+                        justifyContent: 'center',
+                        marginTop: 24
+                    }}>
+                        <p className={styles.menuText} style={{color: menuItem === 0 ? "#3a70ed" : "#000000"}}
+                           onClick={() => setMenuItem(0)}>Backup</p>
+                        <p className={styles.menuText} style={{color: menuItem === 1 ? "#3a70ed" : "#000000"}}
+                           onClick={() => setMenuItem(1)}>Presale</p>
+                        <p className={styles.menuText} style={{color: menuItem === 2 ? "#3a70ed" : "#000000"}}
+                           onClick={() => setMenuItem(2)}>Stake</p>
+                        <p className={styles.menuText} style={{color: menuItem === 3 ? "#3a70ed" : "#000000"}}
+                           onClick={() => setMenuItem(3)}>Farm</p>
+                    </div>
+
+                    {menuItem === 0 ?
+                        <>
+                            <CreateBackupBox walletAddress={walletAddress}
+                                             connectWalletHandler={() => connectWalletHandler()}
+                                             backupContract={backupContract}
+                                             backupContractWithSigner={backupContractWithSigner}
+                                             provider={provider}
+                                             signer={signer}
+                                             oracleContract={oracleContract}
+                                             easyContract={easyContract}
+                                             presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
+                        </>
+                        : menuItem === 1 ?
+                            <PresaleBox walletAddress={walletAddress}
+                                        easyContract={easyContract}
+                                        usdcContract={usdcContract}
+                                        usdcContractWithSigner={usdcContractWithSigner}
+                                        presaleContractWithSigner={presaleContractWithSigner}
+                                        connectWalletHandler={() => connectWalletHandler()}
+                                        provider={provider}
+                                        presaleStartTime={presaleStartTime}/>
+                            : menuItem === 2 ?
+                                <StakeBox
+                                    provider={provider}
+                                    walletAddress={walletAddress}
+                                    connectWalletHandler={() => connectWalletHandler()}
+                                    xEasyContract={xEasyContract}
+                                    xEasyWithSigner={xEasyWithSigner}
                                     easyContract={easyContract}
+                                    easyContractWithSigner={easyContractWithSigner}
+                                    easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                    presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
+                                :
+                                <FarmBox
+                                    walletAddress={walletAddress}
+                                    lpContract={lpContract}
+                                    lpContractWithSigner={lpContractWithSigner}
                                     usdcContract={usdcContract}
-                                    usdcContractWithSigner={usdcContractWithSigner}
-                                    presaleContractWithSigner={presaleContractWithSigner}
+                                    easyContract={easyContract}
+                                    farmContract={farmContract}
+                                    farmContractWithSigner={farmContractWithSigner}
                                     connectWalletHandler={() => connectWalletHandler()}
                                     provider={provider}
-                                    presaleStartTime={presaleStartTime}/>
-                        : menuItem === 2 ?
-                            <StakeBox
-                                provider={provider}
-                                walletAddress={walletAddress}
-                                connectWalletHandler={() => connectWalletHandler()}
-                                xEasyContract={xEasyContract}
-                                xEasyWithSigner={xEasyWithSigner}
-                                easyContract={easyContract}
-                                easyContractWithSigner={easyContractWithSigner}
-                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
-                            :
-                            <FarmBox
-                                walletAddress={walletAddress}
-                                lpContract={lpContract}
-                                lpContractWithSigner={lpContractWithSigner}
-                                usdcContract={usdcContract}
-                                easyContract={easyContract}
-                                farmContract={farmContract}
-                                farmContractWithSigner={farmContractWithSigner}
-                                connectWalletHandler={() => connectWalletHandler()}
-                                provider={provider}
-                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
+                                    easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                    presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
+                </div>
             </main>
 
             <footer className={styles.footer}>
