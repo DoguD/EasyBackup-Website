@@ -218,7 +218,9 @@ export default function Home() {
                 </div>
 
                 <div className={styles.mobilePadding}>
-                    <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
+                    {Date.now() > presaleStartTime + 10 * 24 * 60 * 60 * 1000 ?
+                        <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
+                        : null}
 
                     <div className={styles.backupInfoCard}>
                         <p className={styles.boxTitle}>What is EasyBackup?</p>
