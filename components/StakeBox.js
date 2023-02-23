@@ -168,8 +168,7 @@ export default function StakeBox(props) {
             <h2 className={styles.subTitle}>
                 Stake $EASY
             </h2>
-            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of protocol
-                revenues weekly</p>
+            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of initial fees weekly</p>
             <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts when presale
                 ends)</p>
             <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>

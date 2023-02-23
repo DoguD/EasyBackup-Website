@@ -129,7 +129,7 @@ export default function PresaleBox(props) {
                 First 5 days are reserved for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
                        target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>
 
-            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup protocol revenues will be distributed to $EASY stakers.</p>
+            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup initial fees will be distributed to $EASY stakers.</p>
             {
                 Date.now() > props.presaleStartTime ?
                     <>
