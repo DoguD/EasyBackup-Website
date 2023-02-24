@@ -38,7 +38,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
 export default function PresaleBox(props) {
     const [preSaleEnabled, setPreSaleEnabled] = useState(true);
     const [toMint, setToMint] = useState(2000);
-    const [totalMinted, setTotalMinted] = useState(1000000);
+    const [totalMinted, setTotalMinted] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [usdcAllowance, setUsdcAllowance] = useState(0);
     const [usdcBalance, setUsdcBalance] = useState(0);
