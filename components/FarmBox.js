@@ -215,7 +215,7 @@ export default function FarmBox(props) {
                             daily
                             compounded)</p>
                         <p className={styles.stakingText}
-                           style={{color: "green", fontWeight: 'bold'}}>{(apy * 100).toFixed(4)}%</p>
+                           style={{color: "green", fontWeight: 'bold'}}>{/*TODO: (apy * 100).toFixed(4)*/}NaN%</p>
 
                         <p className={styles.getTokenText}
                            onClick={() => window.open("https://spooky.fi/#/add/" + EASY_ADDRESS + "/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75", "_blank")}>Get

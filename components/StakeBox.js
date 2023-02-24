@@ -183,7 +183,7 @@ export default function StakeBox(props) {
                         <p className={styles.stakingTitle}>Staked TVL</p>
                         <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy)}</p>
                         <p className={styles.stakingTitle}>APR Estimate</p>
-                        <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>1.13%</p>
+                        <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>NaN%</p>
 
                         <div style={{
                             display: 'flex',

@@ -1,15 +1,23 @@
-export const PRESALE_ADDRESS = "0xE9F10E80812eE87559883C726dc8aBf97e361c9c";
+export const PRESALE_ADDRESS = "0x560Ef28eAa34E1166Aff9a7cFEd112840863bA08";
 export const PRESALE_ABI = [
     {
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_startTime",
+                "name": "_amount",
                 "type": "uint256"
-            },
+            }
+        ],
+        "name": "buyTokens",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_preSaleDuration",
+                "name": "_startTime",
                 "type": "uint256"
             },
             {
@@ -41,6 +49,13 @@ export const PRESALE_ABI = [
         "type": "event"
     },
     {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -48,7 +63,20 @@ export const PRESALE_ABI = [
                 "type": "uint256"
             }
         ],
-        "name": "buyTokens",
+        "name": "setMinMintAmount",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -120,13 +148,6 @@ export const PRESALE_ABI = [
     },
     {
         "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "saleDuration",
         "outputs": [
             {
@@ -136,19 +157,6 @@ export const PRESALE_ABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "setMinMintAmount",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -175,19 +183,6 @@ export const PRESALE_ABI = [
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
-        ],
-        "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     }
 ]
