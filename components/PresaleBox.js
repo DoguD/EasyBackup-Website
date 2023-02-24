@@ -142,7 +142,7 @@ export default function PresaleBox(props) {
                             <b>Minted: </b> {totalMinted}
                         </p>
                         <ProgressBar bgColor={"#3a70ed"}
-                                     completed={(100 * totalMinted / 3500000).toFixed(2)}
+                                     completed={(100 * totalMinted / 3500000).toFixed(0)}
                                      width={300}/>
                         {
                             props.walletAddress === "" ?
