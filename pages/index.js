@@ -66,7 +66,7 @@ export default function Home() {
     // Presale related
     const [presaleStartTime, setPresaleStartTime] = useState(1677239940000); // Today at 2024 timestamp
 
-    const [menuItem, setMenuItem] = useState(0);
+    const [menuItem, setMenuItem] = useState(1);
     // Referrer
     useEffect(() => {
         let fullUrl = window.location.href;
