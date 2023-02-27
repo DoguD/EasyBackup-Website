@@ -218,10 +218,6 @@ export default function PresaleBox(props) {
                                                     <ClipLoader color={"#3a70ed"}
                                                                 size={25}/> : usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve" : "Mint"}</p>}
                                     </div>
-                                    <p className={styles.mintCostText} style={{fontSize: 12, marginTop: 32}}><b>$EASY
-                                        Contract Address: </b>0x26A0D46A4dF26E9D7dEeE9107a27ee979935F237</p>
-                                    <p className={styles.mintCostText} style={{fontSize: 12}}><b>Presale Contract
-                                        Address: </b>0x560Ef28eAa34E1166Aff9a7cFEd112840863bA08</p>
                                 </>
                         }
                     </>
@@ -230,6 +226,10 @@ export default function PresaleBox(props) {
                         <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Presale Starts In</b></p>
                         <MyTimer expiryTimestamp={props.presaleStartTime}/>
                     </>}
+            <p className={styles.mintCostText} style={{fontSize: 12, marginTop: 32}}><b>$EASY
+                Contract Address: </b>0x26A0D46A4dF26E9D7dEeE9107a27ee979935F237</p>
+            <p className={styles.mintCostText} style={{fontSize: 12}}><b>Presale Contract
+                Address: </b>0x560Ef28eAa34E1166Aff9a7cFEd112840863bA08</p>
         </>
     )
 }
