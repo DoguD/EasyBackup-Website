@@ -76,13 +76,12 @@ export default function PresaleBox(props) {
         try {
             setEasyBalance(parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
         } catch (e) {
-            console.log("Backup Box, get allowance error:");
+            console.log("Presale Box, get EASY balance error:");
             console.log(e);
         }
     }
 
     async function getPresaleData() {
-        console.log("Minted Tokens");
         if (typeof props.easyContract != "undefined") {
             setTotalMinted(parseInt(await props.easyContract.mintedPresaleTokens(), 10) / 10 ** 18);
         }
@@ -129,7 +128,7 @@ export default function PresaleBox(props) {
             if (props.walletAddress !== "") {
                 let allowance = parseInt(await props.usdcContract.allowance(props.walletAddress, PRESALE_ADDRESS), 10);
                 let balance = parseInt(await props.usdcContract.balanceOf(props.walletAddress), 10) / 10 ** 6;
-                console.log(allowance);
+                console.log('Allowance:', allowance);
                 setUsdcAllowance(allowance);
                 setUsdcBalance(balance);
             }
@@ -141,7 +140,6 @@ export default function PresaleBox(props) {
 
     function setListener(txHash) {
         props.provider.once(txHash, (transaction) => {
-            console.log(transaction);
             setIsLoading(false);
             getPresaleData();
             getUsdcAllowance();
@@ -196,8 +194,6 @@ export default function PresaleBox(props) {
                                                onChange={(b) => {
                                                    let newValue = parseInt(b.target.value);
                                                    if (newValue) {
-                                                       console.log(newValue)
-                                                       console.log(newValue + totalMinted)
                                                        if (newValue + totalMinted > 3500000) {
                                                            setToMint(3500000 - totalMinted);
                                                        } else {
@@ -218,7 +214,6 @@ export default function PresaleBox(props) {
                                         Balance: </b>{usdcBalance.toFixed(3)} $USDC</p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (usdcAllowance < toMint * 0.005 * (10 ** 6)) {
-                                            console.log("test");
                                             approveUsdc();
                                         } else {
                                             presaleMint(BigInt(toMint * (10 ** 18)));
@@ -230,7 +225,7 @@ export default function PresaleBox(props) {
                                             <p className={styles.mintText}>
                                                 {isLoading ?
                                                     <ClipLoader color={"#3a70ed"}
-                                                                size={25}/> : usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve" : "Mint"}</p>}
+                                                                size={25}/> : usdcAllowance < toMint * 0.005 * (10 ** 6) ? "Approve" : "Mint"}</p>}
                                     </div>
                                 </>
                         }
