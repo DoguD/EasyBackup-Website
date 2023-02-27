@@ -361,7 +361,7 @@ export default function CreateBackupBox(props) {
                             applied only when a backup is claimed.</p>
                         <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}
                             <br/>
-                            {isDiscounted ? <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10 fee.</b> :
+                            {/*isDiscounted*/ easyBalance > 10000 ? <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10 fee.</b> :
                                 <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup without the $10 fee.</b>}
                         </p>
 

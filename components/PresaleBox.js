@@ -30,6 +30,29 @@ function MyTimer({expiryTimestamp}) {
     );
 }
 
+function SmallTimer({expiryTimestamp}) {
+    const {
+        seconds,
+        minutes,
+        hours,
+        days,
+        isRunning,
+        start,
+        pause,
+        resume,
+        restart,
+    } = useTimer({expiryTimestamp, onExpire: () => console.warn('onExpire called')});
+
+
+    return (
+        <div style={{textAlign: 'center', marginTop: 16, marginBottom: 32}}>
+            <div className={styles.presaleTimer} style={{fontSize: 48}}>
+                <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
+            </div>
+        </div>
+    );
+}
+
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -77,18 +100,15 @@ export default function PresaleBox(props) {
             setIsLoading(false);
             console.log("Buy error: ");
             console.log(e);
-            if(e.toString().indexOf("Amount is lower than minMintAmount") !== -1) {
+            if (e.toString().indexOf("Amount is lower than minMintAmount") !== -1) {
                 alert("Minimum purchase amount is 2000 $EASY in the presale.");
-            }
-            else if(e.toString().indexOf("Sale not active") !== -1) {
+            } else if (e.toString().indexOf("Sale not active") !== -1) {
                 alert("Sale hasn't started yet.");
-            }
-            else if(e.toString().indexOf("Presale is only for EasyClub VIPs") !== -1) {
+            } else if (e.toString().indexOf("Presale is only for EasyClub VIPs") !== -1) {
                 alert("You need to own at least 5 EasyClub NFTs to buy $EASY during the first 5 days of presale.");
-            }
-            else if(e.toString().indexOf("Sale is only for EasyClub members") !== -1) {
+            } else if (e.toString().indexOf("Sale is only for EasyClub members") !== -1) {
                 alert("You need to own at least 1 EasyClub NFT to participate in $EASY presale.");
-            } else if(e.toString().indexOf("Presale allocation exceeded") !== -1) {
+            } else if (e.toString().indexOf("Presale allocation exceeded") !== -1) {
                 alert("The amount you are trying to buy exceeds presale allocation.");
             }
         }
@@ -125,24 +145,30 @@ export default function PresaleBox(props) {
             </h2>
             <p className={styles.presaleDescription}><b>35%</b> of EasyBlock token is allocated for presale. Presale
                 starts on <b>February 24th, 11:59 UTC</b> and will last for <b>10 days.</b><br/>
-                You need to have at least 1 <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"} target={"_blank"} rel="noreferrer">EasyClub NFT</a> to participate in the sale. <br/>
-                First 5 days are reserved for <a style={{fontWeight: "bold", color: "#3a70ed"}} href={"https://club.easyblock.finance"}
-                       target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>
+                You need to have at least 1 <a style={{fontWeight: "bold", color: "#3a70ed"}}
+                                               href={"https://club.easyblock.finance"} target={"_blank"}
+                                               rel="noreferrer">EasyClub NFT</a> to participate in the sale. <br/>
+                First 5 days are reserved for <a style={{fontWeight: "bold", color: "#3a70ed"}}
+                                                 href={"https://club.easyblock.finance"}
+                                                 target={"_blank"} rel="noreferrer">VIP EasyClub</a> holders.</p>
 
-            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup initial fees will be distributed to $EASY stakers.</p>
+            <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Why $EASY?</b><br/>90% of EasyBackup
+                initial fees will be distributed to $EASY stakers.</p>
             {
                 Date.now() > props.presaleStartTime ?
                     <>
+                        <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Presale Ends In</b></p>
+                        <SmallTimer expiryTimestamp={props.presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
                         <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Total Presale
                             Allocation: </b> 3,500,000 $EASY</p>
                         <p className={styles.sectionDescription}><b>Presale Price: </b> 0.005
                             $USDC</p>
                         <p className={styles.sectionDescription}><b>Minimum Mint Amount: </b>2000 $EASY (=10 $USDC)</p>
                         <p className={styles.sectionDescription} style={{marginBottom: 32}}>
-                            <b>Minted: </b> {totalMinted.toFixed(0)}
+                            <b>Minted: </b> {USDollar.format(totalMinted.toFixed(0)).slice(1, -3)}
                         </p>
                         <ProgressBar bgColor={"#3a70ed"}
-                                     completed={(100 * totalMinted / 3500000).toFixed(0)*100/100}
+                                     completed={(100 * totalMinted / 3500000).toFixed(0) * 100 / 100}
                                      width={300}/>
                         {
                             props.walletAddress === "" ?
@@ -174,7 +200,8 @@ export default function PresaleBox(props) {
                                     </div>
                                     <p className={styles.mintCostText}><b>Total: </b>{(0.005 * toMint).toFixed(3)} $USDC
                                     </p>
-                                    <p className={styles.mintCostText}><b>Your Wallet Balance: </b>{usdcBalance.toFixed(3)} $USDC</p>
+                                    <p className={styles.mintCostText}><b>Your Wallet
+                                        Balance: </b>{usdcBalance.toFixed(3)} $USDC</p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
                                             console.log("test");
@@ -191,6 +218,10 @@ export default function PresaleBox(props) {
                                                     <ClipLoader color={"#3a70ed"}
                                                                 size={25}/> : usdcAllowance < toMint * 0.05 * 1 ** 6 ? "Approve" : "Mint"}</p>}
                                     </div>
+                                    <p className={styles.mintCostText} style={{fontSize: 12, marginTop: 32}}><b>$EASY
+                                        Contract Address: </b>0x26A0D46A4dF26E9D7dEeE9107a27ee979935F237</p>
+                                    <p className={styles.mintCostText} style={{fontSize: 12}}><b>Presale Contract
+                                        Address: </b>0x560Ef28eAa34E1166Aff9a7cFEd112840863bA08</p>
                                 </>
                         }
                     </>
