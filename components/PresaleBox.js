@@ -59,17 +59,27 @@ let USDollar = new Intl.NumberFormat('en-US', {
 });
 
 export default function PresaleBox(props) {
-    const [preSaleEnabled, setPreSaleEnabled] = useState(true);
     const [toMint, setToMint] = useState(2000);
     const [totalMinted, setTotalMinted] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [usdcAllowance, setUsdcAllowance] = useState(0);
     const [usdcBalance, setUsdcBalance] = useState(0);
+    const [easyBalance, setEasyBalance] = useState(0);
 
     useEffect(() => {
         getPresaleData();
         getUsdcAllowance();
+        getEasyBalance();
     }, [props.walletAddress])
+
+    async function getEasyBalance() {
+        try {
+            setEasyBalance(parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
+        } catch (e) {
+            console.log("Backup Box, get allowance error:");
+            console.log(e);
+        }
+    }
 
     async function getPresaleData() {
         console.log("Minted Tokens");
@@ -159,14 +169,17 @@ export default function PresaleBox(props) {
                     <>
                         <p className={styles.presaleDescription} style={{marginTop: 16}}><b>Presale Ends In</b></p>
                         <SmallTimer expiryTimestamp={props.presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
-                        <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Total Presale
+                        <p className={styles.sectionDescription} style={{marginTop: 16}}><b>Presale
                             Allocation: </b> 3,500,000 $EASY</p>
-                        <p className={styles.sectionDescription}><b>Presale Price: </b> 0.005
-                            $USDC</p>
-                        <p className={styles.sectionDescription}><b>Minimum Mint Amount: </b>2000 $EASY (=10 $USDC)</p>
-                        <p className={styles.sectionDescription} style={{marginBottom: 32}}>
-                            <b>Minted: </b> {USDollar.format(totalMinted.toFixed(0)).slice(1, -3)}
+                        <p className={styles.sectionDescription}>
+                            <b>Total Minted: </b> {USDollar.format(totalMinted.toFixed(0)).slice(1, -3)}
                         </p>
+                        <p className={styles.sectionDescription}><b>Price per Token: </b> 0.005
+                            $USDC</p>
+                        <p className={styles.sectionDescription}><b>Minimum Mint Amount: </b>2,000
+                            $EASY (=10 $USDC)</p>
+                        <p className={styles.mintCostText} style={{marginBottom: 32}}><b>Your EASY
+                            Balance: </b>{USDollar.format(easyBalance.toFixed(0)).slice(1,-3)} $EASY</p>
                         <ProgressBar bgColor={"#3a70ed"}
                                      completed={(100 * totalMinted / 3500000).toFixed(0) * 100 / 100}
                                      width={300}/>
@@ -198,9 +211,10 @@ export default function PresaleBox(props) {
                                                    if (toMint < 2000) setToMint(2000)
                                                }}></input>
                                     </div>
-                                    <p className={styles.mintCostText}><b>Total: </b>{(0.005 * toMint).toFixed(3)} $USDC
+                                    <p className={styles.mintCostText}><b>Total
+                                        Cost: </b>{(0.005 * toMint).toFixed(3)} $USDC
                                     </p>
-                                    <p className={styles.mintCostText}><b>Your Wallet
+                                    <p className={styles.mintCostText}><b>Your USDC
                                         Balance: </b>{usdcBalance.toFixed(3)} $USDC</p>
                                     <div className={styles.mintButton} onClick={async () => {
                                         if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
