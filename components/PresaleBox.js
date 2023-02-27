@@ -217,11 +217,11 @@ export default function PresaleBox(props) {
                                     <p className={styles.mintCostText}><b>Your USDC
                                         Balance: </b>{usdcBalance.toFixed(3)} $USDC</p>
                                     <div className={styles.mintButton} onClick={async () => {
-                                        if (usdcAllowance < toMint * 0.05 * 1 ** 6) {
+                                        if (usdcAllowance < toMint * 0.005 * (10 ** 6)) {
                                             console.log("test");
                                             approveUsdc();
                                         } else {
-                                            presaleMint(BigInt(toMint * 10 ** 18));
+                                            presaleMint(BigInt(toMint * (10 ** 18)));
                                         }
                                     }}>
                                         {props.isMinting ?
