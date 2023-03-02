@@ -242,20 +242,20 @@ export default function Home() {
                             wallet, and access time.
                             <br/></p>
                         <p className={styles.sectionSmallDescription}>
-                            <b>Token:</b>The token you want the backup wallet to be able to access. You can choose from
+                            <b>Token: </b>The token you want the backup wallet to be able to access. You can choose from
                             the
                             list
                             or use a custom token address.
                             <br/>
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
-                            <b>Amount:</b>The amount of tokens the backup wallet can access. If you choose "infinite"
+                            <b>Amount: </b>The amount of tokens the backup wallet can access. If you choose "infinite"
                             the
                             backup
                             will able to access all, or you can limit the amount.
                             <br/>
-                            <b>Backup Wallet:</b>The wallet which you want to be able to access your tokens.
+                            <b>Backup Wallet: </b>The wallet which you want to be able to access your tokens.
                             <br/>
-                            <b>Access Time:</b>The time which needs to pass before the backup becomes accessible. For
+                            <b>Access Time: </b>The time which needs to pass before the backup becomes accessible. For
                             example,
                             choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365
                             days
