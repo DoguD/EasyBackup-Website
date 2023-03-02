@@ -227,7 +227,7 @@ export default function Home() {
                         <p className={styles.sectionDescription}>EasyBackup is a protocol which lets you assign backup
                             wallets
                             for the tokens in your wallet. This way
-                            if you loose access to your wallet for any reason, the backup wallet will be able to
+                            if you lose access to your wallet for any reason, the backup wallet will be able to
                             transfer
                             those
                             tokens to itself. You never need to transfer your tokens to EasyBackup smart contract and
@@ -255,7 +255,7 @@ export default function Home() {
                             <br/>
                             <b>Backup Wallet:</b>The wallet which you want to be able to access your tokens.
                             <br/>
-                            <b>Access Time:</b>The time which needs to pass before the backup becomes accesible. For
+                            <b>Access Time:</b>The time which needs to pass before the backup becomes accessible. For
                             example,
                             choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365
                             days
