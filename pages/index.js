@@ -66,7 +66,7 @@ export default function Home() {
     // Presale related
     const [presaleStartTime, setPresaleStartTime] = useState(1677239940000); // Today at 2024 timestamp
 
-    const [menuItem, setMenuItem] = useState(1);
+    const [menuItem, setMenuItem] = useState(0);
     // Referrer
     useEffect(() => {
         let fullUrl = window.location.href;
@@ -284,8 +284,6 @@ export default function Home() {
                     }}>
                         <p className={styles.menuText} style={{color: menuItem === 0 ? "#3a70ed" : "#000000"}}
                            onClick={() => setMenuItem(0)}>Backup</p>
-                        <p className={styles.menuText} style={{color: menuItem === 1 ? "#3a70ed" : "#000000"}}
-                           onClick={() => setMenuItem(1)}>Presale</p>
                         <p className={styles.menuText} style={{color: menuItem === 2 ? "#3a70ed" : "#000000"}}
                            onClick={() => setMenuItem(2)}>Stake</p>
                         <p className={styles.menuText} style={{color: menuItem === 3 ? "#3a70ed" : "#000000"}}
@@ -304,39 +302,30 @@ export default function Home() {
                                              easyContract={easyContract}
                                              presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
                         </>
-                        : menuItem === 1 ?
-                            <PresaleBox walletAddress={walletAddress}
-                                        easyContract={easyContract}
-                                        usdcContract={usdcContract}
-                                        usdcContractWithSigner={usdcContractWithSigner}
-                                        presaleContractWithSigner={presaleContractWithSigner}
-                                        connectWalletHandler={() => connectWalletHandler()}
-                                        provider={provider}
-                                        presaleStartTime={presaleStartTime}/>
-                            : menuItem === 2 ?
-                                <StakeBox
-                                    provider={provider}
-                                    walletAddress={walletAddress}
-                                    connectWalletHandler={() => connectWalletHandler()}
-                                    xEasyContract={xEasyContract}
-                                    xEasyWithSigner={xEasyWithSigner}
-                                    easyContract={easyContract}
-                                    easyContractWithSigner={easyContractWithSigner}
-                                    easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                    presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
-                                :
-                                <FarmBox
-                                    walletAddress={walletAddress}
-                                    lpContract={lpContract}
-                                    lpContractWithSigner={lpContractWithSigner}
-                                    usdcContract={usdcContract}
-                                    easyContract={easyContract}
-                                    farmContract={farmContract}
-                                    farmContractWithSigner={farmContractWithSigner}
-                                    connectWalletHandler={() => connectWalletHandler()}
-                                    provider={provider}
-                                    easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                    presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
+                        : menuItem === 2 ?
+                            <StakeBox
+                                provider={provider}
+                                walletAddress={walletAddress}
+                                connectWalletHandler={() => connectWalletHandler()}
+                                xEasyContract={xEasyContract}
+                                xEasyWithSigner={xEasyWithSigner}
+                                easyContract={easyContract}
+                                easyContractWithSigner={easyContractWithSigner}
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
+                            :
+                            <FarmBox
+                                walletAddress={walletAddress}
+                                lpContract={lpContract}
+                                lpContractWithSigner={lpContractWithSigner}
+                                usdcContract={usdcContract}
+                                easyContract={easyContract}
+                                farmContract={farmContract}
+                                farmContractWithSigner={farmContractWithSigner}
+                                connectWalletHandler={() => connectWalletHandler()}
+                                provider={provider}
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
                 </div>
             </main>
 
