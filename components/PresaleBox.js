@@ -177,7 +177,7 @@ export default function PresaleBox(props) {
                         <p className={styles.sectionDescription}><b>Minimum Mint Amount: </b>2,000
                             $EASY (=10 $USDC)</p>
                         <p className={styles.mintCostText} style={{marginBottom: 32}}><b>Your EASY
-                            Balance: </b>{USDollar.format(easyBalance.toFixed(0)).slice(1,-3)} $EASY</p>
+                            Balance: </b>{USDollar.format(easyBalance.toFixed(0)).slice(1, -3)} $EASY</p>
                         <ProgressBar bgColor={"#3a70ed"}
                                      completed={(100 * totalMinted / 3500000).toFixed(0) * 100 / 100}
                                      width={300}/>
@@ -206,6 +206,18 @@ export default function PresaleBox(props) {
                                                onBlur={() => {
                                                    if (toMint < 2000) setToMint(2000)
                                                }}></input>
+                                        <p style={{
+                                            marginLeft: 8,
+                                            color: "#3a70ed",
+                                            textDecoration: "underline",
+                                            fontWeight: 'bold',
+                                            cursor: "pointer",
+                                            fontSize: 16
+                                        }}
+                                        onClick={()=> {
+                                            setToMint(Math.floor(usdcBalance/0.005))
+                                        }
+                                        }>Max</p>
                                     </div>
                                     <p className={styles.mintCostText}><b>Total
                                         Cost: </b>{(0.005 * toMint).toFixed(3)} $USDC
