@@ -134,7 +134,7 @@ export default function Home() {
     // Wallet Connect
     const connectWalletHandler = async () => {
         if (!metamaskInstalled) {
-            alert("Please install Metamask to mint NFTs.");
+            alert("Please install Metamask to use EasyBackup.");
             return;
         }
         try {
@@ -143,7 +143,7 @@ export default function Home() {
             chainId = chainId['chainId'];
 
             if (chainId !== 250) {
-                if (window.confirm("Please switch to Fantom Network to mint Easy Club NFTs.")) {
+                if (window.confirm("Please switch to Fantom Network to use EasyBackup.")) {
                     await changeNetworkToFTM();
                 }
             } else {
