@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 // Web3
-import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/EasyClub";
+import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/InProduction/EasyClub";
 import {ethers} from "ethers";
 // Toast
 import toast, {Toaster, useToasterStore} from 'react-hot-toast';
@@ -19,14 +19,14 @@ import 'semantic-ui-css/semantic.min.css'
 import 'react-circular-progressbar/dist/styles.css';
 import FarmBox from "../components/FarmBox";
 import CreateBackupBox from "../components/CreateBackupBox";
-import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/Presale";
-import {USDC_ABI, USDC_ADDRESS} from "../contracts/USDC";
+import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/InProduction/Presale";
+import {USDC_ABI, USDC_ADDRESS} from "../contracts/InProduction/USDC";
 import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
 import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/xEasy";
 import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
 import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/Backup";
-import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/Oracle";
+import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/InProduction/Oracle";
 
 // Web3 Global Vars
 let provider;
@@ -176,11 +176,7 @@ export default function Home() {
 
             setEasySupply(supply);
             setTotalBackups(parseInt(await backupContract.backupCount(), 10));
-            let presaleTime = parseInt(await presaleContract.preSaleStartTime(), 10) * 1000; // To turn into milliseconds
-            // setPresaleStartTime(presaleTime); // TODO: Re-open
-            if (Date.now() > presaleTime + 10 * 24 * 60 * 60 * 1000) {
-                setEasyPrice(usdcInLp / easyInLp);
-            }
+            setEasyPrice(usdcInLp / easyInLp);
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -332,7 +328,8 @@ export default function Home() {
             <footer className={styles.footer}>
                 <IconContainer/>
             </footer>
-            <p style={{fontSize: 12, color: 'gray', textAlign: 'center', padding: 32}}>Use of backup.easyblock.finance (the “Site”) and the EasyBackup protocol (the “Protocol”) is strictly
+            <p style={{fontSize: 12, color: 'gray', textAlign: 'center', padding: 32}}>Use of backup.easyblock.finance
+                (the “Site”) and the EasyBackup protocol (the “Protocol”) is strictly
                 at your own risk. Before using the Protocol, users should fully understand and accept the risks
                 involved, which include, but are not limited to, front-end errors, bugs, hacks, regulatory and tax
                 uncertainty, and total loss of funds. Do not deploy funds you cannot afford to lose. The Protocol is

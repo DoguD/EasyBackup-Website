@@ -1,4 +1,4 @@
-export const FARM_ADDRESS = "0x8e7A46D0D8e97Cd60dB6C92a03E274f307EA2F18";
+export const FARM_ADDRESS = "0x3F4dF7E5ae6491Bf36aD0045ed38A6415A5C878f";
 export const FARM_ABI = [
     {
         "inputs": [
@@ -39,19 +39,6 @@ export const FARM_ABI = [
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "_devaddr",
-                "type": "address"
-            }
-        ],
-        "name": "dev",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "uint256",
                 "name": "_pid",
                 "type": "uint256"
@@ -65,13 +52,21 @@ export const FARM_ABI = [
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "_easyAddress",
-                "type": "address"
-            },
+                "internalType": "uint256",
+                "name": "_pid",
+                "type": "uint256"
+            }
+        ],
+        "name": "harvest",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "internalType": "address",
-                "name": "_devaddr",
+                "name": "_easyAddress",
                 "type": "address"
             },
             {
@@ -137,19 +132,6 @@ export const FARM_ABI = [
         ],
         "name": "EmergencyWithdraw",
         "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_pid",
-                "type": "uint256"
-            }
-        ],
-        "name": "harvest",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
     },
     {
         "anonymous": false,
@@ -302,19 +284,6 @@ export const FARM_ABI = [
         ],
         "name": "Withdraw",
         "type": "event"
-    },
-    {
-        "inputs": [],
-        "name": "devaddr",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
     },
     {
         "inputs": [],
