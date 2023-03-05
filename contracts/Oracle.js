@@ -1,19 +1,120 @@
-export const ORACLE_ADDRESS = "0xDe8eb3b3C05F6d20eeceC7e16276D294bfAD7ae2";
+export const ORACLE_ADDRESS = "0x913DB3bb93d3c55cd51A092fb14D180f4f1d584b";
 export const ORACLE_ABI = [
     {
         "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
+        "name": "decimals",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
         "inputs": [],
-        "name": "getEthPrice",
+        "name": "description",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "string",
                 "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint80",
+                "name": "_roundId",
+                "type": "uint80"
+            }
+        ],
+        "name": "getRoundData",
+        "outputs": [
+            {
+                "internalType": "uint80",
+                "name": "roundId",
+                "type": "uint80"
+            },
+            {
+                "internalType": "int256",
+                "name": "answer",
+                "type": "int256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "startedAt",
                 "type": "uint256"
             },
+            {
+                "internalType": "uint256",
+                "name": "updatedAt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint80",
+                "name": "answeredInRound",
+                "type": "uint80"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "latestAnswer",
+        "outputs": [
+            {
+                "internalType": "int256",
+                "name": "",
+                "type": "int256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "latestRoundData",
+        "outputs": [
+            {
+                "internalType": "uint80",
+                "name": "roundId",
+                "type": "uint80"
+            },
+            {
+                "internalType": "int256",
+                "name": "answer",
+                "type": "int256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "startedAt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "updatedAt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint80",
+                "name": "answeredInRound",
+                "type": "uint80"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "version",
+        "outputs": [
             {
                 "internalType": "uint256",
                 "name": "",
