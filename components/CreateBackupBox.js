@@ -14,6 +14,11 @@ import {EXPIRY_OPTIONS, MAX_BIG_INT, TOKENS} from "./subComponents/Constants";
 let tokenContract;
 let tokenContractWithSigner;
 
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
 function BackupRow(props) {
     return (
         <div className={styles.claimableBackupsRow}>
@@ -359,10 +364,10 @@ export default function CreateBackupBox(props) {
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
                             than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee
                             applied only when a backup is claimed.</p>
-                        <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}
+                        <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{USDollar.format(easyBalance.toFixed(0)).slice(1,-3)}
                             <br/>
                             {/*isDiscounted*/ easyBalance >= 10000 ? <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10 fee.</b> :
-                                <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup without the $10 fee.</b>}
+                                <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup without the $10 initial fee.</b>}
                         </p>
 
 
