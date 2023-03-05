@@ -237,7 +237,7 @@ export default function CreateBackupBox(props) {
                                 />
                             </div>
                             {token !== "" ?
-                                <p><b className={styles.backupTitle}>Balance:</b> {balance}</p>
+                                <p><b className={styles.backupTitle}>Balance:</b> {USDollar.format(balance).slice(1,-3)}</p>
                                 : null}
 
                             <div className={styles.backupRow}>

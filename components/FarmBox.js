@@ -106,9 +106,9 @@ export default function FarmBox(props) {
             let userInfo;
 
             setUserLpBalance(parseInt(await props.lpContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
-            userInfo = await props.farmContract.userInfo(1, props.walletAddress);
+            userInfo = await props.farmContract.userInfo(0, props.walletAddress);
             setUserFarmBalance(parseInt(userInfo[0], 10) / 10 ** 18);
-            setUserReward(parseInt(await props.farmContract.pendingEASY(1, props.walletAddress), 10) / 10 ** 18);
+            setUserReward(parseInt(await props.farmContract.pendingEASY(0, props.walletAddress), 10) / 10 ** 18);
             setLpAllowance(parseInt(await props.lpContract.allowance(props.walletAddress, FARM_ADDRESS)));
 
             let tvl = (lockedLp / lpSupply) * usdcInLp * 2
@@ -124,7 +124,7 @@ export default function FarmBox(props) {
     async function stakeInFarm(amount) {
         setIsLoading(true);
         try {
-            let transaction = await props.farmContractWithSigner.deposit(1, amount);
+            let transaction = await props.farmContractWithSigner.deposit(0, amount);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -136,7 +136,7 @@ export default function FarmBox(props) {
     async function withdrawFarm(amount) {
         setIsLoading(true);
         try {
-            let transaction = await props.farmContractWithSigner.withdraw(1, amount);
+            let transaction = await props.farmContractWithSigner.withdraw(0, amount);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -148,7 +148,7 @@ export default function FarmBox(props) {
     async function approveLp() {
         setIsLoading(true);
         try {
-            let transaction = await props.lpContractWithSigner.approve(FARM_ADDRESS, MAX_BIG_INT);
+            let transaction = await props.lpContractWithSigner.approve(FARM_ADDRESS, "115792089237316195423570985008687907853269984665640564039457584007913129639935");
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -160,7 +160,7 @@ export default function FarmBox(props) {
     async function harvest() {
         setIsLoading(true);
         try {
-            let transaction = await props.farmContractWithSigner.harvest(1);
+            let transaction = await props.farmContractWithSigner.harvest(0);
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -171,7 +171,6 @@ export default function FarmBox(props) {
 
     function setListener(txHash) {
         props.provider.once(txHash, (transaction) => {
-            console.log(transaction);
             setIsLoading(false);
             getFarmData();
         })
@@ -194,9 +193,9 @@ export default function FarmBox(props) {
             <h2 className={styles.subTitle}>
                 Farm $EASY-$USDC LP
             </h2>
-            <p className={styles.sectionDescription}><b>40% $EASY</b> supply is allocated for <b>$EASY-$USDC
-                LP</b> farmers</p>
-            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Farming starts when presale ends)</p>
+            <p className={styles.sectionDescription}><b>40% of $EASY</b> supply is allocated for <b>$EASY-$USDC
+                liquidity providers</b>.
+                <br/>This will be distributed linearly over a year to incentivize deepening the liquidity to decrease price volatility.</p>
             <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
             {
                 props.walletAddress === "" ?
@@ -215,7 +214,7 @@ export default function FarmBox(props) {
                             daily
                             compounded)</p>
                         <p className={styles.stakingText}
-                           style={{color: "green", fontWeight: 'bold'}}>{/*TODO: (apy * 100).toFixed(4)*/}NaN%</p>
+                           style={{color: "green", fontWeight: 'bold'}}>{(apy * 100).toFixed(2)}%</p>
 
                         <p className={styles.getTokenText}
                            onClick={() => window.open("https://spooky.fi/#/add/" + EASY_ADDRESS + "/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75", "_blank")}>Get
@@ -256,26 +255,21 @@ export default function FarmBox(props) {
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
-                            {Date.now() > props.presaleEndTime ?
-                                <div style={{display: 'flex', flexDirection: 'row'}}>
-                                    <div className={styles.stakingButton} onClick={() => harvest()}>
-                                        {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
-                                            <p className={styles.stakingButtonText}>Claim</p>}
-                                    </div>
-                                    <div className={styles.stakingButton} onClick={() => setOpen(true)}>
-                                        {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
-                                            <p className={styles.stakingButtonText}>Stake</p>}
-                                    </div>
-                                    <div className={styles.stakingButton} onClick={() => setWithdrawOpen(true)}>
-                                        {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
-                                            <p className={styles.stakingButtonText}>Unstake</p>
-                                        }
-                                    </div>
+                            <div style={{display: 'flex', flexDirection: 'row'}}>
+                                <div className={styles.stakingButton} onClick={() => harvest()}>
+                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                        <p className={styles.stakingButtonText}>Claim</p>}
                                 </div>
-                                :
-                                <p className={styles.sectionDescription} style={{color: "#424242"}}>(Farming starts
-                                    when presale
-                                    ends)</p>}
+                                <div className={styles.stakingButton} onClick={() => setOpen(true)}>
+                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                        <p className={styles.stakingButtonText}>Stake</p>}
+                                </div>
+                                <div className={styles.stakingButton} onClick={() => setWithdrawOpen(true)}>
+                                    {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
+                                        <p className={styles.stakingButtonText}>Unstake</p>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>}
         </>
