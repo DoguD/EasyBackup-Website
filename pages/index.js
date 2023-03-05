@@ -332,6 +332,14 @@ export default function Home() {
             <footer className={styles.footer}>
                 <IconContainer/>
             </footer>
+            <p style={{fontSize: 12, color: 'gray', textAlign: 'center', padding: 32}}>Use of backup.easyblock.finance (the “Site”) and the EasyBackup protocol (the “Protocol”) is strictly
+                at your own risk. Before using the Protocol, users should fully understand and accept the risks
+                involved, which include, but are not limited to, front-end errors, bugs, hacks, regulatory and tax
+                uncertainty, and total loss of funds. Do not deploy funds you cannot afford to lose. The Protocol is
+                unaudited yet and involves a substantial degree of risk. No representations or warranties are made
+                as to the safety of funds deployed, and the team will not be liable or responsible
+                for any losses incurred. By using the Site or the Protocol, you represent and warrant that your use
+                does not violate any law, rule or regulation in your jurisdiction of residence.</p>
         </div>
     )
 }
