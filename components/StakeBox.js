@@ -1,7 +1,7 @@
 import styles from "../styles/Home.module.css";
-import {EASY_ADDRESS} from "../contracts/EasyToken";
+import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 import React, {useEffect, useState} from "react";
-import {X_EASY_ADDRESS} from "../contracts/xEasy";
+import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";
 import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
 import {ClipLoader} from "react-spinners";
 import {MAX_BIG_INT} from "./subComponents/Constants";
@@ -147,7 +147,7 @@ export default function StakeBox(props) {
     async function approveEasy(target) {
         setIsLoading(true);
         try {
-            let transaction = await props.easyContractWithSigner.approve(target, MAX_BIG_INT);
+            let transaction = await props.easyContractWithSigner.approve(target, '10000000000000000000000000'); // There is 10m Easy in existance with 18 decimals
             setListener(transaction.hash);
         } catch (e) {
             setIsLoading(false);
@@ -168,10 +168,11 @@ export default function StakeBox(props) {
             <h2 className={styles.subTitle}>
                 Stake $EASY
             </h2>
-            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of initial fees weekly</p>
-            <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts when presale
-                ends)</p>
-            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
+            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of EasyBackup
+                initial fees
+                weekly</p>
+            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}
+                         discountedBackups={props.discountedBackups} totalRefs={props.totalRefs}/>
 
             {props.walletAddress === "" ?
                 <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
@@ -183,7 +184,8 @@ export default function StakeBox(props) {
                         <p className={styles.stakingTitle}>Staked TVL</p>
                         <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy)}</p>
                         <p className={styles.stakingTitle}>APR Estimate</p>
-                        <p className={styles.stakingText} style={{color: "green", fontWeight: 'bold'}}>NaN%</p>
+                        <p className={styles.stakingText}
+                           style={{color: "green", fontWeight: 'bold'}}>NaN%</p> {/*TODO: Calculate this motherfucker*/}
 
                         <div style={{
                             display: 'flex',
@@ -245,24 +247,20 @@ export default function StakeBox(props) {
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
-                            {Date.now() > props.presaleEndTime ?
-                                <div style={{display: 'flex', flexDirection: 'row'}}>
-                                    <div className={styles.stakingButton} onClick={() => {
-                                        setOpen(true);
-                                    }}>
-                                        <p className={styles.stakingButtonText}>{isLoading ?
-                                            <ClipLoader color={"#424242"} size={15}/> : "Stake"}</p>
-                                    </div>
-                                    <div className={styles.stakingButton} onClick={() => {
-                                        setWithdrawOpen(true);
-                                    }}>
-                                        <p className={styles.stakingButtonText}>{isLoading ?
-                                            <ClipLoader color={"#424242"} size={15}/> : "Withdraw"}</p>
-                                    </div>
-                                </div> :
-                                <p className={styles.sectionDescription} style={{color: "#424242"}}>(Staking starts
-                                    when presale
-                                    ends)</p>}
+                            <div style={{display: 'flex', flexDirection: 'row'}}>
+                                <div className={styles.stakingButton} onClick={() => {
+                                    setOpen(true);
+                                }}>
+                                    <p className={styles.stakingButtonText}>{isLoading ?
+                                        <ClipLoader color={"#424242"} size={15}/> : "Stake"}</p>
+                                </div>
+                                <div className={styles.stakingButton} onClick={() => {
+                                    setWithdrawOpen(true);
+                                }}>
+                                    <p className={styles.stakingButtonText}>{isLoading ?
+                                        <ClipLoader color={"#424242"} size={15}/> : "Withdraw"}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </>}

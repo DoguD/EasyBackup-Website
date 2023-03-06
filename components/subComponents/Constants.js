@@ -1,3 +1,5 @@
+import {EASY_ADDRESS} from "../../contracts/InProduction/EasyToken";
+
 export const MAX_BIG_INT = BigInt(115792089237316195423570985008687907853269984665640564039457584007913129639935);
 
 export const EXPIRY_OPTIONS = [
@@ -84,6 +86,12 @@ export const TOKENS = [
         value: '0x85dec8c4B2680793661bCA91a8F129607571863d',
         image: {avatar: true, src: '/brush.webp'},
     },
+    {
+        key: "EASY",
+        text: "EASY",
+        value: EASY_ADDRESS,
+        image: {avatar: true, src: '/favicon.png'},
+    },
 ]
 
 export const TOKEN_MAP = {
@@ -96,4 +104,5 @@ export const TOKEN_MAP = {
     '0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454': 'BNB',
     '0x511D35c52a3C244E7b8bd92c0C297755FbD89212': 'AVAX',
     '0x85dec8c4B2680793661bCA91a8F129607571863d': 'BRUSH',
+    EASY_ADDRESS: 'EASY'
 }

@@ -1,4 +1,4 @@
-export const X_EASY_ADDRESS = "0x62b8d28f026d34b2925f303f26b567596e2912a0";
+export const X_EASY_ADDRESS = "0x5Cd9C4bcFDa86dd4C13AF8B04B30B4D8651F2D7C";
 export const X_EASY_ABI = [
     {
         "inputs": [

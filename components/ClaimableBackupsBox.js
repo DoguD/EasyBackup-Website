@@ -2,6 +2,8 @@ import styles from "../styles/Home.module.css";
 import React, {useEffect, useState} from "react";
 import {Button} from 'semantic-ui-react'
 import {TOKEN_MAP} from "./subComponents/Constants";
+import {ethers} from "ethers";
+import {ERC20_ABI} from "../contracts/InProduction/ERC20";
 
 function ClaimableBackupRow(props) {
     let remainingDays;
@@ -25,14 +27,14 @@ function ClaimableBackupRow(props) {
                 <p className={styles.claimableBackupText}><b>Amount: </b></p>
                 <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
                     ? "∞"
-                    : parseInt(props.backup.amount / 10 ** 18).toFixed(4)}</p>
+                    : parseInt(props.backup.amount / (10 ** props.backup.decimals)).toFixed(4)}</p>
 
                 <div style={{width: 16}}/>
                 <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
                 <p className={styles.claimableBackupText}>{remainingDays} days</p>
 
                 <p className={styles.claimableBackupText}><b>Automatic: </b></p>
-                <p className={styles.claimableBackupText}>{props.backup.isAutomatic ? "Yes" : "No"}</p>
+                <p className={styles.claimableBackupText}>{props.backup.automatic ? "Yes" : "No"}</p>
 
                 <div style={{width: 32}}/>
                 <Button primary disabled={remainingDays !== 0}
@@ -65,7 +67,8 @@ export default function ClaimableBackupsBox(props) {
                     token: backup[2],
                     lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
                     backupId: backupId,
-                    automatic: backup[6]
+                    automatic: backup[6],
+                    decimals: parseInt(await new ethers.Contract(backup[2], ERC20_ABI, props.provider).decimals(), 10),
                 }
                 console.log(parsedBackup);
                 parsedBackups.push(parsedBackup);

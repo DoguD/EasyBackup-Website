@@ -1,14 +1,11 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 // Web3
-import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/EasyClub";
+import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/InProduction/EasyClub";
 import {ethers} from "ethers";
-// Toast
-import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 
 import React, {useEffect, useState} from "react";
 import StatsBox from "../components/StatsBox";
-import PresaleBox from "../components/PresaleBox";
 import StakeBox from "../components/StakeBox";
 import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
@@ -19,14 +16,14 @@ import 'semantic-ui-css/semantic.min.css'
 import 'react-circular-progressbar/dist/styles.css';
 import FarmBox from "../components/FarmBox";
 import CreateBackupBox from "../components/CreateBackupBox";
-import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/Presale";
-import {USDC_ABI, USDC_ADDRESS} from "../contracts/USDC";
-import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
-import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/xEasy";
-import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
-import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
-import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/Backup";
-import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/Oracle";
+import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/InProduction/Presale";
+import {USDC_ABI, USDC_ADDRESS} from "../contracts/InProduction/USDC";
+import {EASY_ABI, EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
+import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/InProduction/xEasy";
+import {LP_ABI, LP_ADDRESS} from "../contracts/InProduction/LP";
+import {FARM_ABI, FARM_ADDRESS} from "../contracts/InProduction/Farm";
+import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/InProduction/Backup";
+import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/InProduction/Oracle";
 
 // Web3 Global Vars
 let provider;
@@ -56,26 +53,26 @@ export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
     // UI Controllers
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
-    // Toasts
-    const {toasts} = useToasterStore();
-    const TOAST_LIMIT = 1;
     // Referral
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
     const [totalBackups, setTotalBackups] = useState(0);
-    // Presale related
-    const [presaleStartTime, setPresaleStartTime] = useState(1677239940000); // Today at 2024 timestamp
+    const [discountedBackups, setDiscountedBackups] = useState(0);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [refAddress, setRefAddress] = useState("0x0000000000000000000000000000000000000000");
+    const [totalRefs, setTotalRefs] = useState(0);
 
-    const [menuItem, setMenuItem] = useState(1);
+    const [menuItem, setMenuItem] = useState(0);
     // Referrer
     useEffect(() => {
         let fullUrl = window.location.href;
         let splitUrl = fullUrl.split('?');
         if (splitUrl.length > 1) {
             let params = splitUrl[1];
-            if (params.indexOf("r=") != -1) {
+            if (params.indexOf("r=") !== -1) {
                 let referer = params.slice(2, 44);
-                // REFERRAL SYSTEM
+                console.log("Ref: ", referer);
+                setRefAddress(referer);
             }
         }
     }, []);
@@ -176,11 +173,10 @@ export default function Home() {
 
             setEasySupply(supply);
             setTotalBackups(parseInt(await backupContract.backupCount(), 10));
-            let presaleTime = parseInt(await presaleContract.preSaleStartTime(), 10) * 1000; // To turn into milliseconds
-            // setPresaleStartTime(presaleTime); // TODO: Re-open
-            if (Date.now() > presaleTime + 10 * 24 * 60 * 60 * 1000) {
-                setEasyPrice(usdcInLp / easyInLp);
-            }
+            setDiscountedBackups(parseInt(await backupContract.discountedBackupCount(), 10));
+            setTotalUsers(parseInt(await backupContract.totalUsers(), 10));
+            setEasyPrice(usdcInLp / easyInLp);
+            setTotalRefs(parseInt(await backupContract.referralBackupCount(), 10));
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -198,7 +194,6 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            <Toaster/>
             <Head>
                 <title>EasyBackup - Never lose your crypto</title>
                 <meta name="description" content="Backup your crypto wallet easily"/>
@@ -218,10 +213,6 @@ export default function Home() {
                 </div>
 
                 <div className={styles.mobilePadding}>
-                    {Date.now() > presaleStartTime + 10 * 24 * 60 * 60 * 1000 ?
-                        <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
-                        : null}
-
                     <div className={styles.backupInfoCard}>
                         <p className={styles.boxTitle}>What is EasyBackup?</p>
                         <p className={styles.sectionDescription}>EasyBackup is a protocol which lets you assign backup
@@ -256,11 +247,13 @@ export default function Home() {
                             <b>Backup Wallet: </b>The wallet which you want to be able to access your tokens.
                             <br/>
                             <b>Access Time: </b>The time which needs to pass before the backup becomes accessible. For
-                            example,
-                            choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365
-                            days
-                            after
-                            your last interaction with the contract.
+                            example, choosing 1 year means, the backup wallet can transfer the specified tokens to
+                            itself 365 days after your last interaction with the contract.
+                            <br/>
+                            <b>Automatic Transfer: </b>If this option is enabled the funds will automatically get
+                            transferred to the backup wallet. Be extremely careful about enabling this option because
+                            loss of access to the backup wallet when automatic transfer is enabled may cause loss of
+                            funds.
                             <br/><br/>
                         </p>
                         <p className={styles.sectionDescription}>- After the access time has passed, the backup wallet
@@ -274,6 +267,8 @@ export default function Home() {
                             the backup.
                         </p>
                     </div>
+                    <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                              totalUsers={totalUsers}/>
 
                     <div style={{
                         display: 'flex',
@@ -284,8 +279,6 @@ export default function Home() {
                     }}>
                         <p className={styles.menuText} style={{color: menuItem === 0 ? "#3a70ed" : "#000000"}}
                            onClick={() => setMenuItem(0)}>Backup</p>
-                        <p className={styles.menuText} style={{color: menuItem === 1 ? "#3a70ed" : "#000000"}}
-                           onClick={() => setMenuItem(1)}>Presale</p>
                         <p className={styles.menuText} style={{color: menuItem === 2 ? "#3a70ed" : "#000000"}}
                            onClick={() => setMenuItem(2)}>Stake</p>
                         <p className={styles.menuText} style={{color: menuItem === 3 ? "#3a70ed" : "#000000"}}
@@ -302,47 +295,50 @@ export default function Home() {
                                              signer={signer}
                                              oracleContract={oracleContract}
                                              easyContract={easyContract}
-                                             presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
+                                             refAddress={refAddress}
+                                             totalRefs={totalRefs}/>
                         </>
-                        : menuItem === 1 ?
-                            <PresaleBox walletAddress={walletAddress}
-                                        easyContract={easyContract}
-                                        usdcContract={usdcContract}
-                                        usdcContractWithSigner={usdcContractWithSigner}
-                                        presaleContractWithSigner={presaleContractWithSigner}
-                                        connectWalletHandler={() => connectWalletHandler()}
-                                        provider={provider}
-                                        presaleStartTime={presaleStartTime}/>
-                            : menuItem === 2 ?
-                                <StakeBox
-                                    provider={provider}
-                                    walletAddress={walletAddress}
-                                    connectWalletHandler={() => connectWalletHandler()}
-                                    xEasyContract={xEasyContract}
-                                    xEasyWithSigner={xEasyWithSigner}
-                                    easyContract={easyContract}
-                                    easyContractWithSigner={easyContractWithSigner}
-                                    easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                    presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
-                                :
-                                <FarmBox
-                                    walletAddress={walletAddress}
-                                    lpContract={lpContract}
-                                    lpContractWithSigner={lpContractWithSigner}
-                                    usdcContract={usdcContract}
-                                    easyContract={easyContract}
-                                    farmContract={farmContract}
-                                    farmContractWithSigner={farmContractWithSigner}
-                                    connectWalletHandler={() => connectWalletHandler()}
-                                    provider={provider}
-                                    easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                    presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
+                        : menuItem === 2 ?
+                            <StakeBox
+                                provider={provider}
+                                walletAddress={walletAddress}
+                                connectWalletHandler={() => connectWalletHandler()}
+                                xEasyContract={xEasyContract}
+                                xEasyWithSigner={xEasyWithSigner}
+                                easyContract={easyContract}
+                                easyContractWithSigner={easyContractWithSigner}
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                discountedBackups={discountedBackups}
+                                totalRefs={totalRefs}/>
+                            :
+                            <FarmBox
+                                walletAddress={walletAddress}
+                                lpContract={lpContract}
+                                lpContractWithSigner={lpContractWithSigner}
+                                usdcContract={usdcContract}
+                                easyContract={easyContract}
+                                farmContract={farmContract}
+                                farmContractWithSigner={farmContractWithSigner}
+                                connectWalletHandler={() => connectWalletHandler()}
+                                provider={provider}
+                                easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                                discountedBackups={discountedBackups}
+                                totalRefs={totalRefs}/>}
                 </div>
             </main>
 
             <footer className={styles.footer}>
                 <IconContainer/>
             </footer>
+            <p style={{fontSize: 12, color: 'gray', textAlign: 'center', padding: 32}}>Use of backup.easyblock.finance
+                (the “Site”) and the EasyBackup protocol (the “Protocol”) is strictly
+                at your own risk. Before using the Protocol, users should fully understand and accept the risks
+                involved, which include, but are not limited to, front-end errors, bugs, hacks, regulatory and tax
+                uncertainty, and total loss of funds. Do not deploy funds you cannot afford to lose. The Protocol is
+                unaudited yet and involves a substantial degree of risk. No representations or warranties are made
+                as to the safety of funds deployed, and the team will not be liable or responsible
+                for any losses incurred. By using the Site or the Protocol, you represent and warrant that your use
+                does not violate any law, rule or regulation in your jurisdiction of residence.</p>
         </div>
     )
 }

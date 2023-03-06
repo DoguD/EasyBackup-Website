@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {CircleLoader, ClipLoader} from "react-spinners";
 
 import {useTimer} from 'react-timer-hook';
-import {PRESALE_ADDRESS} from "../contracts/Presale";
+import {PRESALE_ADDRESS} from "../contracts/InProduction/Presale";
 
 function MyTimer({expiryTimestamp}) {
     const {

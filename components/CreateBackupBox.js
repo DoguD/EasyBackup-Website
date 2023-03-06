@@ -1,18 +1,26 @@
 import styles from "../styles/Home.module.css";
 import React, {useEffect, useState} from 'react'
 import {Button, Dropdown} from 'semantic-ui-react';
-import {EASY_ADDRESS} from "../contracts/EasyToken";
+import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 import {Radio} from 'semantic-ui-react'
 import {ClipLoader} from "react-spinners";
 import {ethers} from "ethers";
-import {ERC20_ABI} from "../contracts/ERC20";
-import {BACKUP_ADDRESS} from "../contracts/Backup";
+import {ERC20_ABI} from "../contracts/InProduction/ERC20";
+import {BACKUP_ADDRESS} from "../contracts/InProduction/Backup";
 import ClaimableBackupsBox from "./ClaimableBackupsBox";
 import {TOKEN_MAP} from "./subComponents/Constants";
 import {EXPIRY_OPTIONS, MAX_BIG_INT, TOKENS} from "./subComponents/Constants";
+import {DISCOUNTED_ORACLE_ABI, DISCOUNTED_ORACLE_ADDRESS} from "../contracts/InProduction/DiscountedUserOracle";
 
 let tokenContract;
 let tokenContractWithSigner;
+
+let discountedUserOracle;
+
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 function BackupRow(props) {
     return (
@@ -28,14 +36,14 @@ function BackupRow(props) {
             <p className={styles.claimableBackupText}><b>Amount: </b></p>
             <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
                 ? "∞"
-                : parseInt(props.backup.amount / 10 ** props.backup.decimals).toFixed(4)}</p>
+                : parseInt(props.backup.amount / (10 ** props.backup.decimals)).toFixed(4)}</p>
 
             <div style={{width: 16}}/>
             <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
             <p className={styles.claimableBackupText}>{Math.max(0, ((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24)).toFixed(0)} days</p>
 
             <p className={styles.claimableBackupText}><b>Automatic: </b></p>
-            <p className={styles.claimableBackupText}>{props.backup.isAutomatic ? "Yes" : "No"}</p>
+            <p className={styles.claimableBackupText}>{props.backup.automatic ? "Yes" : "No"}</p>
 
             <div style={{width: 32}}/>
             {props.backup.isActive ?
@@ -58,28 +66,36 @@ export default function CreateBackupBox(props) {
 
     const [approvalNeeded, setApprovalNeeded] = useState(true);
     const [createdBackups, setCreatedBackups] = useState([]);
+    const [totalCreatedBackups, setTotalCreatedBackups] = useState(0);
 
     const [balance, setBalance] = useState(0);
     const [decimals, setDecimals] = useState(18);
     const [easyBalance, setEasyBalance] = useState(0);
     const [isDiscounted, setIsDiscounted] = useState(false);
 
+    const [userRefs, setUserRefs] = useState(0);
+
     useEffect(() => {
         getBackupData();
         getCreatedBackups();
         getEasyBalance();
+        discountedUserOracle = new ethers.Contract(DISCOUNTED_ORACLE_ADDRESS, DISCOUNTED_ORACLE_ABI, props.provider);
     }, [props.walletAddress]);
 
+    useEffect(()=> {
+        getTokenData(token);
+    }, [token]);
+
     async function getBackupData() {
-        await getAllowance(EASY_ADDRESS);
         if (typeof props.backupContract !== "undefined") {
-            setFee(parseInt(await props.backupContract.getInitFee(), 10).toString());
+            setFee(parseInt(await props.backupContract.getInitFee(), 10));
         }
     }
 
     async function getCreatedBackups() {
         if (props.walletAddress !== "") {
             let createdBackupCount = parseInt(await props.backupContract.createdBackupsCount(props.walletAddress), 10);
+            setTotalCreatedBackups(createdBackupCount);
             let parsedBackups = [];
             for (let i = 0; i < createdBackupCount; i++) {
                 let backupId = parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10);
@@ -94,13 +110,14 @@ export default function CreateBackupBox(props) {
                         token: backup[2],
                         lastInteraction: parseInt(await props.backupContract.lastInteraction(backup[0]), 10),
                         backupId: backupId,
+                        automatic: backup[6],
                         decimals: parseInt(await new ethers.Contract(backup[2], ERC20_ABI, props.provider).decimals(), 10),
-                        automatic: backup[6]
                     }
                     parsedBackups.push(parsedBackup);
                 }
             }
             setCreatedBackups(parsedBackups);
+            setUserRefs(parseInt(await props.backupContract.referralCount(props.walletAddress), 10));
         }
     }
 
@@ -130,7 +147,7 @@ export default function CreateBackupBox(props) {
     async function getEasyBalance() {
         try {
             setEasyBalance(parseInt(await props.easyContract.balanceOf(props.walletAddress), 10) / 10 ** 18);
-            setIsDiscounted(await props.backupContract.isDiscounted(props.walletAddress))
+            setIsDiscounted(await discountedUserOracle.isDiscountedUser(props.walletAddress))
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
@@ -149,12 +166,14 @@ export default function CreateBackupBox(props) {
     }
 
     async function getTokenData(tokenAddress) {
-        tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
-        tokenContractWithSigner = tokenContract.connect(props.signer);
+        if(typeof props.provider !== "undefined" && props.walletAddress !== "") {
+            tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, props.provider);
+            tokenContractWithSigner = tokenContract.connect(props.signer);
 
-        await getAllowance();
-        let decimal = await getDecimal();
-        await getBalance(decimal);
+            await getAllowance();
+            let decimal = await getDecimal();
+            await getBalance(decimal);
+        }
     }
 
     async function approve() {
@@ -172,12 +191,14 @@ export default function CreateBackupBox(props) {
     async function createBackup() {
         setIsLoading(true);
         try {
-            const options = {value: isDiscounted ? 0 : fee}
+            const options = {value: isDiscounted ? 0 : BigInt(fee)}
             let transaction = await props.backupContractWithSigner.createBackup(backupWallet,
                 token,
                 isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals),
-                expiry * 24 * 60 * 60, isAutomatic,
-                "0x0000000000000000000000000000000000000000",
+                //expiry * 24 * 60 * 60, TODO: Before release !!!!
+                300,
+                isAutomatic,
+                props.refAddress,
                 options);
             setListener(transaction.hash);
         } catch (e) {
@@ -227,12 +248,12 @@ export default function CreateBackupBox(props) {
                                     options={TOKENS}
                                     onChange={(e, {value}) => {
                                         setToken(value);
-                                        getTokenData(value);
                                     }}
                                 />
                             </div>
                             {token !== "" ?
-                                <p><b className={styles.backupTitle}>Balance:</b> {balance}</p>
+                                <p><b className={styles.backupTitle}>Balance:</b> {USDollar.format(balance).slice(1, -3)}
+                                </p>
                                 : null}
 
                             <div className={styles.backupRow}>
@@ -329,29 +350,22 @@ export default function CreateBackupBox(props) {
                                 </div>
                                 : null}
                             <div className={styles.backupRow}>
-                                {Date.now() > props.presaleEndTime ?
-                                    <div className={styles.mintButton} onClick={() => {
-                                        if (approvalNeeded) {
-                                            approve();
-                                        } else {
-                                            createBackup();
-                                        }
-                                    }} style={{width: '100%'}}>
-                                        {
-                                            isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
-                                                <p className={styles.mintText}>
-                                                    {
-                                                        approvalNeeded ?
-                                                            "Approve" :
-                                                            "Create Backup"
-                                                    }</p>}
-                                    </div> :
-                                    <p className={styles.sectionDescription} style={{
-                                        color: "#424242",
-                                        width: '100%',
-                                        marginTop: 16,
-                                        fontWeight: 'bold'
-                                    }}>EasyBackup will go live when the presale ends</p>}
+                                <div className={styles.mintButton} onClick={() => {
+                                    if (approvalNeeded) {
+                                        approve();
+                                    } else {
+                                        createBackup();
+                                    }
+                                }} style={{width: '100%'}}>
+                                    {
+                                        isLoading ? <ClipLoader color={"#3a70ed"} size={15}/> :
+                                            <p className={styles.mintText}>
+                                                {
+                                                    approvalNeeded ?
+                                                        "Approve" :
+                                                        "Create Backup"
+                                                }</p>}
+                                </div>
                             </div>
                         </div>
                         <p className={styles.sectionDescription}><b>Fee: </b>Creating a backup costs $10 in $FTM, if you
@@ -359,11 +373,32 @@ export default function CreateBackupBox(props) {
                             {/* eslint-disable-next-line react/no-unescaped-entities */}
                             than 10,000 $EASY in your wallet you get a full discount on this fee. There is also a 1% fee
                             applied only when a backup is claimed.</p>
-                        <p className={styles.sectionDescription}><b>Your $EASY Balance: </b>{easyBalance}
+                        <p className={styles.sectionDescription}><b>Your $EASY
+                            Balance: </b>{USDollar.format(easyBalance.toFixed(0)).slice(1, -3)}
                             <br/>
-                            {/*isDiscounted*/ easyBalance >= 10000 ? <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10 fee.</b> :
-                                <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup without the $10 fee.</b>}
+                            {isDiscounted ?
+                                <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10
+                                    fee.</b> :
+                                <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup
+                                    without the $10 initial fee.</b>}
                         </p>
+
+                        {props.walletAddress !== "" ?
+                            <div className={styles.referralBox}>
+                                <h1 style={{color: "#3a70ed", marginBottom: 0, textAlign: 'center'}}>1st Month Special: Refer and Get Rewarded</h1>
+                                <p style={{marginTop: 4, textAlign: "center"}}>If you are using EasyBackup and loving it, share it with your friends for more people to benefit.<br/>
+                                <b>You will get 50% of backup creation fee ($5) in $FTM directly to your wallet for every backup created with your link.</b></p>
+                                <p style={{marginTop: 0}}><b>Your Referral
+                                    Link: </b>{totalCreatedBackups > 0 ?
+                                    <span style={{wordBreak: "break-all"}}>backup.easyblock.finance?r={props.walletAddress}</span>
+                                    : <span>You need to create at least 1 backup to get your referral link</span>
+                                }
+                                </p>
+                                <p style={{margin: 2}}><b>Total Referral Rewards: </b><span
+                                    style={{color: "#3a70ed"}}>{props.totalRefs * 5} USD</span></p>
+                                <p style={{margin: 2}}><b>Your Referral Rewards: </b><span
+                                    style={{color: "#3a70ed"}}>{userRefs * 5} USD</span></p>
+                            </div> : null}
 
 
                         <h2 className={styles.subTitle}>
