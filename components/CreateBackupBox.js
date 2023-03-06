@@ -73,6 +73,8 @@ export default function CreateBackupBox(props) {
     const [easyBalance, setEasyBalance] = useState(0);
     const [isDiscounted, setIsDiscounted] = useState(false);
 
+    const [userRefs, setUserRefs] = useState(0);
+
     useEffect(() => {
         getBackupData();
         getCreatedBackups();
@@ -115,6 +117,7 @@ export default function CreateBackupBox(props) {
                 }
             }
             setCreatedBackups(parsedBackups);
+            setUserRefs(parseInt(await props.backupContract.referralCount(props.walletAddress), 10));
         }
     }
 
@@ -195,7 +198,7 @@ export default function CreateBackupBox(props) {
                 //expiry * 24 * 60 * 60, TODO: Before release !!!!
                 300,
                 isAutomatic,
-                "0x0000000000000000000000000000000000000000",
+                props.refAddress,
                 options);
             setListener(transaction.hash);
         } catch (e) {
@@ -392,9 +395,9 @@ export default function CreateBackupBox(props) {
                                 }
                                 </p>
                                 <p style={{margin: 2}}><b>Total Referral Rewards: </b><span
-                                    style={{color: "#3a70ed"}}>{0} USD</span></p>
+                                    style={{color: "#3a70ed"}}>{props.totalRefs * 5} USD</span></p>
                                 <p style={{margin: 2}}><b>Your Referral Rewards: </b><span
-                                    style={{color: "#3a70ed"}}>{0} USD</span></p>
+                                    style={{color: "#3a70ed"}}>{userRefs * 5} USD</span></p>
                             </div> : null}
 
 

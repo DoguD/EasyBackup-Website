@@ -59,6 +59,8 @@ export default function Home() {
     const [totalBackups, setTotalBackups] = useState(0);
     const [discountedBackups, setDiscountedBackups] = useState(0);
     const [totalUsers, setTotalUsers] = useState(0);
+    const [refAddress, setRefAddress] = useState("0x0000000000000000000000000000000000000000");
+    const [totalRefs, setTotalRefs] = useState(0);
 
     const [menuItem, setMenuItem] = useState(0);
     // Referrer
@@ -67,9 +69,10 @@ export default function Home() {
         let splitUrl = fullUrl.split('?');
         if (splitUrl.length > 1) {
             let params = splitUrl[1];
-            if (params.indexOf("r=") != -1) {
+            if (params.indexOf("r=") !== -1) {
                 let referer = params.slice(2, 44);
-                // REFERRAL SYSTEM
+                console.log("Ref: ", referer);
+                setRefAddress(referer);
             }
         }
     }, []);
@@ -173,6 +176,7 @@ export default function Home() {
             setDiscountedBackups(parseInt(await backupContract.discountedBackupCount(), 10));
             setTotalUsers(parseInt(await backupContract.totalUsers(), 10));
             setEasyPrice(usdcInLp / easyInLp);
+            setTotalRefs(parseInt(await backupContract.referralBackupCount(), 10));
         } catch (e) {
             console.log("General methods error: ");
             console.log(e);
@@ -290,7 +294,9 @@ export default function Home() {
                                              provider={provider}
                                              signer={signer}
                                              oracleContract={oracleContract}
-                                             easyContract={easyContract}/>
+                                             easyContract={easyContract}
+                                             refAddress={refAddress}
+                                             totalRefs={totalRefs}/>
                         </>
                         : menuItem === 2 ?
                             <StakeBox
@@ -302,7 +308,8 @@ export default function Home() {
                                 easyContract={easyContract}
                                 easyContractWithSigner={easyContractWithSigner}
                                 easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                discountedBackups={discountedBackups}/>
+                                discountedBackups={discountedBackups}
+                                totalRefs={totalRefs}/>
                             :
                             <FarmBox
                                 walletAddress={walletAddress}
@@ -315,7 +322,8 @@ export default function Home() {
                                 connectWalletHandler={() => connectWalletHandler()}
                                 provider={provider}
                                 easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                discountedBackups={discountedBackups}/>}
+                                discountedBackups={discountedBackups}
+                                totalRefs={totalRefs}/>}
                 </div>
             </main>
 

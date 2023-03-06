@@ -19,7 +19,7 @@ export default function CoinStatBox(props) {
                 </div>
                 <div className={styles.card}>
                     <h2>Protocol Revenue</h2>
-                    <p>{USDollar.format((props.totalBackups - props.discountedBackups) * 10)}</p>
+                    <p>{USDollar.format((props.totalBackups - props.discountedBackups - props.totalRefs / 2) * 10)}</p>
                 </div>
             </div>
         </>

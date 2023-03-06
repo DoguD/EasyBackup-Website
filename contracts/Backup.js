@@ -1,4 +1,4 @@
-export const BACKUP_ADDRESS = "0x5bB57cD7dECD21E3191eF0D23982619CEC00286E";
+export const BACKUP_ADDRESS = "0xc644e711882c1801409FBdD819c2E9709740C57E";
 export const BACKUP_ABI = [
     {
         "anonymous": false,
@@ -634,6 +634,25 @@ export const BACKUP_ABI = [
     {
         "inputs": [],
         "name": "referralBackupCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "referralCount",
         "outputs": [
             {
                 "internalType": "uint256",
