@@ -1,4 +1,4 @@
-export const LP_ADDRESS = "0x79Ec034A12C2462447E4EF150e2804BCf89D54b8";
+export const LP_ADDRESS = "0xc7f6b2e61c0e028ec0e804de75c60ac37dba477a";
 export const LP_ABI = [{"inputs": [], "stateMutability": "nonpayable", "type": "constructor"}, {
     "anonymous": false,
     "inputs": [{"indexed": true, "internalType": "address", "name": "owner", "type": "address"}, {

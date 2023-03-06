@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 
 import {FARM_ADDRESS} from "../contracts/Farm";
-import {LP_ADDRESS} from "../contracts/LP";
+import {LP_ADDRESS} from "../contracts/InProduction/LP";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";
 import {ClipLoader} from "react-spinners";
