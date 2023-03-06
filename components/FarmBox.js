@@ -195,8 +195,10 @@ export default function FarmBox(props) {
             </h2>
             <p className={styles.sectionDescription}><b>40% of $EASY</b> supply is allocated for <b>$EASY-$USDC
                 liquidity providers</b>.
-                <br/>This will be distributed linearly over a year to incentivize deepening the liquidity to decrease price volatility.</p>
-            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups} discountedBackups={props.discountedBackups}/>
+                <br/>This will be distributed linearly over a year to incentivize deepening the liquidity to decrease
+                price volatility.</p>
+            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}
+                         discountedBackups={props.discountedBackups}/>
             {
                 props.walletAddress === "" ?
                     <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
@@ -209,10 +211,9 @@ export default function FarmBox(props) {
                         </div>
                         <p className={styles.stakingTitle}>Staked TVL</p>
                         <p className={styles.stakingText}>${tvl.toFixed(0)}</p>
-                        <p className={styles.stakingTitle}>APY</p>
+                        <p className={styles.stakingTitle}>APY Estimate</p>
                         <p className={styles.stakingText} style={{color: "#424242", fontSize: 12, margin: 0}}>(When
-                            daily
-                            compounded)</p>
+                            compounded daily)</p>
                         <p className={styles.stakingText}
                            style={{color: "green", fontWeight: 'bold'}}>{(apy * 100).toFixed(2)}%</p>
 

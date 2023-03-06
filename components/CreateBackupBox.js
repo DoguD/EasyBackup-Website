@@ -66,6 +66,7 @@ export default function CreateBackupBox(props) {
 
     const [approvalNeeded, setApprovalNeeded] = useState(true);
     const [createdBackups, setCreatedBackups] = useState([]);
+    const [totalCreatedBackups, setTotalCreatedBackups] = useState(0);
 
     const [balance, setBalance] = useState(0);
     const [decimals, setDecimals] = useState(18);
@@ -92,6 +93,7 @@ export default function CreateBackupBox(props) {
     async function getCreatedBackups() {
         if (props.walletAddress !== "") {
             let createdBackupCount = parseInt(await props.backupContract.createdBackupsCount(props.walletAddress), 10);
+            setTotalCreatedBackups(createdBackupCount);
             let parsedBackups = [];
             for (let i = 0; i < createdBackupCount; i++) {
                 let backupId = parseInt(await props.backupContract.createdBackups(props.walletAddress, i), 10);
@@ -190,7 +192,7 @@ export default function CreateBackupBox(props) {
             let transaction = await props.backupContractWithSigner.createBackup(backupWallet,
                 token,
                 isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals),
-                //expiry * 24 * 60 * 60,
+                //expiry * 24 * 60 * 60, TODO: Before release !!!!
                 300,
                 isAutomatic,
                 "0x0000000000000000000000000000000000000000",
@@ -377,6 +379,23 @@ export default function CreateBackupBox(props) {
                                 <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup
                                     without the $10 initial fee.</b>}
                         </p>
+
+                        {props.walletAddress !== "" ?
+                            <div className={styles.referralBox}>
+                                <h1 style={{color: "#3a70ed", marginBottom: 0, textAlign: 'center'}}>1st Month Special: Refer and Get Rewarded</h1>
+                                <p style={{marginTop: 4, textAlign: "center"}}>If you are using EasyBackup and loving it, share it with your friends for more people to benefit.<br/>
+                                <b>You will get 50% of backup creation fee ($5) in $FTM directly to your wallet for every backup created with your link.</b></p>
+                                <p style={{marginTop: 0}}><b>Your Referral
+                                    Link: </b>{totalCreatedBackups > 0 ?
+                                    <span style={{wordBreak: "break-all"}}>backup.easyblock.finance?r={props.walletAddress}</span>
+                                    : <span>You need to create at least 1 backup to get your referral link</span>
+                                }
+                                </p>
+                                <p style={{margin: 2}}><b>Total Referral Rewards: </b><span
+                                    style={{color: "#3a70ed"}}>{0} USD</span></p>
+                                <p style={{margin: 2}}><b>Your Referral Rewards: </b><span
+                                    style={{color: "#3a70ed"}}>{0} USD</span></p>
+                            </div> : null}
 
 
                         <h2 className={styles.subTitle}>

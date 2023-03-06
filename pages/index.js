@@ -209,9 +209,6 @@ export default function Home() {
                 </div>
 
                 <div className={styles.mobilePadding}>
-                    <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                              totalUsers={totalUsers}/>
-
                     <div className={styles.backupInfoCard}>
                         <p className={styles.boxTitle}>What is EasyBackup?</p>
                         <p className={styles.sectionDescription}>EasyBackup is a protocol which lets you assign backup
@@ -246,11 +243,13 @@ export default function Home() {
                             <b>Backup Wallet: </b>The wallet which you want to be able to access your tokens.
                             <br/>
                             <b>Access Time: </b>The time which needs to pass before the backup becomes accessible. For
-                            example,
-                            choosing 1 year means, the backup wallet can transfer the specified tokens to itself 365
-                            days
-                            after
-                            your last interaction with the contract.
+                            example, choosing 1 year means, the backup wallet can transfer the specified tokens to
+                            itself 365 days after your last interaction with the contract.
+                            <br/>
+                            <b>Automatic Transfer: </b>If this option is enabled the funds will automatically get
+                            transferred to the backup wallet. Be extremely careful about enabling this option because
+                            loss of access to the backup wallet when automatic transfer is enabled may cause loss of
+                            funds.
                             <br/><br/>
                         </p>
                         <p className={styles.sectionDescription}>- After the access time has passed, the backup wallet
@@ -264,6 +263,8 @@ export default function Home() {
                             the backup.
                         </p>
                     </div>
+                    <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                              totalUsers={totalUsers}/>
 
                     <div style={{
                         display: 'flex',
