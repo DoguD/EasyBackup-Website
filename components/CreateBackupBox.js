@@ -6,7 +6,7 @@ import {Radio} from 'semantic-ui-react'
 import {ClipLoader} from "react-spinners";
 import {ethers} from "ethers";
 import {ERC20_ABI} from "../contracts/InProduction/ERC20";
-import {BACKUP_ADDRESS} from "../contracts/Backup";
+import {BACKUP_ADDRESS} from "../contracts/InProduction/Backup";
 import ClaimableBackupsBox from "./ClaimableBackupsBox";
 import {TOKEN_MAP} from "./subComponents/Constants";
 import {EXPIRY_OPTIONS, MAX_BIG_INT, TOKENS} from "./subComponents/Constants";

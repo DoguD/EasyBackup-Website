@@ -22,7 +22,7 @@ import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
 import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/InProduction/xEasy";
 import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
-import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/Backup";
+import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/InProduction/Backup";
 import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/InProduction/Oracle";
 
 // Web3 Global Vars
