@@ -1,4 +1,4 @@
-export const BACKUP_ADDRESS = "0x4EF1d8B62aaf391050DA99a2F9f01A30ed1E6C83";
+export const BACKUP_ADDRESS = "0x5bB57cD7dECD21E3191eF0D23982619CEC00286E";
 export const BACKUP_ABI = [
     {
         "anonymous": false,
@@ -451,7 +451,20 @@ export const BACKUP_ABI = [
     },
     {
         "inputs": [],
-        "name": "easyTokenAddress",
+        "name": "discountedBackupCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "discountedUserOracleAddress",
         "outputs": [
             {
                 "internalType": "address",
@@ -463,24 +476,16 @@ export const BACKUP_ABI = [
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "easyTokenDiscountAmount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "uint256",
                 "name": "_id",
                 "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "_to",
+                "type": "address"
             },
             {
                 "internalType": "uint256",
@@ -582,25 +587,6 @@ export const BACKUP_ABI = [
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_user",
-                "type": "address"
-            }
-        ],
-        "name": "isDiscounted",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [],
         "name": "isReferralActive",
         "outputs": [
@@ -640,6 +626,19 @@ export const BACKUP_ABI = [
                 "internalType": "address",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "referralBackupCount",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -694,25 +693,12 @@ export const BACKUP_ABI = [
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "setDiscountAmount",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
-                "name": "_address",
+                "name": "_newOracle",
                 "type": "address"
             }
         ],
-        "name": "setEasyContract",
+        "name": "setDiscountedUserOracle",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
