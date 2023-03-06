@@ -1,4 +1,4 @@
-import {EASY_ADDRESS} from "../../contracts/EasyToken";
+import {EASY_ADDRESS} from "../../contracts/InProduction/EasyToken";
 
 export const MAX_BIG_INT = BigInt(115792089237316195423570985008687907853269984665640564039457584007913129639935);
 

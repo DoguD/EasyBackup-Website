@@ -1,7 +1,7 @@
 import styles from "../styles/Home.module.css";
 import React, {useEffect, useState} from 'react'
 import {Button, Dropdown} from 'semantic-ui-react';
-import {EASY_ADDRESS} from "../contracts/EasyToken";
+import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 import {Radio} from 'semantic-ui-react'
 import {ClipLoader} from "react-spinners";
 import {ethers} from "ethers";

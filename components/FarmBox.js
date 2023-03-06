@@ -1,6 +1,6 @@
 import styles from "../styles/Home.module.css";
 import React, {useEffect, useState} from "react";
-import {EASY_ADDRESS} from "../contracts/EasyToken";
+import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 
 import {FARM_ADDRESS} from "../contracts/Farm";
 import {LP_ADDRESS} from "../contracts/LP";

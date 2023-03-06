@@ -1,7 +1,7 @@
 import styles from "../../styles/Home.module.css";
 import {AiFillMediumSquare, AiOutlineTwitter} from "react-icons/ai";
 import {FaDiscord} from "react-icons/fa";
-import {EASY_ADDRESS} from "../../contracts/EasyToken";
+import {EASY_ADDRESS} from "../../contracts/InProduction/EasyToken";
 
 export default function IconContainer(props) {
     return (
