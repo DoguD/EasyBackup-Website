@@ -5,7 +5,7 @@ import {EASY_ADDRESS} from "../contracts/EasyToken";
 import {FARM_ADDRESS} from "../contracts/Farm";
 import {LP_ADDRESS} from "../contracts/LP";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
-import {X_EASY_ADDRESS} from "../contracts/xEasy";
+import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";
 import {ClipLoader} from "react-spinners";
 import {MAX_BIG_INT} from "./subComponents/Constants";
 import CoinStatBox from "./CoinStats";

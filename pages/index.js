@@ -19,7 +19,7 @@ import CreateBackupBox from "../components/CreateBackupBox";
 import {PRESALE_ABI, PRESALE_ADDRESS} from "../contracts/InProduction/Presale";
 import {USDC_ABI, USDC_ADDRESS} from "../contracts/InProduction/USDC";
 import {EASY_ABI, EASY_ADDRESS} from "../contracts/EasyToken";
-import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/xEasy";
+import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/InProduction/xEasy";
 import {LP_ABI, LP_ADDRESS} from "../contracts/LP";
 import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
 import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/Backup";

@@ -1,7 +1,7 @@
 import styles from "../styles/Home.module.css";
 import {EASY_ADDRESS} from "../contracts/EasyToken";
 import React, {useEffect, useState} from "react";
-import {X_EASY_ADDRESS} from "../contracts/xEasy";
+import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";
 import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
 import {ClipLoader} from "react-spinners";
 import {MAX_BIG_INT} from "./subComponents/Constants";
