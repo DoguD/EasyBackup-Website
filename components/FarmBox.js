@@ -209,7 +209,7 @@ export default function FarmBox(props) {
                             <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
                             <img src="/usdc.png" width={50} height={50} style={{borderRadius: 25, marginLeft: -20}}/>
                         </div>
-                        <p className={styles.stakingTitle}>Staked TVL</p>
+                        <p className={styles.stakingTitle}>TVL</p>
                         <p className={styles.stakingText}>${tvl.toFixed(0)}</p>
                         <p className={styles.stakingTitle}>APY Estimate</p>
                         <p className={styles.stakingText} style={{color: "#424242", fontSize: 12, margin: 0}}>(When
