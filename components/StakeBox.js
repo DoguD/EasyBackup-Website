@@ -168,9 +168,9 @@ export default function StakeBox(props) {
             <h2 className={styles.subTitle}>
                 Stake $EASY
             </h2>
-            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of initial fees
+            <p className={styles.sectionDescription}>Stake <b>$EASY</b> as <b>$xEASY</b> and earn 90% of EasyBackup initial fees
                 weekly</p>
-            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
+            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups} discountedBackups={props.discountedBackups}/>
 
             {props.walletAddress === "" ?
                 <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>

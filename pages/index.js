@@ -3,12 +3,9 @@ import styles from '../styles/Home.module.css'
 // Web3
 import {NFT_ADDRESS, NFT_ABI, DISCOUNTED_ADDRESS, DISCOUNTED_ABI} from "../contracts/InProduction/EasyClub";
 import {ethers} from "ethers";
-// Toast
-import toast, {Toaster, useToasterStore} from 'react-hot-toast';
 
 import React, {useEffect, useState} from "react";
 import StatsBox from "../components/StatsBox";
-import PresaleBox from "../components/PresaleBox";
 import StakeBox from "../components/StakeBox";
 import NavBar from "../components/NavBar";
 import IconContainer from "../components/subComponents/IconContainer";
@@ -56,15 +53,12 @@ export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
     // UI Controllers
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
-    // Toasts
-    const {toasts} = useToasterStore();
-    const TOAST_LIMIT = 1;
     // Referral
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
     const [totalBackups, setTotalBackups] = useState(0);
-    // Presale related
-    const [presaleStartTime, setPresaleStartTime] = useState(1677239940000); // Today at 2024 timestamp
+    const [discountedBackups, setDiscountedBackups] = useState(0);
+    const [totalUsers, setTotalUsers] = useState(0);
 
     const [menuItem, setMenuItem] = useState(0);
     // Referrer
@@ -176,6 +170,8 @@ export default function Home() {
 
             setEasySupply(supply);
             setTotalBackups(parseInt(await backupContract.backupCount(), 10));
+            setDiscountedBackups(parseInt(await backupContract.discountedBackupCount(), 10));
+            setTotalUsers(parseInt(await backupContract.totalUsers(), 10));
             setEasyPrice(usdcInLp / easyInLp);
         } catch (e) {
             console.log("General methods error: ");
@@ -194,7 +190,6 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            <Toaster/>
             <Head>
                 <title>EasyBackup - Never lose your crypto</title>
                 <meta name="description" content="Backup your crypto wallet easily"/>
@@ -214,9 +209,8 @@ export default function Home() {
                 </div>
 
                 <div className={styles.mobilePadding}>
-                    {Date.now() > presaleStartTime + 10 * 24 * 60 * 60 * 1000 ?
-                        <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}/>
-                        : null}
+                    <StatsBox easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
+                              totalUsers={totalUsers}/>
 
                     <div className={styles.backupInfoCard}>
                         <p className={styles.boxTitle}>What is EasyBackup?</p>
@@ -295,8 +289,7 @@ export default function Home() {
                                              provider={provider}
                                              signer={signer}
                                              oracleContract={oracleContract}
-                                             easyContract={easyContract}
-                                             presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
+                                             easyContract={easyContract}/>
                         </>
                         : menuItem === 2 ?
                             <StakeBox
@@ -308,7 +301,7 @@ export default function Home() {
                                 easyContract={easyContract}
                                 easyContractWithSigner={easyContractWithSigner}
                                 easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>
+                                discountedBackups={discountedBackups}/>
                             :
                             <FarmBox
                                 walletAddress={walletAddress}
@@ -321,7 +314,7 @@ export default function Home() {
                                 connectWalletHandler={() => connectWalletHandler()}
                                 provider={provider}
                                 easyPrice={easyPrice} easySupply={easySupply} totalBackups={totalBackups}
-                                presaleEndTime={presaleStartTime + 10 * 24 * 60 * 60 * 1000}/>}
+                                discountedBackups={discountedBackups}/>}
                 </div>
             </main>
 

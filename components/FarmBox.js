@@ -196,7 +196,7 @@ export default function FarmBox(props) {
             <p className={styles.sectionDescription}><b>40% of $EASY</b> supply is allocated for <b>$EASY-$USDC
                 liquidity providers</b>.
                 <br/>This will be distributed linearly over a year to incentivize deepening the liquidity to decrease price volatility.</p>
-            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups}/>
+            <CoinStatBox easyPrice={props.easyPrice} easySupply={props.easySupply} totalBackups={props.totalBackups} discountedBackups={props.discountedBackups}/>
             {
                 props.walletAddress === "" ?
                     <div className={styles.mintButton} onClick={() => props.connectWalletHandler()}>
