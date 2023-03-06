@@ -2,7 +2,7 @@ import styles from "../styles/Home.module.css";
 import React, {useEffect, useState} from "react";
 import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 
-import {FARM_ADDRESS} from "../contracts/Farm";
+import {FARM_ADDRESS} from "../contracts/InProduction/Farm";
 import {LP_ADDRESS} from "../contracts/InProduction/LP";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";

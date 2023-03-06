@@ -21,7 +21,7 @@ import {USDC_ABI, USDC_ADDRESS} from "../contracts/InProduction/USDC";
 import {EASY_ABI, EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 import {X_EASY_ADDRESS, X_EASY_ABI} from "../contracts/InProduction/xEasy";
 import {LP_ABI, LP_ADDRESS} from "../contracts/InProduction/LP";
-import {FARM_ABI, FARM_ADDRESS} from "../contracts/Farm";
+import {FARM_ABI, FARM_ADDRESS} from "../contracts/InProduction/Farm";
 import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/InProduction/Backup";
 import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/InProduction/Oracle";
 
