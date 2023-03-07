@@ -2,9 +2,8 @@ import styles from "../styles/Home.module.css";
 import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 import React, {useEffect, useState} from "react";
 import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";
-import {Button, Header, Image, Input, Modal} from "semantic-ui-react";
+import {Button, Header, Input, Modal} from "semantic-ui-react";
 import {ClipLoader} from "react-spinners";
-import {MAX_BIG_INT} from "./subComponents/Constants";
 import CoinStatBox from "./CoinStats";
 
 let USDollar = new Intl.NumberFormat('en-US', {
@@ -24,10 +23,10 @@ function StakeModal(props) {
                 <Modal.Description>
                     <Header>Stake in xEASY</Header>
                     <p>
-                        <b>Available:</b> {USDollar.format(props.easyBalance.toFixed(2))} EASY
+                        <b>Available:</b> {USDollar.format(props.easyBalance).slice(1)} $EASY
                     </p>
                     <div style={{display: 'flex', alignItems: 'center'}}>
-                        <Button onClick={() => setStakeAmount(props.easyBalance)}>Max</Button>
+                        <Button onClick={() => setStakeAmount(Math.floor(props.easyBalance))}>Max</Button>
                         <Input value={stakeAmount} onChange={(b, {value}) => {
                             if (value) setStakeAmount(parseFloat(value))
                             else setStakeAmount(0);
@@ -61,10 +60,10 @@ function WithdrawModal(props) {
                 <Modal.Description>
                     <Header>Withdraw xEASY</Header>
                     <p>
-                        <b>Available:</b> {USDollar.format(props.xEasyBalance.toFixed(2))} xEASY
+                        <b>Available:</b> {USDollar.format(props.xEasyBalance).slice(1)} $xEASY
                     </p>
                     <div style={{display: 'flex', alignItems: 'center'}}>
-                        <Button onClick={() => setStakeAmount(props.xEasyBalance)}>Max</Button>
+                        <Button onClick={() => setStakeAmount(Math.floor(props.xEasyBalance))}>Max</Button>
                         <Input value={stakeAmount} onChange={(b, {value}) => {
                             if (value) setStakeAmount(parseFloat(value))
                             else setStakeAmount(0);
@@ -240,12 +239,12 @@ export default function StakeBox(props) {
                                 color: '#424242',
                                 fontWeight: 'semi-bold',
                                 marginTop: 16
-                            }}>Claimable
-                                EASY</p>
+                            }}>Claimable EASY</p>
                             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <p className={styles.balanceText}>{stakedEasyBalance}</p>
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
+                                <p className={styles.balanceText} style={{marginLeft: 8}}>(~{USDollar.format(stakedEasyBalance * props.easyPrice)})</p>
                             </div>
                             <div style={{display: 'flex', flexDirection: 'row'}}>
                                 <div className={styles.stakingButton} onClick={() => {

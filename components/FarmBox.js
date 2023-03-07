@@ -5,10 +5,13 @@ import {EASY_ADDRESS} from "../contracts/InProduction/EasyToken";
 import {FARM_ADDRESS} from "../contracts/InProduction/Farm";
 import {LP_ADDRESS} from "../contracts/InProduction/LP";
 import {Button, Header, Input, Modal} from "semantic-ui-react";
-import {X_EASY_ADDRESS} from "../contracts/InProduction/xEasy";
 import {ClipLoader} from "react-spinners";
-import {MAX_BIG_INT} from "./subComponents/Constants";
 import CoinStatBox from "./CoinStats";
+
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 function StakeModal(props) {
     const [stakeAmount, setStakeAmount] = useState(0);
@@ -249,13 +252,13 @@ export default function FarmBox(props) {
                                 color: '#424242',
                                 fontWeight: 'semi-bold',
                                 marginTop: 16
-                            }}>Claimable
-                                Reward</p>
+                            }}>Claimable Reward</p>
                             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <p className={styles.balanceText}>{userReward}</p>
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
+                            <p className={styles.balanceText}>(~{USDollar.format(userReward * props.easyPrice)})</p>
                             <div style={{display: 'flex', flexDirection: 'row'}}>
                                 <div className={styles.stakingButton} onClick={() => harvest()}>
                                     {isLoading ? <ClipLoader color={"#424242"} size={15}/> :
