@@ -379,7 +379,7 @@ export default function CreateBackupBox(props) {
                             {isDiscounted ?
                                 <b style={{color: "green"}}>You are eligible to use EasyBackup without paying the $10
                                     fee.</b> :
-                                <b style={{color: "darkred"}}>You need {10000 - easyBalance} more $EASY to use EasyBackup
+                                <b style={{color: "darkred"}}>You need {(10000 - easyBalance).toFixed(0)} more $EASY to use EasyBackup
                                     without the $10 initial fee.</b>}
                         </p>
 
