@@ -218,7 +218,10 @@ export default function FarmBox(props) {
                         <p className={styles.stakingText} style={{color: "#424242", fontSize: 12, margin: 0}}>(When
                             compounded daily)</p>
                         <p className={styles.stakingText}
-                           style={{color: "green", fontWeight: 'bold'}}>{(apy * 100).toFixed(2)}%</p>
+                           style={{
+                               color: "green",
+                               fontWeight: 'bold'
+                           }}>{USDollar.format(apy * 100).slice(1, -3)}%</p> {/*TODO: When lowered remove -3 at the end of slice*/}
 
                         <p className={styles.getTokenText}
                            onClick={() => window.open("https://spooky.fi/#/add/" + EASY_ADDRESS + "/0x04068DA6C83AFCFA0e13ba15A6696662335D5B75", "_blank")}>Get

@@ -566,7 +566,9 @@
     }
 
     .stakingCard {
-        width: 350px;
+        margin: 0;
+        width: 320px;
+        padding: 8px;
     }
 
     .presaleTimer {
