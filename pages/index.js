@@ -24,6 +24,7 @@ import {LP_ABI, LP_ADDRESS} from "../contracts/InProduction/LP";
 import {FARM_ABI, FARM_ADDRESS} from "../contracts/InProduction/Farm";
 import {BACKUP_ABI, BACKUP_ADDRESS} from "../contracts/InProduction/Backup";
 import {ORACLE_ABI, ORACLE_ADDRESS} from "../contracts/InProduction/Oracle";
+import {useCookies} from "react-cookie";
 
 // Web3 Global Vars
 let provider;
@@ -53,18 +54,22 @@ export default function Home() {
     const [walletAddress, setWalletAddress] = useState("");
     // UI Controllers
     const [metamaskInstalled, setMetamaskInstalled] = useState(false);
-    // Referral
     const [easyPrice, setEasyPrice] = useState(0.005);
     const [easySupply, setEasySupply] = useState(0);
     const [totalBackups, setTotalBackups] = useState(0);
     const [discountedBackups, setDiscountedBackups] = useState(0);
     const [totalUsers, setTotalUsers] = useState(0);
-    const [refAddress, setRefAddress] = useState("0x0000000000000000000000000000000000000000");
     const [totalRefs, setTotalRefs] = useState(0);
 
     const [menuItem, setMenuItem] = useState(0);
-    // Referrer
+
+    // Cookie
+    const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+
+    // Referrer and cookie
+    const [refAddress, setRefAddress] = useState("0x0000000000000000000000000000000000000000");
     useEffect(() => {
+        // Get referrer if any
         let fullUrl = window.location.href;
         let splitUrl = fullUrl.split('?');
         if (splitUrl.length > 1) {
@@ -75,7 +80,11 @@ export default function Home() {
                 setRefAddress(referer);
             }
         }
-    }, []);
+        // Got connected wallet if any
+        if(metamaskInstalled && typeof cookies['walletAddress'] !== "undefined") {
+            connectWalletHandler();
+        }
+    }, [metamaskInstalled]);
 
     // Web3
     useEffect(() => {
@@ -147,6 +156,9 @@ export default function Home() {
                 signer = provider.getSigner();
                 let userAddress = await signer.getAddress();
                 setWalletAddress(userAddress);
+
+                setCookie("walletAddress", userAddress);
+                console.log(cookies);
 
                 nftContractWithSigner = nftContract.connect(signer);
                 discountedContractWithSigner = discountedContract.connect(signer);
