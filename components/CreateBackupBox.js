@@ -195,8 +195,7 @@ export default function CreateBackupBox(props) {
             let transaction = await props.backupContractWithSigner.createBackup(backupWallet,
                 token,
                 isAmountInfinite ? "115792089237316195423570985008687907853269984665640564039457584007913129639935" : BigInt(amount * 10 ** decimals),
-                //expiry * 24 * 60 * 60, TODO: Before release !!!!
-                300,
+                expiry * 24 * 60 * 60,
                 isAutomatic,
                 props.refAddress,
                 options);

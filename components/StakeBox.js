@@ -181,7 +181,7 @@ export default function StakeBox(props) {
                     <div className={styles.stakingCard}>
                         <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
                         <p className={styles.stakingTitle}>Staked TVL</p>
-                        <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy)}</p>
+                        <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy).slice(0,-3)}</p>
                         <p className={styles.stakingTitle}>APR Estimate</p>
                         <p className={styles.stakingText}
                            style={{color: "green", fontWeight: 'bold'}}>NaN%</p> {/*TODO: Calculate this motherfucker*/}
