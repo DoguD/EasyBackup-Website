@@ -7,7 +7,9 @@ import {ERC20_ABI} from "../contracts/InProduction/ERC20";
 
 function ClaimableBackupRow(props) {
     let remainingDays;
+    let canBeClaimed = false
     if (((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction)))) < 0) {
+        canBeClaimed = true;
         remainingDays = 0;
     } else {
         remainingDays = ((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0)
@@ -31,13 +33,13 @@ function ClaimableBackupRow(props) {
 
                 <div style={{width: 16}}/>
                 <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
-                <p className={styles.claimableBackupText}>{remainingDays} days</p>
+                <p className={styles.claimableBackupText}>{canBeClaimed ? "Now" : remainingDays + " days"}</p>
 
                 <p className={styles.claimableBackupText}><b>Automatic: </b></p>
                 <p className={styles.claimableBackupText}>{props.backup.automatic ? "Yes" : "No"}</p>
 
                 <div style={{width: 32}}/>
-                <Button primary disabled={remainingDays !== 0}
+                <Button primary disabled={!canBeClaimed}
                         onClick={() => props.claimBackup(props.backup.backupId)}>Claim</Button>
             </div> : null
     )
