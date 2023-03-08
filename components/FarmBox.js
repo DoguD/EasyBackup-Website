@@ -97,6 +97,9 @@ export default function FarmBox(props) {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const [usdcInLp, setUsdcInLp] = useState(0);
+    const [totalLp, setTotalLp] = useState(0);
+
     useEffect(() => {
         if (props.walletAddress !== "") getFarmData();
     }, [props.walletAddress]);
@@ -119,6 +122,8 @@ export default function FarmBox(props) {
             let dailyApr = apr / 365;
             let apy = (1 + dailyApr) ** 365;
 
+            setUsdcInLp(usdcInLp);
+            setTotalLp(lpSupply);
             setTvl(tvl);
             setApy(apy);
         }
@@ -176,6 +181,7 @@ export default function FarmBox(props) {
         props.provider.once(txHash, (transaction) => {
             setIsLoading(false);
             getFarmData();
+            setOpen(false);
         })
     }
 
@@ -236,13 +242,14 @@ export default function FarmBox(props) {
                                 <img src="/usdc.png"
                                      style={{width: 20, height: 20, borderRadius: 10, marginLeft: -8}}/>
                             </div>
+                            {userLpBalance !== 0 ?
+                                <p className={styles.balanceText}>(~{USDollar.format((userLpBalance / totalLp) * usdcInLp * 2)})</p> : null}
                             <p style={{
                                 marginBottom: 0,
                                 color: '#424242',
                                 fontWeight: 'semi-bold',
                                 marginTop: 16
-                            }}>Staked
-                                $EASY-$USDC</p>
+                            }}>Staked $EASY-$USDC</p>
                             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                                 <p className={styles.balanceText}>{userFarmBalance}</p>
                                 <img src="/favicon.png"
@@ -250,6 +257,8 @@ export default function FarmBox(props) {
                                 <img src="/usdc.png"
                                      style={{width: 20, height: 20, borderRadius: 10, marginLeft: -8}}/>
                             </div>
+                            {userFarmBalance !== 0 ?
+                                <p className={styles.balanceText}>(~{USDollar.format(userFarmBalance / totalLp * usdcInLp * 2)})</p> : null}
                             <p style={{
                                 marginBottom: 0,
                                 color: '#424242',
@@ -261,7 +270,8 @@ export default function FarmBox(props) {
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
                             </div>
-                            <p className={styles.balanceText}>(~{USDollar.format(userReward * props.easyPrice)})</p>
+                            {userReward !== 0 ?
+                                <p className={styles.balanceText}>(~{USDollar.format(userReward * props.easyPrice)})</p> : null}
                             <div style={{display: 'flex', flexDirection: 'row'}}>
                                 <div className={styles.stakingButton} onClick={() => harvest()}>
                                     {isLoading ? <ClipLoader color={"#424242"} size={15}/> :

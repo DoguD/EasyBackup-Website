@@ -115,6 +115,8 @@ export default function StakeBox(props) {
             console.log(transaction);
             setIsLoading(false);
             getStakeData();
+
+            setOpen(false);
         })
     }
 
@@ -181,7 +183,7 @@ export default function StakeBox(props) {
                     <div className={styles.stakingCard}>
                         <img src="/favicon.png" width={50} height={50} style={{borderRadius: 25}}/>
                         <p className={styles.stakingTitle}>Staked TVL</p>
-                        <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy).slice(0,-3)}</p>
+                        <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy).slice(0, -3)}</p>
                         <p className={styles.stakingTitle}>APR Estimate</p>
                         <p className={styles.stakingText}
                            style={{color: "green", fontWeight: 'bold'}}>NaN%</p> {/*TODO: Calculate this motherfucker*/}
@@ -244,7 +246,9 @@ export default function StakeBox(props) {
                                 <p className={styles.balanceText}>{stakedEasyBalance}</p>
                                 <img src="/favicon.png"
                                      style={{width: 20, height: 20, marginLeft: 8, borderRadius: 10}}/>
-                                <p className={styles.balanceText} style={{marginLeft: 8}}>(~{USDollar.format(stakedEasyBalance * props.easyPrice)})</p>
+                                {stakedEasyBalance !== 0 ?
+                                    <p className={styles.balanceText}
+                                       style={{marginLeft: 8}}>(~{USDollar.format(stakedEasyBalance * props.easyPrice)})</p> : null}
                             </div>
                             <div style={{display: 'flex', flexDirection: 'row'}}>
                                 <div className={styles.stakingButton} onClick={() => {
