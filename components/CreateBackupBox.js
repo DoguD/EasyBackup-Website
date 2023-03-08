@@ -221,9 +221,9 @@ export default function CreateBackupBox(props) {
 
     function setListener(txHash) {
         props.provider.once(txHash, (transaction) => {
-            console.log(transaction);
             setIsLoading(false);
             getCreatedBackups();
+            getAllowance();
         })
     }
 
@@ -279,11 +279,10 @@ export default function CreateBackupBox(props) {
                                     <input className={styles.walletInput} type={"text"} id={"backup-amount"}
                                            value={amount}
                                            onChange={(b) => {
-                                               let newValue = parseInt(b.target.value);
-                                               if (newValue) {
-                                                   setAmount(newValue)
-                                               } else {
-                                                   setAmount(0);
+                                               let newValue = b.target.value;
+                                               let rgx = /^[0-9]*\.?[0-9]*$/;
+                                               if (newValue.match(rgx) != null) {
+                                                   setAmount(newValue);
                                                }
                                            }}>
 
@@ -320,15 +319,6 @@ export default function CreateBackupBox(props) {
                                     }}
                                 />
                             </div>
-                            <div className={styles.backupRow}>
-                                <p className={styles.backupTitle}>Automatic Transfer: </p>
-                                <Radio toggle onClick={(evt, data) => setIsAutomatic(data.checked)}/>
-                            </div>
-                            {isAutomatic ?
-                                <p className={styles.backupTitle} style={{color: 'red'}}>If automatic transfer is enabled
-                                    the tokens will transfer to your backup wallet
-                                    automaticaly when the time comes. Be careful! This means if you lose access to your
-                                    backup wallet, the tokens will be lost forever.</p> : null}
                             {isExpiryCustom ?
                                 <div className={styles.backupRow}>
                                     <p className={styles.backupTitle}>Custom Access Time: </p>
@@ -348,6 +338,15 @@ export default function CreateBackupBox(props) {
                                     <p className={styles.backupTitle}>days</p>
                                 </div>
                                 : null}
+                            <div className={styles.backupRow}>
+                                <p className={styles.backupTitle}>Automatic Transfer: </p>
+                                <Radio toggle onClick={(evt, data) => setIsAutomatic(data.checked)}/>
+                            </div>
+                            {isAutomatic ?
+                                <p className={styles.backupTitle} style={{color: 'red'}}>If automatic transfer is enabled
+                                    the tokens will transfer to your backup wallet
+                                    automaticaly when the time comes. Be careful! This means if you lose access to your
+                                    backup wallet, the tokens will be lost forever.</p> : null}
                             <div className={styles.backupRow}>
                                 <div className={styles.mintButton} onClick={() => {
                                     if (approvalNeeded) {
