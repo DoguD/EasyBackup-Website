@@ -7,7 +7,7 @@ import {ERC20_ABI} from "../contracts/InProduction/ERC20";
 
 function ClaimableBackupRow(props) {
     let remainingDays;
-    let canBeClaimed = false
+    let canBeClaimed = false;
     if (((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction)))) < 0) {
         canBeClaimed = true;
         remainingDays = 0;
