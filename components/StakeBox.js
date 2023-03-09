@@ -186,7 +186,10 @@ export default function StakeBox(props) {
                         <p className={styles.stakingText}>{USDollar.format(props.easyPrice * lockedEasy).slice(0, -3)}</p>
                         <p className={styles.stakingTitle}>APR Estimate</p>
                         <p className={styles.stakingText}
-                           style={{color: "green", fontWeight: 'bold'}}>NaN%</p> {/*TODO: Calculate this motherfucker*/}
+                           style={{
+                               color: "green",
+                               fontWeight: 'bold'
+                           }}>{(0.9 * 365 * ((props.totalBackups - props.discountedBackups - props.totalRefs / 2) * 10) / ((Date.now() - 1678103940000) / 1000 / 60 / 60 / 24) / (props.easyPrice * lockedEasy) * 100).toFixed(2)}%</p> {/*TODO: Calculate this better*/}
 
                         <div style={{
                             display: 'flex',
