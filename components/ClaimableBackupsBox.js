@@ -29,7 +29,7 @@ function ClaimableBackupRow(props) {
                 <p className={styles.claimableBackupText}><b>Amount: </b></p>
                 <p className={styles.claimableBackupText}>{BigInt(props.backup.amount) > BigInt(2 ** 250)
                     ? "∞"
-                    : parseInt(props.backup.amount / (10 ** props.backup.decimals)).toFixed(4)}</p>
+                    : parseFloat(props.backup.amount / (10 ** props.backup.decimals)).toString()}</p>
 
                 <div style={{width: 16}}/>
                 <p className={styles.claimableBackupText}><b>Can Be Claimed In: </b></p>
