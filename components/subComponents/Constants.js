@@ -21,7 +21,7 @@ export const EXPIRY_OPTIONS = [
     {
         key: '12month',
         text: "1 Year",
-        value: 360
+        value: 365
     },
     {
         key: 'custom',

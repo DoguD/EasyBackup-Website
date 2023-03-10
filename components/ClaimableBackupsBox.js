@@ -14,7 +14,6 @@ function ClaimableBackupRow(props) {
     } else {
         remainingDays = ((parseInt(props.backup.expiry) - (Math.floor(Date.now() / 1000) - parseInt(props.backup.lastInteraction))) / 60 / 60 / 24).toFixed(0)
     }
-    console.log(remainingDays);
     return (
         props.backup.isActive ?
             <div className={styles.claimableBackupsRow}>
@@ -72,7 +71,6 @@ export default function ClaimableBackupsBox(props) {
                     automatic: backup[6],
                     decimals: parseInt(await new ethers.Contract(backup[2], ERC20_ABI, props.provider).decimals(), 10),
                 }
-                console.log(parsedBackup);
                 parsedBackups.push(parsedBackup);
             }
             setClaimableBackups(parsedBackups);
@@ -80,7 +78,6 @@ export default function ClaimableBackupsBox(props) {
     }
 
     async function claimBackup(id) {
-        console.log("In claim");
         try {
             let transaction = await props.backupContractWithSigner.claimBackup(id);
             setListener(transaction.hash);
@@ -92,7 +89,6 @@ export default function ClaimableBackupsBox(props) {
 
     function setListener(txHash) {
         props.provider.once(txHash, (transaction) => {
-            console.log(transaction);
             getClaimableBackups();
         })
     }
