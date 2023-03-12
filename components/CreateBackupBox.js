@@ -136,10 +136,8 @@ export default function CreateBackupBox(props) {
     async function getAllowance() {
         try {
             let allowance = parseInt(await tokenContract.allowance(props.walletAddress, BACKUP_ADDRESS), 10);
-            // setApprovalNeeded(BigInt(allowance) < MAX_BIG_INT);
-            console.log(BigInt(allowance));
-            console.log(BigInt(allowance) === BigInt(0));
-            setApprovalNeeded(BigInt(allowance) === BigInt(0));
+            // setApprovalNeeded(BigInt(allowance) < MAX_BIG_INT); // Needs infinite amount of approval to work
+            setApprovalNeeded(BigInt(allowance) === BigInt(0)); // Any approval would work
         } catch (e) {
             console.log("Backup Box, get allowance error:");
             console.log(e);
