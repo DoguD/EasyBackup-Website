@@ -189,7 +189,7 @@ export default function StakeBox(props) {
                            style={{
                                color: "green",
                                fontWeight: 'bold'
-                           }}>{(0.9 * 365 * ((props.totalBackups - props.discountedBackups - props.totalRefs / 2) * 10) / ((Date.now() - 1678103940000) / 1000 / 60 / 60 / 24) / (props.easyPrice * lockedEasy) * 100).toFixed(2)}%</p> {/*TODO: Calculate this better*/}
+                           }}>{((easyForXEasy - 1) / ((Date.now() - 1678103940000) / 1000 / 60 / 60 / 24) * 365 * 100).toFixed(2)}%</p>
 
                         <div style={{
                             display: 'flex',
